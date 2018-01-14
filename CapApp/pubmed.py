@@ -6,7 +6,7 @@ from lxml import etree
 from lxml import html
 from unidecode import unidecode
 from itertools import chain
-from CapProj.settings_secret import API_KEY
+# from CapProj.settings_secret import API_KEY
 
 #What does this do?
 # try:
