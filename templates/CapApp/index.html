@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% extends "CapApp/base.html"%}
+  {%block body_block%}
+    <div>
+      <h4>Enter keyword here</h4>
+      <form type="get" action="{% url 'index' %}" style="margin: 0">
+        <input  id="q" type="text" name="q"  placeholder="Search..." >
+        <button id="search_submit" type="submit" >Submit</button>
+      </form>
+    </div>
+
+    <div>
+      <h4>Top searches</h4>
+      {% if top_ten_searches %}
+      <ul>
+        {% for search in top_ten_searches %}
+        <li>
+          {{search.keyword}}
+        </li>
+      {%endfor%}
+      </ul>
+      {%endif%}
+    </div>
+
+
+    <div>
+      <h4>Grants included in Database:</h4>
+      <ul>
+        <li>
+          All <strong>D</strong> grants (Institutional Training and Director Program Projects)
+        </li>
+        <li>
+          All <strong>F</strong> grants (Fellowship Programs)
+        </li>
+        <li>
+          <strong>I01</strong> and <strong>I80</strong> grants (Non-HHS Research Projects and DoD Research Project Grant Program)
+        </li>
+        <li>
+          All <strong>K</strong> grants (Research Career Programs)
+        </li>
+        <li>
+          All <strong>R</strong> grants (Research Projects)
+        </li>
+        <li>
+          All <strong>S</strong> grants (Research-Related Programs)
+        </li>
+      </ul>
+      <p>
+        For more information on grant types visit this
+          <a href="https://grants.nih.gov/grants/funding/ac_search_results.htm">NIH page </a>
+      </p>
+    </div>
+
+{%endblock%}

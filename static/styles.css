@@ -1,0 +1,9 @@
+
+.no_bullets {
+   list-style-type: none;
+}
+
+svg {
+  border-color: black;
+  background-color: Snow;
+}

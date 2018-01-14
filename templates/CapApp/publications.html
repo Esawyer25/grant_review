@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+{% extends "CapApp/base.html"%}
+  {%block body_block%}
+  <div class= "jumbotron">
+    <h2>Grant summary</h2>
+      <div class="grant_header">
+        <p>
+          <h3>{{focal.project_title}}</h3>
+        </p>
+      </div>
+      <div class= "grant_information col-10">
+        <div id={{focal.core_project_num}} class ="word_cloud pull-right "></div>
+
+        <script>
+        var fill = d3.scale.category20();
+        var color = d3.scale.linear()
+          .domain([0,1,2,3,4,5,6,10,15,20,100])
+          .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
+        d3.layout.cloud().size([200, 200])
+      .words({{focal.small_data_structure|safe}})
+      .rotate(0)
+      .padding(3)
+      .fontSize(function(d) { return d.size; })
+      .on("end", draw)
+      .start();
+      function draw(words) {
+        d3.select("#{{focal.core_project_num}}").append("svg")
+          .attr("width", 220)
+          .attr("height", 220)
+          .attr("class", "wordcloud")
+          .append("g")
+          // without the transform, words words would get cutoff to the left and top, they would
+          // appear outside of the SVG area
+          .attr("transform", "translate(100,100)")
+          .selectAll("text")
+          .data(words)
+          .enter().append("text")
+          .style("font-size", function(d) { return d.size + "px"; })
+          .style("fill", function(d, i) { return color(i); })
+          .style("font-size", function(d) { return d.size + "px"; })
+          .style("font-family", "Impact")
+          .style("fill", function(d, i) { return fill(i); })
+          .attr("text-anchor", "middle")
+          .attr("transform", function(d) {
+              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+          })
+          .text(function(d) { return d.text; });
+}
+        </script>
+        <p>
+          <strong>Principal Investigator(s):</strong>
+        {%for name in focal.pi_name%}
+        </p>
+        <p>
+          {{name}}
+        </p>
+        {%endfor%}
+        <p>
+          {{focal.org_name}}, {{focal.org_state}}
+        </p>
+        <p>
+          <strong>Core Project Number:</strong> {{focal.core_project_num}}
+        </p>
+        <p>
+          <strong>Number of Papers:</strong> {{focal.number_of_papers}}
+        </p>
+        <p>
+          <strong>Funding breakdown by year:</strong>
+        </p>
+
+    </div>
+  </div>
+
+
+<div>
+  <p>
+    Resulting papers
+  </p>
+  {% if all_papers%}
+  <ul>
+    {% for paper in all_papers %}
+    <li>
+      <article class = "paper-summary">
+        <div class="paper_header">
+          <p>
+            <h3>{{paper.title}}</h3>
+          </p>
+        </div>
+        <div class="paper_information col-10">
+        <div id="A{{paper.pmid}}" class ="word_cloud pull-right "></div>
+
+        <script>
+        var fill = d3.scale.category20();
+        var color = d3.scale.linear()
+          .domain([0,1,2,3,4,5,6,10,15,20,100])
+          .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
+        d3.layout.cloud().size([200, 200])
+      .words({{paper.small_data_structure|safe}})
+      .rotate(0)
+      .padding(3)
+      .fontSize(function(d) { return d.size; })
+      .on("end", draw)
+      .start();
+      function draw(words) {
+        d3.select("#A{{paper.pmid}}").append("svg")
+          .attr("width", 220)
+          .attr("height", 220)
+          .attr("class", "wordcloud")
+          .append("g")
+          // without the transform, words words would get cutoff to the left and top, they would
+          // appear outside of the SVG area
+          .attr("transform", "translate(100,100)")
+          .selectAll("text")
+          .data(words)
+          .enter().append("text")
+          .style("font-size", function(d) { return d.size + "px"; })
+          .style("fill", function(d, i) { return color(i); })
+          .style("font-size", function(d) { return d.size + "px"; })
+          .style("font-family", "Impact")
+          .style("fill", function(d, i) { return fill(i); })
+          .attr("text-anchor", "middle")
+          .attr("transform", function(d) {
+              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+          })
+          .text(function(d) { return d.text; });
+}
+        </script>
+
+          <p>
+            <strong>Authors:</strong>
+            {%for author in paper.authors%}
+              {{author}}, 
+            {%endfor%}
+          </p>
+          <p>
+            <strong>Year:</strong>  {{paper.year}}
+          </p>
+          <p>
+            <strong>Journal:</strong>  {{paper.journal}}
+          </p>
+          </div>
+          <div class="abstract">
+            <strong>Abstract:</strong>
+            {%if paper.abstract%}
+              {{paper.abstract}}
+            {%else%}
+              Abstract not available
+            {%endif%}
+          </div>
+        </article>
+    </li>
+    {%endfor%}
+  </ul>
+  {%endif%}
+</div>
+
+
+
+  {%endblock%}

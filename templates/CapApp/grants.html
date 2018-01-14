@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+{% extends "CapApp/base.html"%}
+
+
+  {%block body_block%}
+  {% load humanize %}
+    <div class="jumbotron">
+      <h2>Summary stats</h2>
+      <ul>
+        <li>
+          <p>
+            Number of grants with keyword <strong><em>{{grant_stats.totals.query}}</em></strong>:
+            {{ grant_stats.totals.grant_count|intcomma }}
+          </p>
+        </li>
+        <li>
+          <p>
+            Cost since 2015 (total,  (indirect/ direct)):
+          </p>
+          <p>
+            ${{grant_stats.totals.grant_total_cost|intcomma}},
+              (${{grant_stats.totals.grant_direct_cost|intcomma}}/ ${{grant_stats.totals.grant_indirect_cost|intcomma}})
+          </p>
+            <ul>
+              <li>
+                Cost in 2018: ${{grant_stats.2018.grant_total_cost|intcomma}},
+                  (${{grant_stats.2018.grant_direct_cost|intcomma}}/ ${{grant_stats.2018.grant_indirect_cost|intcomma}})
+              </li>
+              <li>
+                Cotal cost in 2017: ${{grant_stats.2017.grant_total_cost|intcomma}},
+                  (${{grant_stats.2017.grant_direct_cost|intcomma}}/ ${{grant_stats.2017.grant_indirect_cost|intcomma}})
+              </li>
+            </ul>
+          </li>
+          <li>
+            <p>
+              Funding by grant type:
+            </p>
+          <ul>
+            <li>
+              NIH Director’s Pioneer Award (DP1):
+              {{grant_stats.totals.dp1_count}}
+              Total cost:  ${{grant_stats.totals.dp1_total_cost|intcomma}}
+            </li>
+            <li>
+              NIH Director’s New Innovator Award (DP2):
+              {{grant_stats.totals.dp2_count}}
+              Total cost: ${{grant_stats.dp2_total_cost|intcomma}}
+            </li>
+            <li>
+              Outstanding Investigator Awards (R35):
+              {{grant_stats.totals.r35_count}}
+              Total cost: ${{grant_stats.totals.r35_total_cost|intcomma}}
+            </li>
+            <li>
+              Research Project (R01):
+              {{grant_stats.r01_count}}
+              Total cost: ${{grant_stats.totals.r01_total_cost|intcomma}}
+            </li>
+            <li>
+              Research Transition Award (R00):
+              {{grant_stats.r00_count}}
+              Total cost: ${{grant_stats.totals.r00_total_cost|intcomma}}
+            </li>
+            <li>
+              Career Transition Award (K99):
+              {{grant_stats.totals.k99_count}}
+              Total cost: ${{grant_stats.totals.k99_total_cost|intcomma}}
+            </li>
+            <li>
+              Traning grants (F30/F31/F32):
+              {{grant_stats.totals.f30_count}}/{{grant_stats.totals.f31_count}}/{{grant_stats.totals.f32_count}}
+              Total cost: ${{grant_stats.totals.f30_total_cost|intcomma}}/ ${{grant_stats.totals.f31_total_cost|intcomma}}/ ${{grant_stats.totals.f32_total_cost|intcomma}}
+            </li>
+          </ul>
+          </li>
+        </li>
+
+
+      </ul>
+    </div>
+
+    <div>
+      <h2>Search Results</h2>
+    {% if grants %}
+      <ul class="no_bullets">
+        {% for grant in grants %}
+
+        <li>
+          <article class = "grant-summary">
+            <div class="grant_header">
+          <h3>
+           {{ forloop.counter0|add:grants.start_index }}.
+          {{ grant.project_title }}</h3>
+          <p>
+          </div>
+
+          <div class= "grant_information col-10">
+          <div id={{grant.core_project_num}} class ="word_cloud pull-right "></div>
+          <script>
+          var fill = d3.scale.category20();
+          var color = d3.scale.linear()
+            .domain([0,1,2,3,4,5,6,10,15,20,100])
+            .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
+          d3.layout.cloud().size([390, 390])
+        .words({{grant.make_data_structure|safe}})
+        .rotate(0)
+        .padding(3)
+        .fontSize(function(d) { return d.size; })
+        .on("end", draw)
+        .start();
+        function draw(words) {
+          d3.select("#{{grant.core_project_num}}").append("svg")
+            .attr("width", 400)
+            .attr("height", 400)
+            .attr("class", "wordcloud")
+            .append("g")
+            // without the transform, words words would get cutoff to the left and top, they would
+            // appear outside of the SVG area
+            .attr("transform", "translate(200,200)")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", function(d) { return d.size + "px"; })
+            .style("fill", function(d, i) { return color(i); })
+            .style("font-size", function(d) { return d.size + "px"; })
+            .style("font-family", "Impact")
+            .style("fill", function(d, i) { return fill(i); })
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .text(function(d) { return d.text; });
+}
+          </script>
+
+            <p>
+              <strong>Principal Investigator(s):</strong>
+            </p>
+          {%for name in grant.pi_name%}
+          <p>
+            {{name}}
+          </p>
+          {%endfor%}
+          </p>
+          <p>
+          {{grant.org_name}}, {{grant.org_state}}
+          </p>
+          <p>
+              <strong>Core Project Number:</strong> {{grant.core_project_num}}
+          </p>
+          <p>
+            <strong>Cost:</strong>
+          </p>
+          <p>
+            Total cost:
+            {%if grant.total_cost == None %}
+              ${{grant.total_cost_sub_project|intcomma}}
+            {%else%}
+              ${{grant.total_cost|intcomma}}
+            {%endif%}
+            </p>
+            <p>
+            Direct cost: ${{grant.direct_cost_amt|intcomma}}
+            </p>
+            <p>
+            Indirect cost: ${{grant.indirect_cost_amt|intcomma}}
+            </p>
+          <p>
+            <strong>Number of years of funding:</strong> {{grant.support_year}}
+            </p>
+          </p>
+          <p>
+            <strong>Number of Papers:</strong> {{grant.number_of_papers|intcomma}}
+            <a href="{%url 'publications'%} ?app_id={{grant.application_id}}" class ="button">See the papers</a>
+            <p class ="small">
+              Due to limits set by the NIH,
+              each paper takes 0.5 seconds to load.
+            </p>
+          <p>
+            <strong>Activity Code:</strong> {{grant.activity}}
+          </p>
+          </div>
+          <div class="abstract">
+          <p>
+            <strong>Abstract:</strong>
+          {{grant.abstract_text}}
+          </p>
+          </div>
+          </article>
+        </li>
+
+        {% endfor %}
+      </ul>
+
+    {% endif %}
+    </div>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if grants.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ grants.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ grants.number }} of {{ grants.paginator.num_pages }}
+            </span>
+
+            {% if grants.has_next %}
+                <a href="?page={{ grants.next_page_number }}">next</a>
+                <a href="?page={{ grants.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+
+
+  {% endblock %}
+
+  <!-- </body>
+</html> -->
