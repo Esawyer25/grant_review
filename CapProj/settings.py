@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import django
+django.setup()
 # from .settings_secret import SECRET_KEY
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
