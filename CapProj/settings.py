@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 if 'SECRET_KEY' in os.environ:
-    print(SECRET_KEY)
     pass
 else:
     print('I got it from here')

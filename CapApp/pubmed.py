@@ -9,7 +9,6 @@ from itertools import chain
 
 import os
 if 'API_KEY' in os.environ:
-    print(API_KEY)
     pass
 else:
     print('I got it from here')
