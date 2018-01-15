@@ -12,7 +12,7 @@ if 'API_KEY' in os.environ:
     pass
 else:
     print('I got it from here')
-    from .settings_secret import API_KEY
+    from CapProj.settings_secret import API_KEY
 
 #What does this do?
 # try:
