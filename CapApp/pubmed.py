@@ -6,10 +6,14 @@ from lxml import etree
 from lxml import html
 from unidecode import unidecode
 from itertools import chain
-try:
-    API_KEY
-except:
-    from CapProj.settings_secret import API_KEY
+
+import os
+if 'API_KEY' in os.environ:
+    print(API_KEY)
+    pass
+else:
+    print('I got it from here')
+    from .settings_secret import API_KEY
 
 #What does this do?
 # try:

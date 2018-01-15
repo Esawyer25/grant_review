@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-try:
-    SECRET_KEY
-except:
+if 'SECRET_KEY' in os.environ:
+    print(SECRET_KEY)
+    pass
+else:
+    print('I got it from here')
     from .settings_secret import SECRET_KEY
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
