@@ -1,9 +1,99 @@
 <!DOCTYPE html>
 {% extends "CapApp/base.html"%}
+{% load static %}
 
 
   {%block body_block%}
   {% load humanize %}
+  <style>
+  	.state{
+  		fill: none;
+  		stroke: #a9a9a9;
+  		stroke-width: 1;
+  	}
+  	.state:hover{
+  		fill-opacity:0.5;
+  	}
+  	#tooltip {
+  		position: absolute;
+  		text-align: center;
+  		padding: 20px;
+  		margin: 10px;
+  		font: 12px sans-serif;
+  		background: lightsteelblue;
+  		border: 1px;
+  		border-radius: 2px;
+  		pointer-events: none;
+  	}
+  	#tooltip h4{
+  		margin:0;
+  		font-size:14px;
+  	}
+  	#tooltip{
+  		background:rgba(0,0,0,0.9);
+  		border:1px solid grey;
+  		border-radius:5px;
+  		font-size:12px;
+  		width:auto;
+  		padding:4px;
+  		color:white;
+  		opacity:0;
+  	}
+  	#tooltip table{
+  		table-layout:fixed;
+  	}
+  	#tooltip tr td{
+  		padding:10px;
+  		margin:10px;
+      border: white;
+  	}
+  	#tooltip tr td:nth-child(1){
+  		width:50px;
+  	}
+  	#tooltip tr td:nth-child(2){
+  		text-align:center;
+  	}
+  </style>
+  <div id="tooltip"></div><!-- div to hold tooltip. -->
+<svg width="960" height="600" id="statesvg"></svg> <!-- svg to hold the map. -->
+<script>
+
+	function tooltipHtml(n, d){	/* function to create html content string in tooltip div. */
+    console.log(d)
+		let string =  "<h4>"+n+"</h4>"
+    if (d.first[1] > 0){
+			string = string + "<p> Top Funded Institutions  </p>"
+      string = string + "<table><tr><td>"+(d.first[0])+" </td><td> "+(d.first[1])+ " grant(s)"+"</td></tr>";
+    }
+    if (d.second[1] > 0){
+      string = string +"<tr><td> "+(d.second[0])+" </td><td> "+(d.second[1])+ " grant(s) "+"</td></tr>";
+    }
+    if (d.third[1] > 0){
+      string = string +"<tr><td>"+(d.third[0])+" </td><td> "+(d.third[1])+ " grant(s)"+"</td></tr>";
+    }
+		string = string + "</table><p>Total grants to state: </td><td>"+(d.value)+" </p> ";
+    return string
+	}
+  let Data ={{states_dict|safe}};
+  let inst ={{states_top_inst|safe}};
+  let sampleData ={}
+  let STATES = ["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA","ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", "MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", "CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", "WI", "MO", "AR", "OK", "KS", "LS", "VA"]
+  STATES.forEach(function(state){
+      sampleData[state]={value: Data[state],
+        first: inst[state][0],
+        second: inst[state][1],
+        third: inst[state][2],
+        color:d3.interpolate("#ffffcc", "#800026")(Data[state]/100)};
+         });
+
+    console.log(sampleData)
+	/* draw states on id #statesvg */
+	uStates.draw("#statesvg", sampleData, tooltipHtml);
+
+	d3.select(self.frameElement).style("height", "600px");
+</script>
+
+
     <div class="jumbotron">
       <h2>Summary stats</h2>
       <ul>
@@ -14,21 +104,24 @@
           </p>
         </li>
         <li>
-          <p>
-            Cost since 2015 (total,  (indirect/ direct)):
-          </p>
-          <p>
-            ${{grant_stats.totals.grant_total_cost|intcomma}},
-              (${{grant_stats.totals.grant_direct_cost|intcomma}}/ ${{grant_stats.totals.grant_indirect_cost|intcomma}})
-          </p>
             <ul>
               <li>
-                Cost in 2018: ${{grant_stats.2018.grant_total_cost|intcomma}},
-                  (${{grant_stats.2018.grant_direct_cost|intcomma}}/ ${{grant_stats.2018.grant_indirect_cost|intcomma}})
+                <p>
+                  Cost in 2018 (total,  (indirect/ direct)): ${{grant_stats.2018.grant_total_cost|intcomma}},
+                    (${{grant_stats.2018.grant_direct_cost|intcomma}}/ ${{grant_stats.2018.grant_indirect_cost|intcomma}})
+                </p>
               </li>
               <li>
                 Cotal cost in 2017: ${{grant_stats.2017.grant_total_cost|intcomma}},
                   (${{grant_stats.2017.grant_direct_cost|intcomma}}/ ${{grant_stats.2017.grant_indirect_cost|intcomma}})
+              </li>
+              <li>
+                Cotal cost in 2016: ${{grant_stats.2016.grant_total_cost|intcomma}},
+                  (${{grant_stats.2016.grant_direct_cost|intcomma}}/ ${{grant_stats.2016.grant_indirect_cost|intcomma}})
+              </li>
+              <li>
+                Cotal cost in 2015: ${{grant_stats.2015.grant_total_cost|intcomma}},
+                  (${{grant_stats.2015.grant_direct_cost|intcomma}}/ ${{grant_stats.2015.grant_indirect_cost|intcomma}})
               </li>
             </ul>
           </li>
@@ -137,11 +230,11 @@
             <p>
               <strong>Principal Investigator(s):</strong>
             </p>
-          {%for name in grant.pi_name%}
+
           <p>
-            {{name}}
+            {{grant.pi_name}}
           </p>
-          {%endfor%}
+
           </p>
           <p>
           {{grant.org_name}}, {{grant.org_state}}

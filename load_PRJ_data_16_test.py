@@ -1,4 +1,3 @@
-
 import django
 import os
 import sys
@@ -148,7 +147,6 @@ for zip_file in zip_files:
 
                 # print(row[30])
                 grant.pi_name= row[30]
-                print(grant.pi_name)
 
                 # grant.program_officer_name = row[31]
 
@@ -223,7 +221,7 @@ for zip_file in zip_files:
         print(f'removing {csv_file_path}')
         os.remove(csv_file_path)
 
-groups= ["C", "G", "H", "L", "O", "P", "T", "U", "V", "X", "I"]
+groups= ["C", "G", "H", "L", "O", "P", "T", "U", "V", "X", "I", "M"]
 for code in groups:
     temp = Grant.objects.filter(activity__startswith = code)
     print(f'deleting {temp.count()} grants starting with {code}')
@@ -236,12 +234,11 @@ for code in groups:
 #     print(f'deleting {temp.count()} {code} grants')
 #     temp.delete()
 
-
-
 # csv_PRJABS_files =["seed_data/PRJABS_csv/RePORTER_PRJABS_C_FY2015.csv","seed_data/PRJABS_csv/RePORTER_PRJABS_C_FY2016.csv"]
-csv_PRJABS_files=["PRJABS_csv/RePORTER_PRJABS_C_FY2016.csv"]
 
-zip_files = ['seed_data/zipfiles_PRJ_ABS/RePORTER_PRJ_C_FY2016.zip', 'seed_data/zipfiles_PRJ_ABS/RePORTER_PRJ_C_FY2015.zip']
+zip_files = [
+'seed_data/zipfiles_PRJ_ABS/RePORTER_PRJABS_C_FY2016.zip',
+'seed_data/zipfiles_PRJ_ABS/RePORTER_PRJABS_C_FY2015.zip',]
 
 # zip_files = ['zipfiles_PRJ_ABS/RePORTER_PRJ_C_FY2016.zip', 'zipfiles_PRJ_ABS/RePORTER_PRJ_C_FY2015.zip']
 

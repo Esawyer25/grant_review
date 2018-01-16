@@ -11,7 +11,6 @@ import os
 if 'API_KEY' in os.environ:
     pass
 else:
-    print('I got it from here')
     from CapProj.settings_secret import API_KEY
 
 #What does this do?

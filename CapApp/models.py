@@ -107,6 +107,8 @@ class Grant(models.Model):
 
     total_cost_sub_project = models.IntegerField(null=True, blank=True)
 
+    # related_grants = ArrayField(models.CharField(max_length=500, blank=True), null=True, blank=True)
+
     # num_of_papers = models.IntegerField(null=True, blank=True)
     #
     # num_of_papers = Grant_Publication.objects.get(project_num= self.core_project_num).count()
@@ -197,6 +199,7 @@ class Grant(models.Model):
         paper_list = Grant_Publication.objects.filter(project_number= self.core_project_num)
         return paper_list
 
+#could I save this as an attribute instead of calculating it every time
     def number_of_papers(self):
         paper_list = Grant_Publication.objects.filter(project_number= self.core_project_num)
         paper_number = paper_list.count()
@@ -213,8 +216,8 @@ class Grant_Publication(models.Model):
     pmid = models.CharField(max_length=10, null=True)
     project_number = models.CharField(max_length=12, null=True)
 
-    def __str__(self):
-        return self.pmid
+    # def __str__(self):
+    #     return self.pmid
 
 class Publication(models.Model):
     pmid = models.CharField(max_length=16, null=True, blank=True,unique=True)
@@ -227,9 +230,9 @@ class Publication(models.Model):
 
     affiliation= models.TextField(max_length=5000, null=True, blank=True)
 
-    authors = models.CharField(max_length=1000, null=True, blank=True)
+    # authors = models.CharField(max_length=1000, null=True, blank=True)
 
-    # authors = ArrayField(models.CharField(max_length=500, null=True, blank=True), null=True)
+    authors = ArrayField(models.CharField(max_length=500, null=True, blank=True), null=True)
 
     year = models.IntegerField(null=True, blank=True)
 
@@ -279,7 +282,7 @@ class Publication(models.Model):
         return json.dumps(data)
 
     def __str__(self):
-        return self.pmid_id # change this to something more sensible later
+        return self.pmid # change this to something more sensible later
 
 
 class Keyword(models.Model):
@@ -293,9 +296,14 @@ class Keyword(models.Model):
     class Meta:
         ordering = ['-searches',]
 
-#how do i delete this?
-class Keyword_grant(models.Model):
-    nothing = models.CharField(max_length=100, null=True)
+class Related_grant(models.Model):
+    core_project_num = models.CharField(max_length=30, null=True, blank=True)
+    grants = models.ManyToManyField(Grant)
+
+    def __str__(self):
+        return self.core_project_num
+
+
     # keyword = models.ForeignKey(
     #     'Keyword',
     #     on_delete=models.CASCADE,

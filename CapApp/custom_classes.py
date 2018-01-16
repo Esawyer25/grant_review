@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from CapApp.models import Grant, Grant_Publication, Keyword
 import datetime
+import json
 
 class Add_Keyword:
     def create_keyword(word, grant_list, searches=0):
@@ -71,9 +72,13 @@ class Stats:
             grants_by_year[year_str] = grant_list.filter(FY=year)
         return grants_by_year
 
+    def number_of_papers(list):
+        total = 0
+        for grant in list:
+            total += grant.number_of_papers()
+        return total
 
     def return_stats_by_year(grant_list, query):
-
         #make a dict of all the stats divided by FY
         #{totals: {grant_total_cost: xx, grant_indirect_cost:xx...}, 1985: {grant_total_cost = xx,...}}
         grant_dict = Stats.divide_by_FY(grant_list)
@@ -85,10 +90,71 @@ class Stats:
             stats_dict[year_str] = Stats.return_stats_dict(grant_dict[year_str], query)
         return stats_dict
 
+    def states(grant_list):
+        STATES = ["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA","ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", "MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", "CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", "WI", "MO", "AR", "OK", "KS", "LS", "VA"]
+        states_dict={}
+        for state in STATES:
+            results = grant_list.filter(org_state=state)
+            length = len(results)
+            states_dict[state] = length
+        print(states_dict)
+        # states_dict = states_dict._getvalue()
+
+        return json.dumps(states_dict)
+
+    def return_max(dictionary):
+        #make this return top three
+        top_three = []
+        if dictionary != {}:
+            first =[]
+            focal = max(dictionary, key=dictionary.get)
+            first = [focal.title(), dictionary[focal]]
+            top_three.append(first)
+            del dictionary[focal]
+        else:
+            top_three.append([None, 0])
+
+        if dictionary != {}:
+            second = []
+            focal = max(dictionary, key=dictionary.get)
+            # focal = focal.title()
+            second = [focal.title(), dictionary[focal]]
+            top_three.append(second)
+            del dictionary[focal]
+        else:
+            top_three.append([None, 0])
+
+        if dictionary != {}:
+            third = []
+            focal = max(dictionary, key=dictionary.get)
+            third = [focal.title(),dictionary[focal]]
+            top_three.append(third)
+        else:
+            top_three.append([None, 0])
+        return top_three
+
+
+    def top_institutions(grant_list):
+        STATES = ["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA","ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", "MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", "CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", "WI", "MO", "AR", "OK", "KS", "LS", "VA"]
+        institution_hash ={}
+        for state in STATES:
+            state_grant_list = grant_list.filter(org_state=state)
+            state_hash = {}
+            for grant in state_grant_list:
+                if grant.org_name in state_hash:
+                    state_hash[grant.org_name] += 1
+                else:
+                    state_hash[grant.org_name] = 1
+
+            top_three = Stats.return_max(state_hash)
+            # print(f'this is the state_hash {state_hash}')
+            # print(f'this is the top_three {top_three}')
+
+            institution_hash[state] = top_three
+        # print(f'this is the institution_hash {institution_hash}')
+        return json.dumps(institution_hash)
 
     def return_stats_dict(grant_list, query):
-
-
         grant1= grant_list
         a = datetime.datetime.now()
         grant_count = grant_list.count()
@@ -96,6 +162,7 @@ class Stats:
         grant_total_cost = costs['total_cost']
         grant_indirect_cost = costs['indirect_cost']
         grant_direct_cost = costs['direct_cost']
+        grant_num_papers = Stats.number_of_papers(grant_list)
 
         # #make dict where grants are divided by FY
         # #ex. {'2015': <QuerySet []>, '2016': <QuerySet [<Grant: 9082664>, <Grant: 9114892>]}
@@ -115,6 +182,7 @@ class Stats:
         costs = Stats.find_cost(grant_f31)
         f31_total_cost = costs['total_cost']
         f31_count = grant_f31.count()
+
 
         # Postdoctoral Individual National Research Service Award
         grant_f32 = grant_list.filter(activity="F32")
@@ -167,6 +235,6 @@ class Stats:
 
         b = datetime.datetime.now()
         print(f'time elapsed in stats: {b-a}')
-        grant_stats_dict={'query': query,'grant_count': grant_count,'grant_total_cost':grant_total_cost,'grant_direct_cost':grant_direct_cost,'grant_indirect_cost':grant_indirect_cost,'f30_count':f30_count,'f30_total_cost':f30_total_cost,'f31_count':f31_count,'f31_total_cost':f31_total_cost,'f32_count':f32_count,'f32_total_cost':f32_total_cost,'k99_count':k99_count,'k99_total_cost':k99_total_cost,'r00_count':r00_count,'r00_total_cost':r00_total_cost,'r01_count':r01_count,'r01_total_cost':r01_total_cost,'r35_count':r35_count,'r35_total_cost':r35_total_cost,'dp1_count':dp1_count,'dp1_total_cost':dp1_total_cost,'dp2_count':dp2_count,'dp2_total_cost':dp2_total_cost}
+        grant_stats_dict={'query': query,'grant_count': grant_count,'grant_total_cost':grant_total_cost,'grant_direct_cost':grant_direct_cost,'grant_indirect_cost':grant_indirect_cost,'grant_num_papers':grant_num_papers,'f30_count':f30_count,'f30_total_cost':f30_total_cost,'f31_count':f31_count,'f31_total_cost':f31_total_cost,'f32_count':f32_count,'f32_total_cost':f32_total_cost,'k99_count':k99_count,'k99_total_cost':k99_total_cost,'r00_count':r00_count,'r00_total_cost':r00_total_cost,'r01_count':r01_count,'r01_total_cost':r01_total_cost,'r35_count':r35_count,'r35_total_cost':r35_total_cost,'dp1_count':dp1_count,'dp1_total_cost':dp1_total_cost,'dp2_count':dp2_count,'dp2_total_cost':dp2_total_cost}
 
         return grant_stats_dict

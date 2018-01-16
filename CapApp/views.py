@@ -12,7 +12,7 @@ from django.core.exceptions import ValidationError
 
 # from django.core.urlresolvers import reverse
 from CapApp.pubmed import Pubmed
-from CapApp.models import Grant, Keyword, Publication
+from CapApp.models import Grant, Keyword, Publication, Related_grant
 from CapApp.custom_classes import Stats, Add_Keyword
 
 # Create your views here.
@@ -74,7 +74,12 @@ def grants(request):
 
         grant_list_short = Add_Keyword.make_short_list(grant_list_long)
 
-    #4)Paginate the first 100 results
+    #4)related_grants
+
+
+
+
+    #5)Paginate the first 100 results
     c = datetime.datetime.now()
     paginator = Paginator(grant_list_short, 10)
     # Show 10 contacts per page
@@ -89,10 +94,15 @@ def grants(request):
     d = datetime.datetime.now()
     print(f'time in pagination = {d-c}')
 
-    #5)Calculate the stats for all the results
+    #6)Calculate the stats for all the results
     grant_stats = Stats.return_stats_by_year(grant_list_long, query)
 
-    return render(request, 'CapApp/grants.html',{'grants':grants, 'grant_stats': grant_stats})
+    states_dict = Stats.states(grant_list_long)
+
+    states_top_inst = Stats.top_institutions(grant_list_long)
+    print(states_top_inst)
+
+    return render(request, 'CapApp/grants.html',{'grants':grants, 'grant_stats': grant_stats, 'states_dict': states_dict, 'states_top_inst': states_top_inst})
 
 #https://github.com/titipata/pubmed_parser
 #if you use this package please cite: Titipat Achakulvisut, Daniel E. Acuna (2015) "Pubmed Parser" http://github.com/titipata/pubmed_parser. http://doi.org/10.5281/zenodo.159504

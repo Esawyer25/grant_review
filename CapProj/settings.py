@@ -14,7 +14,6 @@ import os
 if 'SECRET_KEY' in os.environ:
     pass
 else:
-    print('I got it from here')
     from .settings_secret import SECRET_KEY
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
