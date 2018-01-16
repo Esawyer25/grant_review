@@ -52,6 +52,7 @@ def grants(request):
     query = request.session['query']
 
     #1)See if there is a keyword_object for that keyword
+    print(f'this is the query {query}')
     try:
         keyword_object = Keyword.objects.get(keyword__iexact=query)
     except:
@@ -73,10 +74,6 @@ def grants(request):
         Add_Keyword.create_keyword(query, grant_list_long, searches=1)
 
         grant_list_short = Add_Keyword.make_short_list(grant_list_long)
-
-    #4)related_grants
-
-
 
 
     #5)Paginate the first 100 results
@@ -158,8 +155,20 @@ def publications(request):
         all_papers.append(pub)
         # all_papers.append(Pubmed.parse_xml_web(paper.pmid, sleep=2, save_xml=False))
         index += 1
+        # try Related_grant.objects.get(core_project_num = focal.core_project_num):
+    related_grant_object = Related_grant.objects.get(core_project_num = focal.core_project_num)
+    related = related_grant_object.grants.all()
+    same_grant_dif_year = related.filter(project_title = focal.project_title)
+    same_grant_dif_year=same_grant_dif_year.exclude(FY=focal.FY)
+    dif_grant = related.exclude(project_title = focal.project_title)
+    print(f'same grant: {same_grant_dif_year}')
+    print(f'dif grant: {dif_grant}')
+        # except:
+            # related_grants = None
+
+
         # time.sleep(0.5)
-    return render(request, 'CapApp/publications.html', {'all_papers':all_papers, 'focal': focal})
+    return render(request, 'CapApp/publications.html', {'all_papers':all_papers, 'focal': focal, 'same_grant_dif_year': same_grant_dif_year})
 
 
 # def your_view(request):

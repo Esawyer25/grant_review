@@ -7,3 +7,20 @@ svg {
   border-color: black;
   background-color: Snow;
 }
+
+table{
+  background-color: white;
+}
+
+tr td{
+  padding:10px;
+  margin:10px;
+  border: black;
+}
+
+#costTable {
+  background-color: white;
+  padding:10px;
+  margin:10px;
+  border: black;
+}

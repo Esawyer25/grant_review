@@ -221,7 +221,7 @@ for zip_file in zip_files:
         print(f'removing {csv_file_path}')
         os.remove(csv_file_path)
 
-groups= ["C", "G", "H", "L", "O", "P", "T", "U", "V", "X", "I", "M"]
+groups= ["C", "G", "H", "L", "O", "P", "T", "U", "V", "X", "I", "M", "Z"]
 for code in groups:
     temp = Grant.objects.filter(activity__startswith = code)
     print(f'deleting {temp.count()} grants starting with {code}')

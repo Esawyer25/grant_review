@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 {% extends "CapApp/base.html"%}
   {%block body_block%}
+    {% load humanize %}
+
   <div class= "jumbotron">
     <h2>Grant summary</h2>
       <div class="grant_header">
@@ -49,17 +51,29 @@
         </script>
         <p>
           <strong>Principal Investigator(s):</strong>
-        {%for name in focal.pi_name%}
+
         </p>
         <p>
-          {{name}}
+          {{focal.pi_name}}
         </p>
-        {%endfor%}
+
         <p>
           {{focal.org_name}}, {{focal.org_state}}
         </p>
         <p>
-          <strong>Core Project Number:</strong> {{focal.core_project_num}}
+          Funding year: {{focal.FY}}
+        </p>
+        <p>
+          Core Project Number: {{focal.core_project_num}}
+        </p>
+        <p>
+          this project shares a project number with other grants:
+        </p>
+        {% for grant in same_grant_dif_year %}
+        <p>
+          {{grant.project_title}}, {{grant.FY}}
+        </p>
+          {%endfor%}
         </p>
         <p>
           <strong>Number of Papers:</strong> {{focal.number_of_papers}}
@@ -67,7 +81,52 @@
         <p>
           <strong>Funding breakdown by year:</strong>
         </p>
-
+          <table id = "costTable">
+          <tr>
+            <td>
+            Year
+            </td>
+            <td>
+            Total Cost
+            </td>
+            <td>
+            Direct Cost
+            </td>
+            <td>
+            Indirect Cost
+            </td>
+          </tr>
+          <tr>
+          <td>
+            {{focal.FY}}
+          </td>
+          <td>
+            {{focal.total_cost|intcomma}}
+          </td>
+          <td>
+            {{focal.direct_cost_amt|intcomma}}
+          </td>
+          <td>
+            {{focal.indirect_cost_amt|intcomma}}
+          </td>
+          </tr>
+          <tr>
+          {%for grant in same_grant_dif_year%}
+          <td>
+            {{grant.FY}}
+          </td>
+          <td>
+            {{grant.total_cost|intcomma}}
+          </td>
+          <td>
+            {{grant.direct_cost_amt|intcomma}}
+          </td>
+          <td>
+            {{grant.indirect_cost_amt|intcomma}}
+          </td>
+          </tr>
+          {%endfor%}
+          </table>
     </div>
   </div>
 
@@ -128,9 +187,9 @@
 
           <p>
             <strong>Authors:</strong>
-
-              {{paper.authors}}
-
+            {%for author in paper.authors%}
+              {{author}},
+            {%endfor%}
           </p>
           <p>
             <strong>Year:</strong>  {{paper.year}}
