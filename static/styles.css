@@ -3,14 +3,15 @@
    list-style-type: none;
 }
 
+h1 {
+  color:white;
+}
+
 svg {
   border-color: black;
   background-color: Snow;
 }
 
-table{
-  background-color: white;
-}
 
 tr td{
   padding:10px;
@@ -20,6 +21,19 @@ tr td{
 
 #costTable {
   background-color: white;
+  padding:10px;
+  margin:10px;
+  border: black;
+}
+#keyword_table {
+  background-color: white;
+  padding:10px;
+  margin:10px;
+  border: black;
+}
+
+#grant_cost {
+  background-color: #eee;
   padding:10px;
   margin:10px;
   border: black;

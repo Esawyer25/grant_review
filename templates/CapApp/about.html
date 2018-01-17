@@ -3,4 +3,35 @@
 {%block body_block%}
 
 <h4>This is the about page</h4>
+
+<article>
+<p>
+  The purpose of this website is to make it more possible for the general public to search the scientific research grants that are funded by the National Institutes of Health. The website was created by Eva Sawyer, PhD, as a final project at Ada Developers Academy, Seattle, WA, USA.
+</p>
+<h4>Componets of this project:</h4>
+<div>
+  <p>
+    <h5>Search Page:</h5>
+      On this page a user can enter a keyword, such as a disease name, that they are interested in.  This will launch a search of the "project terms" of every grant in the database of funded NIH grants (currently years 2015 to present.)  The database was imported from public csv files available through the <a link="exporter.nih.gov/ExPORTER_Catalog.aspx">NIH Exporter resource</a>.
+  </p>
+</div>
+<div>
+  <p>
+  <h5>Search Results Page:</h5>
+    This page is a paginated list of the top 100 results from the search.  There is a <strong>Summary Figures</strong> section which includes a table of <em>total, direct</em> and <em>indirect</em> costs.
+  </p>
+    Briefly, direct costs are clearly associated with a particular project, and include "salaries, travel, equipment, and supplies directly benefiting the grant-supported project or activity". Indirect costs are the funds that go to facilities operation and maintenance costs and go to the institution where the researcher works.  The total cost is the combined amount of direct and indirect costs.
+  For a fuller explanation of these costs, see the NIH's description <a link="https://grants.nih.gov/grants/policy/nihgps/HTML5/section_7/7.3_direct_costs_and_facilities_and_administrative_costs.htm">here</a>.
+  </p>
+</div>
+<p>
+  <strong>Publication Results Page:</strong>
+</p>
+
+
+
+</article>
+
+
+
 {% endblock %}

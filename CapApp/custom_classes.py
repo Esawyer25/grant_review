@@ -2,6 +2,8 @@ from django.core.exceptions import ValidationError
 from CapApp.models import Grant, Grant_Publication, Keyword
 import datetime
 import json
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import euclidean_distances
 
 class Add_Keyword:
     def create_keyword(word, grant_list, searches=0):
@@ -19,7 +21,7 @@ class Add_Keyword:
             new_word.save()
         except:
             print(f"there was a problem saving with Keyword {word}")
-
+#is it better to do terms or abstract?
         grant_list =Grant.objects.filter(project_terms__search=word)
         for grant in grant_list:
             new_word.grants.add(grant)
@@ -91,15 +93,15 @@ class Stats:
         return stats_dict
 
     def states(grant_list):
+        a = datetime.datetime.now()
         STATES = ["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA","ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", "MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", "CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", "WI", "MO", "AR", "OK", "KS", "LS", "VA"]
         states_dict={}
         for state in STATES:
             results = grant_list.filter(org_state=state)
             length = len(results)
             states_dict[state] = length
-        print(states_dict)
-        # states_dict = states_dict._getvalue()
-
+        b = datetime.datetime.now()
+        print(f'time calculating states_dict: {b-a}')
         return json.dumps(states_dict)
 
     def return_max(dictionary):
@@ -135,6 +137,7 @@ class Stats:
 
 
     def top_institutions(grant_list):
+        a = datetime.datetime.now()
         STATES = ["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA","ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", "MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", "CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", "WI", "MO", "AR", "OK", "KS", "LS", "VA"]
         institution_hash ={}
         for state in STATES:
@@ -147,11 +150,10 @@ class Stats:
                     state_hash[grant.org_name] = 1
 
             top_three = Stats.return_max(state_hash)
-            # print(f'this is the state_hash {state_hash}')
-            # print(f'this is the top_three {top_three}')
 
             institution_hash[state] = top_three
-        # print(f'this is the institution_hash {institution_hash}')
+        b = datetime.datetime.now()
+        print(f'time calculating top_institutions: {b-a}')
         return json.dumps(institution_hash)
 
     def return_stats_dict(grant_list, query):
@@ -182,7 +184,6 @@ class Stats:
         costs = Stats.find_cost(grant_f31)
         f31_total_cost = costs['total_cost']
         f31_count = grant_f31.count()
-
 
         # Postdoctoral Individual National Research Service Award
         grant_f32 = grant_list.filter(activity="F32")
@@ -238,3 +239,93 @@ class Stats:
         grant_stats_dict={'query': query,'grant_count': grant_count,'grant_total_cost':grant_total_cost,'grant_direct_cost':grant_direct_cost,'grant_indirect_cost':grant_indirect_cost,'grant_num_papers':grant_num_papers,'f30_count':f30_count,'f30_total_cost':f30_total_cost,'f31_count':f31_count,'f31_total_cost':f31_total_cost,'f32_count':f32_count,'f32_total_cost':f32_total_cost,'k99_count':k99_count,'k99_total_cost':k99_total_cost,'r00_count':r00_count,'r00_total_cost':r00_total_cost,'r01_count':r01_count,'r01_total_cost':r01_total_cost,'r35_count':r35_count,'r35_total_cost':r35_total_cost,'dp1_count':dp1_count,'dp1_total_cost':dp1_total_cost,'dp2_count':dp2_count,'dp2_total_cost':dp2_total_cost}
 
         return grant_stats_dict
+
+    def ab_word_list(abstract):
+        COMMON_WORDS_SET = set(['', 'What', 'Had', 'Has', 'Be', 'We', 'His', 'Her', 'Not', 'Now', 'By', 'On', 'Did', 'Of', 'She', 'Can', 'Or', 'Day', 'Are', 'Go', 'Find', 'From', 'For', 'Long', 'Which', 'More', 'That', 'Water', 'Part', 'Than', 'He', 'Made', 'Word', 'Look', 'This', 'Could', 'Up', 'Were', 'My', 'First', 'People', 'Use', 'Said', 'Would', 'No', 'Make', 'There', 'When', 'Two', 'Their', 'Way', 'Was', 'Get', 'But', 'Come', 'These', 'So', 'Been', 'Time', 'And', 'How', 'Into', 'Number', 'Him', 'Down', 'See', 'Your', 'Out', 'Write', 'To', 'Other', 'Call', 'You', 'An', 'Each', 'Do', 'Them', 'Oil', 'May', 'Who', 'They', 'Many', 'With', 'A', 'About', 'Like', 'Then', 'I', 'Will', 'The', 'All', 'Is', 'Some', 'It', 'One', 'As', 'At', 'Have', 'In', 'Its', 'If', 'Dr', 'And/or', 'May','To','Project', 'From','On', 'Our', 'Such'])
+
+        COMMON_PUNTUATION =set(['.','?',',', ';', ':' '1)','2)','3)','4)', ')', ')', '#1', ' 1 ', ' 2 ', ' 3 ', ' 4 ', ' 5 ', ' 6 ', ' 7 ', ' 8 ', ' 9 ', ' = '])
+        for punt in COMMON_PUNTUATION:
+            abstract = abstract.replace(punt, "")
+
+        abstract = abstract.split(" ")
+        abstract_list = []
+        for word in abstract:
+            abstract_list.append(word.capitalize())
+
+        remove_list = []
+        for word in abstract_list:
+            if word in COMMON_WORDS_SET:
+                remove_list.append(word)
+
+        for word in remove_list:
+            abstract_list.remove(word)
+        return abstract_list
+
+    def grantab_dict(abstract_list):
+        ab_dict = {}
+        for word in abstract_list:
+            word = word.capitalize()
+            try:
+                value = ab_dict[word]
+            except KeyError:
+                value = None
+            if value:
+                ab_dict[word][0] += 1
+            else:
+                ab_dict[word] = [1, 0]
+        return ab_dict
+
+    def make_similarity_dict(grant_ab, paper_ab):
+        #make a dict with the words in the grant_ab
+        #{word: [1], other: [2]}
+        grant_ab_list = Stats.ab_word_list(grant_ab)
+        print ('I made an grant_ab_list')
+        grant_ab_dict = Stats.grantab_dict(grant_ab_list)
+        print ('I made an grant_ab_dict')
+        #add the words in the paper ab to the dict
+        paper_ab_list = Stats.ab_word_list(paper_ab)
+        print ('I made an paper_ab_list')
+        for word in paper_ab_list:
+            word.capitalize()
+            #if the word is already in the dict
+            try:
+                value = grant_ab_dict[word]
+            except KeyError:
+                value = None
+
+            if value:
+                grant_ab_dict[word][1] += 1
+            else:
+                grant_ab_dict[word]= [0, 1]
+        similarity_score = Stats.similarity_score(grant_ab_dict, len(grant_ab_list), len(paper_ab_list))
+        print(f'this is the similarity_score {similarity_score}')
+        return similarity_score
+
+    def similarity_score(grant_ab_dict, grant_length, paper_length):
+        similar = 0
+        different = 0
+        for word, values in grant_ab_dict.items():
+            if values[0] > 0 and values[1] > 0:
+                similar += 1
+            else:
+                different += 1
+        score = similar/ grant_length
+        return score
+
+    def euclidian(grant_ab, paper_ab):
+
+        corpus = [grant.abstract_text, paper.abstract]
+
+        vectorizer = CountVectorizer()
+        features = vectorizer.fit_transform(corpus).todense()
+        print( vectorizer.vocabulary_ )
+
+        for f in features:
+            print(euclidean_distances(features[0], f))
+        return(euclidean_distances(features[0], f))
+
+
+
+
+        #make hash of grant_ab
+        #{word: 2}

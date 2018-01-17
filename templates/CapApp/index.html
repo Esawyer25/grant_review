@@ -11,9 +11,9 @@
 
     <div>
       <h4>Top searches</h4>
-      {% if top_ten_searches %}
+      {% if top_twenty_searches %}
       <ul>
-        {% for search in top_ten_searches %}
+        {% for search in top_twenty_searches %}
         <li>
           {{search.keyword}}
         </li>
@@ -31,9 +31,6 @@
         </li>
         <li>
           All <strong>F</strong> grants (Fellowship Programs)
-        </li>
-        <li>
-          <strong>I01</strong> and <strong>I80</strong> grants (Non-HHS Research Projects and DoD Research Project Grant Program)
         </li>
         <li>
           All <strong>K</strong> grants (Research Career Programs)

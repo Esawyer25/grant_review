@@ -41,6 +41,7 @@ def make_array_feild(data):
     list = data.split(";")
     array= {}
     for item in list:
+        item = item.title
         if item == "":
             list.remove(item)
         if "(contact)" in item:
@@ -76,7 +77,7 @@ for zip_file in zip_files:
                 # print(row[1])
                 grant.activity = row [1]
                 # print(row[2])
-                grant.administering_ic = row[2]
+                grant.administering_ic = row[2].title
                 # print(row[3])
                 grant.application_type = row[3]
 
@@ -171,7 +172,7 @@ for zip_file in zip_files:
                 # print(row[39])
                 grant.subproject_id = row[39]
 
-                # grant.suffix = row[40]
+                grant.suffix = row[40]
 
                 # print(row[41])
                 if row[41] == "":
@@ -221,7 +222,20 @@ for zip_file in zip_files:
         print(f'removing {csv_file_path}')
         os.remove(csv_file_path)
 
-groups= ["C", "G", "H", "L", "O", "P", "T", "U", "V", "X", "I", "M", "Z"]
+# C - Research Construction Programs (e.g. C06)
+# D - Training Projects (e.g. D43)
+# F - Fellowship Programs (e.g. F31, F32)
+# K - Research Career Programs (e.g. K08, K24)
+# M - General Clinical Research Centers Programs (e.g. M01)
+# N - Research and Development-Related Contracts (e.g. N01, N02)
+# P - Research Program Projects and Centers (e.g. P30, P50)
+# R - Research Projects (e.g. R01, R21)
+# S - Research-Related Programs (e.g. S10)
+# T - Training Programs (e.g. T32, T37)
+# U - Cooperative Agreements (e.g. U01, U09)
+# Y - Inter-Agency/Intra-Agency Agreements (e.g. Y01, Y02)
+# Z - Intramural Research (e.g. Z01)
+groups= ["C", "G", "H", "L", "O", "P", "T", "U", "V", "I", "M", "N", "X" "Y,", "Z"]
 for code in groups:
     temp = Grant.objects.filter(activity__startswith = code)
     print(f'deleting {temp.count()} grants starting with {code}')

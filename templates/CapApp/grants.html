@@ -58,15 +58,122 @@
 
 
     <div class="jumbotron">
-      <h2>Summary stats</h2>
+      <h2>Summary Figures for Grants with Keyword <strong><em>{{keyword.keyword.totals.query}}</em></strong>: </h2>
       <ul>
         <li>
           <p>
-            Number of grants with keyword <strong><em>{{grant_stats.totals.query}}</em></strong>:
-            {{ grant_stats.totals.grant_count|intcomma }}
+            Number of grants:
+            {{ keyword.grant_count|intcomma }}
           </p>
         </li>
         <li>
+          <table id = "keyword_table">
+            <tr>
+              <th>
+                Year
+              </th>
+              <th>
+                Total
+              </th>
+              <th>
+                Direct
+              </th>
+              <th>
+                Indirect
+              </th>
+              <th>
+                Number of grants
+              </th>
+            </tr>
+            <tr>
+              <td>
+                2018
+              </td>
+              <td>
+                ${{keyword.grant_total_cost_18|intcomma}}
+              </td>
+              <td>
+                ${{keyword.grant_direct_cost_18|intcomma}}
+              </td>
+              <td>
+                {{keyword.grant_indirect_cost_18|intcomma}}
+              </td>
+              <td>
+                {{grant_stats.grant_count_18|intcomma}}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                2017
+              </td>
+              <td>
+                ${{keyword.grant_total_cost_17|intcomma}}
+              </td>
+              <td>
+                ${{keyword.grant_direct_cost_17|intcomma}}
+              </td>
+              <td>
+                {{keyword.grant_indirect_cost_17|intcomma}}
+              </td>
+              <td>
+                {{grant_stats.grant_count_17|intcomma}}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                2016
+              </td>
+              <td>
+                ${{keyword.grant_total_cost_16|intcomma}}
+              </td>
+              <td>
+                ${{keyword.grant_direct_cost_16|intcomma}}
+              </td>
+              <td>
+                {{keyword.grant_indirect_cost_16|intcomma}}
+              </td>
+              <td>
+                {{grant_stats.grant_count_16|intcomma}}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                2015
+              <td>
+              <td>
+                ${{keyword.grant_total_cost_15|intcomma}}
+              <td>
+              <td>
+                ${{keyword.grant_indirect_cost_15|intcomma}}
+              <td>
+              <td>
+                {{keyword.grant_indirect_cost_15|intcomma}}
+              <td>
+              <td>
+                {{grant_stats.grant_count_15|intcomma}}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Total
+              </td>
+              <td>
+                ${{keyword.grant_total_cost|intcomma}}
+              </td>
+              <td>
+                ${{keyword.grant_indirect_cost|intcomma}}
+              </td>
+              <td>
+                {{keyword.grant_indirect_cost|intcomma}}
+              </td>
+              <td>
+                {{grant_stats.grant_count|intcomma}}
+              </td>
+            </tr>
+          </table>
+
+
+
             <ul>
               <li>
                 <p>
@@ -197,7 +304,7 @@
           var color = d3.scale.linear()
             .domain([0,1,2,3,4,5,6,10,15,20,100])
             .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
-          d3.layout.cloud().size([390, 390])
+          d3.layout.cloud().size([360, 360])
         .words({{grant.make_data_structure|safe}})
         .rotate(0)
         .padding(3)
@@ -206,13 +313,13 @@
         .start();
         function draw(words) {
           d3.select("#{{grant.core_project_num}}").append("svg")
-            .attr("width", 400)
-            .attr("height", 400)
+            .attr("width", 370)
+            .attr("height", 370)
             .attr("class", "wordcloud")
             .append("g")
             // without the transform, words words would get cutoff to the left and top, they would
             // appear outside of the SVG area
-            .attr("transform", "translate(200,200)")
+            .attr("transform", "translate(180,190)")
             .selectAll("text")
             .data(words)
             .enter().append("text")
@@ -243,26 +350,7 @@
           </p>
           <p>
               <strong>Core Project Number:</strong> {{grant.core_project_num}}
-              There are grants with the same core_project_num:
-              {{grant.related_grants}}
           </p>
-          <p>
-            <strong>Cost:</strong>
-          </p>
-          <p>
-            Total cost:
-            {%if grant.total_cost == None %}
-              ${{grant.total_cost_sub_project|intcomma}}
-            {%else%}
-              ${{grant.total_cost|intcomma}}
-            {%endif%}
-            </p>
-            <p>
-            Direct cost: ${{grant.direct_cost_amt|intcomma}}
-            </p>
-            <p>
-            Indirect cost: ${{grant.indirect_cost_amt|intcomma}}
-            </p>
           <p>
             <strong>Number of years of funding:</strong> {{grant.support_year}}
             </p>
@@ -280,6 +368,59 @@
           <p>
             <strong>Activity Code:</strong> {{grant.activity}}
           </p>
+          <p>
+            Cost:
+          </p>
+          <table id="grant_cost">
+            <tr>
+              <th>
+                Year
+              </th>
+              <th>
+              Total Cost
+            </th>
+              <th>
+              Direct Cost
+            </th>
+              <th>
+              Indirect Cost
+            </th>
+            </tr>
+            <tr>
+              <td>
+                {{grant.FY}}
+              </td>
+              <td>
+                {%if grant.total_cost == None %}
+                  ${{grant.total_cost_sub_project|intcomma}}
+                {%else%}
+                  ${{grant.total_cost|intcomma}}
+                {%endif%}
+              </td>
+              <td>
+                ${{grant.direct_cost_amt|intcomma}}
+              </td>
+              <td>
+                ${{grant.indirect_cost_amt|intcomma}}
+              </td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+              <td>
+                Total for all funding years:
+              </td>
+              <td>
+                ${{grant.total_funding_of_core_numb|intcomma}}
+              </td>
+              <td>
+                ${{grant.total_direct_of_core_numb|intcomma}}
+              </td>
+              <td>
+                ${{grant.total_indirect_of_core_numb|intcomma}}
+              </td>
+            </tr>
+          </table>
           </div>
           <div class="abstract">
           <p>

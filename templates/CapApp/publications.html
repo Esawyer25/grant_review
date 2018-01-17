@@ -66,15 +66,21 @@
         <p>
           Core Project Number: {{focal.core_project_num}}
         </p>
-        <p>
-          this project shares a project number with other grants:
+        {%if same_grant_dif_year%}
+        <p class="small">
+          This project has spanned several years:
         </p>
         {% for grant in same_grant_dif_year %}
         <p>
-          {{grant.project_title}}, {{grant.FY}}
+          <a href="{%url 'publications'%} ?app_id={{grant.application_id}}" class ="button">
+          {{grant.project_title}}, {{grant.FY}}</a>
+          {%if grant.suffix%}
+            , revision or ammendment
+          {%endif%}
         </p>
           {%endfor%}
         </p>
+        {%endif%}
         <p>
           <strong>Number of Papers:</strong> {{focal.number_of_papers}}
         </p>
@@ -83,18 +89,18 @@
         </p>
           <table id = "costTable">
           <tr>
-            <td>
+            <th>
             Year
-            </td>
-            <td>
+          </th>
+            <th>
             Total Cost
-            </td>
-            <td>
+          </th>
+            <th>
             Direct Cost
-            </td>
-            <td>
+          </th>
+            <th>
             Indirect Cost
-            </td>
+          </th>
           </tr>
           <tr>
           <td>
@@ -190,6 +196,9 @@
             {%for author in paper.authors%}
               {{author}},
             {%endfor%}
+          </p>
+          <p>
+            score: {{paper.score}}
           </p>
           <p>
             <strong>Year:</strong>  {{paper.year}}

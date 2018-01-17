@@ -4,7 +4,7 @@ import json
 
 COMMON_WORDS_SET = set(['', 'What', 'Had', 'Has', 'Be', 'We', 'His', 'Her', 'Not', 'Now', 'By', 'On', 'Did', 'Of', 'She', 'Can', 'Or', 'Day', 'Are', 'Go', 'Find', 'From', 'For', 'Long', 'Which', 'More', 'That', 'Water', 'Part', 'Than', 'He', 'Made', 'Word', 'Look', 'This', 'Could', 'Up', 'Were', 'My', 'First', 'People', 'Use', 'Said', 'Would', 'No', 'Make', 'There', 'When', 'Two', 'Their', 'Way', 'Was', 'Get', 'But', 'Come', 'These', 'So', 'Been', 'Time', 'And', 'How', 'Into', 'Number', 'Him', 'Down', 'See', 'Your', 'Out', 'Write', 'To', 'Other', 'Call', 'You', 'An', 'Each', 'Do', 'Them', 'Oil', 'May', 'Who', 'They', 'Many', 'With', 'A', 'About', 'Like', 'Then', 'I', 'Will', 'The', 'All', 'Is', 'Some', 'It', 'One', 'As', 'At', 'Have', 'In', 'Its', 'If', 'Dr', 'And/or', 'May','To','Project', 'From','On', 'Our', 'Such'])
 
-COMMON_PUNTUATION =set(['.','?',',', ';', ':' '1)','2)','3)','4)', ')', ')', '#1', ' 1 ', ' 2 ', ' 3 ', ' 4 ', ' 5 ', ' 6 ', ' 7 ', ' 8 ', ' 9 '])
+COMMON_PUNTUATION =set(['.','?',',', ';', ':' '1)','2)','3)','4)', ')', ')', '#1', ' 1 ', ' 2 ', ' 3 ', ' 4 ', ' 5 ', ' 6 ', ' 7 ', ' 8 ', ' 9 ', ' = '])
 
 #Explanation of field names here: https://exporter.nih.gov/about.aspx
 class Grant(models.Model):
@@ -95,7 +95,7 @@ class Grant(models.Model):
 
     subproject_id = models.CharField(max_length=16, null=True, blank=True)
 
-    # suffix = models.CharField(max_length=16, null=True)
+    suffix = models.CharField(max_length=16, null=True, blank=True)
 
     support_year = models.IntegerField(null=True, blank=True)
 
@@ -107,6 +107,11 @@ class Grant(models.Model):
 
     total_cost_sub_project = models.IntegerField(null=True, blank=True)
 
+    total_funding_of_core_numb = models.IntegerField(null=True, blank=True)
+
+    total_direct_of_core_numb = models.IntegerField(null=True, blank=True)
+
+    total_indirect_of_core_numb = models.IntegerField(null=True, blank=True)
     # related_grants = ArrayField(models.CharField(max_length=500, blank=True), null=True, blank=True)
 
     # num_of_papers = models.IntegerField(null=True, blank=True)
@@ -133,22 +138,19 @@ class Grant(models.Model):
 
         ab_dict = {}
         for word in abstract_list:
+            word = word.capitalize()
             try:
                 value = ab_dict[word.capitalize()]
             except KeyError:
                 value = None
             if value:
-                ab_dict[word.capitalize()] += (8)
+                ab_dict[word.capitalize()] += (7)
             else:
-                ab_dict[word.capitalize()] = (8)
-
-        # for word, repeats in ab_dict.items():
-        #     if repeats == 1:
-        #         ad_dict.pop(word,0)
+                ab_dict[word.capitalize()] = (7)
 
         data = []
         for word, repeats in ab_dict.items():
-            if repeats > 8:
+            if repeats > 7:
                 temp={"text":word, "size": repeats}
                 data.append(temp)
         return json.dumps(data)
@@ -174,14 +176,15 @@ class Grant(models.Model):
 
         ab_dict = {}
         for word in abstract_list:
+            word = word.capitalize()
             try:
-                value = ab_dict[word.capitalize()]
+                value = ab_dict[word]
             except KeyError:
                 value = None
             if value:
-                ab_dict[word.capitalize()] += (4)
+                ab_dict[word] += (4)
             else:
-                ab_dict[word.capitalize()] = (4)
+                ab_dict[word] = (4)
 
         # for word, repeats in ab_dict.items():
         #     if repeats == 1:
@@ -236,6 +239,8 @@ class Publication(models.Model):
 
     year = models.IntegerField(null=True, blank=True)
 
+    score = models.DecimalField(max_digits=5, decimal_places=4, blank=True, null=True)
+
     class Meta:
         ordering = ['-year',]
 
@@ -287,8 +292,50 @@ class Publication(models.Model):
 
 class Keyword(models.Model):
     keyword = models.CharField(max_length=100, null=True,unique=True)
+
     grants = models.ManyToManyField(Grant)
+
     searches = models.IntegerField(null=True, blank=True)
+
+    grant_count = models.IntegerField(null=True, blank=True)
+
+    grant_total_cost = models.IntegerField(null=True, blank=True)
+
+    grant_direct_cost = models.IntegerField(null=True, blank=True)
+
+    grant_indirect_cost = models.IntegerField(null=True, blank=True)
+
+    grant_count_18 = models.IntegerField(null=True, blank=True)
+
+    grant_total_cost_18 = models.IntegerField(null=True, blank=True)
+
+    grant_direct_cost_18 = models.IntegerField(null=True, blank=True)
+
+    grant_indirect_cost_18 = models.IntegerField(null=True, blank=True)
+
+    grant_count_17 = models.IntegerField(null=True, blank=True)
+
+    grant_total_cost_17 = models.IntegerField(null=True, blank=True)
+
+    grant_direct_cost_17 = models.IntegerField(null=True, blank=True)
+
+    grant_indirect_cost_17 = models.IntegerField(null=True, blank=True)
+
+    grant_count_16 = models.IntegerField(null=True, blank=True)
+
+    grant_total_cost_16 = models.IntegerField(null=True, blank=True)
+
+    grant_direct_cost_16 = models.IntegerField(null=True, blank=True)
+
+    grant_indirect_cost_16 = models.IntegerField(null=True, blank=True)
+
+    grant_count_15 = models.IntegerField(null=True, blank=True)
+
+    grant_total_cost_15 = models.IntegerField(null=True, blank=True)
+
+    grant_direct_cost_15 = models.IntegerField(null=True, blank=True)
+
+    grant_indirect_cost_15 = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.keyword
@@ -298,20 +345,18 @@ class Keyword(models.Model):
 
 class Related_grant(models.Model):
     core_project_num = models.CharField(max_length=30, null=True, blank=True)
+
     grants = models.ManyToManyField(Grant)
+
+    total_funding_of_core_numb = models.IntegerField(null=True, blank=True)
+
+    total_direct_of_core_numb = models.IntegerField(null=True, blank=True)
+
+    total_indirect_of_core_numb = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.core_project_num
 
-
-    # keyword = models.ForeignKey(
-    #     'Keyword',
-    #     on_delete=models.CASCADE,
-    # )
-    # application_id = models.ForeignKey(
-    #     'Grant',
-    #     on_delete=models.CASCADE,
-    # )
 
 
 # Create your models here.
