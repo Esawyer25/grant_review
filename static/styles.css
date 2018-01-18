@@ -12,6 +12,14 @@ svg {
   background-color: Snow;
 }
 
+#grey {
+  background-color: #eee;
+  border-color: black;
+  border-style: solid;
+  padding: 20px;
+  margin: 20px;
+}
+
 
 tr td, th {
   padding:10px;

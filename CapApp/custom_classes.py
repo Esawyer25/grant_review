@@ -1,9 +1,41 @@
 from django.core.exceptions import ValidationError
-from CapApp.models import Grant, Grant_Publication, Keyword
+from CapApp.models import Grant, Grant_Publication, Keyword, Publication
 import datetime
 import json
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import euclidean_distances
+
+class Score:
+    def return_all_scores():
+        pubs = Publication.objects.all()
+        score_array = []
+        for pub in pubs:
+            if pub.score:
+                score_array.append(str(pub.score))
+            else:
+                pass
+
+        return json.dumps(score_array)
+
+    def return_focal_scores(pubs):
+        score_array = []
+        for pub in pubs:
+            if pub.score:
+                temp = {'title': pub.title, 'score': str(pub.score)}
+                score_array.append(temp)
+            else:
+                pass
+        return json.dumps(score_array)
+
+    def return_n():
+        pubs = Publication.objects.all()
+        total = 0
+        for pub in pubs:
+            if pub.score:
+                total += 1
+            else:
+                pass
+        return  json.dumps(total)
 
 class Add_Keyword:
     def create_keyword(word, grant_list, searches=0):

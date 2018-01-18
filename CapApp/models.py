@@ -370,12 +370,6 @@ class Keyword(models.Model):
     dp2_total_cost= models.IntegerField(null=True, blank=True)
 
 
-
-
-
-
-
-
     def __str__(self):
         return self.keyword
 

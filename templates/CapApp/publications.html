@@ -2,8 +2,58 @@
 {% extends "CapApp/base.html"%}
   {%block body_block%}
     {% load humanize %}
+    <style>
 
-  <div class= "jumbotron">
+.whisker line,
+.median line,
+.box rect, {
+  fill: #fff;
+  stroke: #000;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+
+circle {
+  fill: black;
+  stroke: none;
+  shape-rendering: crispEdges;
+}
+
+circle:hover {
+  fill: orange;
+  stroke: orange;
+  opacity: 1;
+}
+
+.outlier {
+  stroke: red;
+  stroke-width: 2px;
+}
+
+.point {
+  opacity: 0.80;
+}
+
+.axis path {
+    fill: none;
+    stroke: black;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+.axis line {
+    fill: none;
+    stroke: black;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-size: 10px;
+}
+</style>
+
+  <div id= "grey">
     <h2>Grant summary</h2>
       <div class="grant_header">
         <p>
@@ -81,6 +131,9 @@
           {%endfor%}
         </p>
         {%endif%}
+        <p class= "small">
+          Abstract: {{focal.abstract_text}}
+        </p>
         <p>
           <strong>Number of Papers:</strong> {{focal.number_of_papers}}
         </p>
@@ -134,8 +187,183 @@
           {%endfor%}
           </table>
     </div>
-  </div>
 
+  <div id="boxplot">
+    <h4>Boxplot of "Bag-of-Words" Comparison Scores (N = {{n}})</h4>
+    <p>
+      Scores estimate the similarity of the grant abstract and the abstracts of papers funded off that grant.  The papers funded off this grant (core project number = {{focal.core_project_num}}) are displyed with black dots.  Any outliers are indicated in red. Hover over the points to see the atricle title.
+    </p>
+  <script>
+    //initialize the dimensions
+    var margin = {top: 10, right: 10, bottom: 10, left: 10},
+    width = 700 - margin.left - margin.right,
+    height = 100 - margin.top - margin.bottom,
+    padding = 20
+    midline = (height - padding) / 2;
+
+//initialize the x scale
+var xScale = d3.scale.linear()
+               .range([padding, width - padding]);
+
+//initialize the x axis
+var xAxis = d3.svg.axis()
+              .scale(xScale)
+              .orient("bottom");
+
+//initialize boxplot statistics
+var data = [],
+    outliers = [],
+    minVal = Infinity,
+    lowerWhisker = Infinity,
+    q1Val = Infinity,
+    medianVal = 0,
+    q3Val = -Infinity,
+    iqr = 0,
+    upperWhisker = -Infinity,
+    maxVal = -Infinity;
+
+  data = {{all_papers_score|safe}}
+
+  data = data.sort(d3.ascending);
+
+  //calculate the boxplot statistics
+  minVal = data[0],
+  q1Val = d3.quantile(data, .25),
+  medianVal = d3.quantile(data, .5),
+  q3Val = d3.quantile(data, .75),
+  iqr = q3Val - q1Val,
+  maxVal = data[data.length - 1];
+  // lowerWhisker = d3.max([minVal, q1Val - iqr])
+  // upperWhisker = d3.min([maxVal, q3Val + iqr]);
+
+  var index = 0;
+
+  //search for the lower whisker, the mininmum value within q1Val - 1.5*iqr
+  while (index < data.length && lowerWhisker == Infinity) {
+
+    if (data[index] >= (q1Val - 1.5*iqr))
+      lowerWhisker = data[index];
+    else
+      outliers.push(data[index]);
+    index++;
+  }
+
+  index = data.length-1; // reset index to end of array
+
+  //search for the upper whisker, the maximum value within q1Val + 1.5*iqr
+  while (index >= 0 && upperWhisker == -Infinity) {
+
+    if (data[index] <= (q3Val + 1.5*iqr))
+      upperWhisker = data[index];
+    else
+      outliers.push(data[index]);
+    index--;
+  }
+
+  //map the domain to the x scale +10%
+  xScale.domain([0,maxVal*1.10]);
+  xScale.domain([0,50]);
+
+  var svg = d3.select("#boxplot")
+              .append("svg")
+              .attr("width", width)
+              .attr("height", height);
+
+  //append the axis
+  svg.append("g")
+     .attr("class", "axis")
+     .attr("transform", "translate(0, " + (height - padding) + ")")
+     .call(xAxis);
+
+  //draw verical line for lowerWhisker
+  svg.append("line")
+     .attr("class", "whisker")
+     .attr("x1", xScale(lowerWhisker))
+     .attr("x2", xScale(lowerWhisker))
+     .attr("stroke", "black")
+     .attr("y1", midline - 10)
+     .attr("y2", midline + 10);
+
+  //draw vertical line for upperWhisker
+  svg.append("line")
+     .attr("class", "whisker")
+     .attr("x1", xScale(upperWhisker))
+     .attr("x2", xScale(upperWhisker))
+     .attr("stroke", "black")
+     .attr("y1", midline - 10)
+     .attr("y2", midline + 10);
+
+  //draw horizontal line from lowerWhisker to upperWhisker
+  svg.append("line")
+     .attr("class", "whisker")
+     .attr("x1",  xScale(lowerWhisker))
+     .attr("x2",  xScale(upperWhisker))
+     .attr("stroke", "black")
+     .attr("y1", midline)
+     .attr("y2", midline);
+
+  //draw rect for iqr
+  svg.append("rect")
+     .attr("class", "box")
+     .attr("stroke", "black")
+     .attr("fill", "white")
+     .attr("x", xScale(q1Val))
+     .attr("y", padding)
+     .attr("width", xScale(iqr) - padding)
+     .attr("height", 20);
+
+  //draw vertical line at median
+  svg.append("line")
+     .attr("class", "median")
+     .attr("stroke", "black")
+     .attr("x1", xScale(medianVal))
+     .attr("x2", xScale(medianVal))
+     .attr("y1", midline - 10)
+     .attr("y2", midline + 10);
+
+  //draw data as points
+  let focal_data = {{focal_papers_score|safe}}
+  console.log(focal_data)
+  svg.selectAll("circle")
+     .data(focal_data)
+     .enter()
+     .append("circle")
+     .attr("r", 2.5)
+     .attr("class", function(d) {
+      if (d.score < lowerWhisker || d.score > upperWhisker)
+        return "outlier";
+      else
+        return "point";
+     })
+     .attr("cy", function(d) {
+      return random_jitter();
+     })
+     .attr("cx", function(d) {
+      return xScale(d.score);
+     })
+     .append("title")
+     .text(function(d) {
+      //  console.log(d.date)
+      return "Title: " + d.title + "; score: " + d.score;
+     });
+
+
+
+function random_jitter() {
+  if (Math.round(Math.random() * 1) == 0)
+    var seed = -5;
+  else
+    var seed = 5;
+  return midline + Math.floor((Math.random() * seed) + 1);
+}
+
+function type(d) {
+  d.value = +d.value; // coerce to number
+  return d;
+}
+</script>
+</div>
+  </div>
 
 <div>
   <h2>
@@ -144,14 +372,17 @@
   {% if all_papers%}
     {% for paper in all_papers %}
       <article class = "paper-summary">
+
         <div class="paper_header">
           <p>
             <h3>{{paper.title}}</h3>
           </p>
         </div>
+
         {% if paper.abstract%}
-        <div class="paper_information col-10">
-        <div id="A{{paper.pmid}}" class ="word_cloud pull-right "></div>
+
+
+          <div id="A{{paper.pmid}}" class ="word_cloud pull-right "></div>
 
         <script>
         var fill = d3.scale.category20();
@@ -196,32 +427,37 @@
               {{author}},
             {%endfor%}
           </p>
+          {%if paper.score%}
           <p>
-            <strong>Eculdian distance</strong>: {{paper.score}}
+            <strong>Comparison Score</strong>: {{paper.score}}
           </p>
           <p class= "small">
               (Score is the eculidian distance between the "bag-of-words" representing the grant abstract and the paper abstract)
           </p>
+          {%endif%}
           <p>
             <strong>Year:</strong>  {{paper.year}}
           </p>
+
           <p>
             <strong>Journal:</strong>  {{paper.journal}}
           </p>
-          </div>
-          <div class="abstract">
+
+          <p class="abstract">
             <strong>Abstract:</strong>
             {%if paper.abstract%}
               {{paper.abstract}}
             {%else%}
               Abstract not available
             {%endif%}
-          </div>
-        </article>
+          </p>
+
+
+      </article>
     {%endfor%}
   {%endif%}
 </div>
 
 
 
-  {%endblock%}
+{%endblock%}

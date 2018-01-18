@@ -8,12 +8,13 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import requests
 import datetime
 import time
+import json
 from django.core.exceptions import ValidationError
 
 # from django.core.urlresolvers import reverse
 from CapApp.pubmed import Pubmed
 from CapApp.models import Grant, Keyword, Publication, Related_grant
-from CapApp.custom_classes import Stats, Add_Keyword
+from CapApp.custom_classes import Stats, Add_Keyword, Score
 
 # Create your views here.
 
@@ -225,6 +226,12 @@ def publications(request):
         index += 1
         # try Related_grant.objects.get(core_project_num = focal.core_project_num):
 
+    all_papers_score = Score.return_all_scores
+    n = Score.return_n
+    focal_papers_score = Score.return_focal_scores(all_papers)
+    box_plot_data ={"n": n, "all_papers_score": all_papers_score, "focal_papers_score": focal_papers_score}
+
+
     related_grant_object = Related_grant.objects.get(core_project_num = focal.core_project_num)
     related = related_grant_object.grants.all()
     same_grant_dif_year = related.filter(project_title = focal.project_title)
@@ -237,7 +244,7 @@ def publications(request):
 
 
         # time.sleep(0.5)
-    return render(request, 'CapApp/publications.html', {'all_papers':all_papers, 'focal': focal, 'same_grant_dif_year': same_grant_dif_year})
+    return render(request, 'CapApp/publications.html', {'all_papers':all_papers, 'focal': focal, 'same_grant_dif_year': same_grant_dif_year, 'all_papers_score':all_papers_score, 'focal_papers_score':focal_papers_score, 'n':n })
 
 
 # def your_view(request):
