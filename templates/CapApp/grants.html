@@ -58,15 +58,10 @@
 
 
     <div class="jumbotron">
-      <h2>Summary Figures for Grants with Keyword <strong><em>{{keyword.keyword.totals.query}}</em></strong>: </h2>
+      <h2>Summary Figures for Grants with Keyword <strong><em>{{keyword.keyword}}</em></strong> </h2>
       <ul>
         <li>
-          <p>
-            Number of grants:
-            {{ keyword.grant_count|intcomma }}
-          </p>
-        </li>
-        <li>
+          Cost table
           <table id = "keyword_table">
             <tr>
               <th>
@@ -96,10 +91,10 @@
                 ${{keyword.grant_direct_cost_18|intcomma}}
               </td>
               <td>
-                {{keyword.grant_indirect_cost_18|intcomma}}
+                ${{keyword.grant_indirect_cost_18|intcomma}}
               </td>
               <td>
-                {{grant_stats.grant_count_18|intcomma}}
+                {{keyword.grant_count_18|intcomma}}
               </td>
             </tr>
             <tr>
@@ -113,10 +108,10 @@
                 ${{keyword.grant_direct_cost_17|intcomma}}
               </td>
               <td>
-                {{keyword.grant_indirect_cost_17|intcomma}}
+                ${{keyword.grant_indirect_cost_17|intcomma}}
               </td>
               <td>
-                {{grant_stats.grant_count_17|intcomma}}
+                {{keyword.grant_count_17|intcomma}}
               </td>
             </tr>
             <tr>
@@ -130,27 +125,27 @@
                 ${{keyword.grant_direct_cost_16|intcomma}}
               </td>
               <td>
-                {{keyword.grant_indirect_cost_16|intcomma}}
+                ${{keyword.grant_indirect_cost_16|intcomma}}
               </td>
               <td>
-                {{grant_stats.grant_count_16|intcomma}}
+                {{keyword.grant_count_16|intcomma}}
               </td>
             </tr>
             <tr>
               <td>
                 2015
-              <td>
+              </td>
               <td>
                 ${{keyword.grant_total_cost_15|intcomma}}
-              <td>
+              </td>
               <td>
                 ${{keyword.grant_indirect_cost_15|intcomma}}
+              </td>
               <td>
+                ${{keyword.grant_indirect_cost_15|intcomma}}
+              </td>
               <td>
-                {{keyword.grant_indirect_cost_15|intcomma}}
-              <td>
-              <td>
-                {{grant_stats.grant_count_15|intcomma}}
+                {{keyword.grant_count_15|intcomma}}
               </td>
             </tr>
             <tr>
@@ -167,33 +162,10 @@
                 {{keyword.grant_indirect_cost|intcomma}}
               </td>
               <td>
-                {{grant_stats.grant_count|intcomma}}
+                {{keyword.grant_count|intcomma}}
               </td>
             </tr>
           </table>
-
-
-
-            <ul>
-              <li>
-                <p>
-                  Cost in 2018 (total,  (indirect/ direct)): ${{grant_stats.2018.grant_total_cost|intcomma}},
-                    (${{grant_stats.2018.grant_direct_cost|intcomma}}/ ${{grant_stats.2018.grant_indirect_cost|intcomma}})
-                </p>
-              </li>
-              <li>
-                Cotal cost in 2017: ${{grant_stats.2017.grant_total_cost|intcomma}},
-                  (${{grant_stats.2017.grant_direct_cost|intcomma}}/ ${{grant_stats.2017.grant_indirect_cost|intcomma}})
-              </li>
-              <li>
-                Cotal cost in 2016: ${{grant_stats.2016.grant_total_cost|intcomma}},
-                  (${{grant_stats.2016.grant_direct_cost|intcomma}}/ ${{grant_stats.2016.grant_indirect_cost|intcomma}})
-              </li>
-              <li>
-                Cotal cost in 2015: ${{grant_stats.2015.grant_total_cost|intcomma}},
-                  (${{grant_stats.2015.grant_direct_cost|intcomma}}/ ${{grant_stats.2015.grant_indirect_cost|intcomma}})
-              </li>
-            </ul>
           </li>
           <li>
             <p>
@@ -285,12 +257,9 @@
     <div>
       <h2>Search Results</h2>
     {% if grants %}
-      <ul class="no_bullets">
-        {% for grant in grants %}
-
-        <li>
-          <article class = "grant-summary">
-            <div class="grant_header">
+      {% for grant in grants %}
+      <article class = "grant-summary">
+        <div class="grant_header">
           <h3>
            {{ forloop.counter0|add:grants.start_index }}.
           {{ grant.project_title }}</h3>
@@ -429,10 +398,7 @@
           </p>
           </div>
           </article>
-        </li>
-
         {% endfor %}
-      </ul>
 
     {% endif %}
     </div>

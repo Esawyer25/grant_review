@@ -230,12 +230,14 @@ def publications(request):
         print('I am going to calculate the score')
 
 
-
-
-
-        score = Stats.make_similarity_dict(focal.abstract_text, pub.abstract)
-        pub.score = score
-        pub.save()
+#need to make this eculdian
+        if pub.abstract == "":
+            pass
+        else:
+            score = Stats.euclidian(focal.abstract_text, pub.abstract)
+            print(f'this is the eculdian score: {score}')
+            pub.score = round(score, 3)
+            pub.save()
         # all_papers.append(Pubmed.parse_xml_web(paper.pmid, sleep=2, save_xml=False))
         index += 1
         # try Related_grant.objects.get(core_project_num = focal.core_project_num):

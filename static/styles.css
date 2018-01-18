@@ -13,28 +13,31 @@ svg {
 }
 
 
-tr td{
+tr td, th {
   padding:10px;
   margin:10px;
   border: black;
+  border-bottom: solid;
+  border-width: thin;
 }
 
 #costTable {
   background-color: white;
-  padding:10px;
-  margin:10px;
+  padding:20px;
+  margin: 20px;
   border: black;
 }
+
 #keyword_table {
   background-color: white;
-  padding:10px;
-  margin:10px;
+  padding:20px;
+  margin:20px;
   border: black;
 }
 
 #grant_cost {
   background-color: #eee;
-  padding:10px;
-  margin:10px;
+  padding:20px;
+  margin:20px;
   border: black;
 }

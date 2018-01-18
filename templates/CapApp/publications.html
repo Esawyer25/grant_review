@@ -138,19 +138,18 @@
 
 
 <div>
-  <p>
+  <h2>
     Resulting papers
-  </p>
+  </h2>
   {% if all_papers%}
-  <ul>
     {% for paper in all_papers %}
-    <li>
       <article class = "paper-summary">
         <div class="paper_header">
           <p>
             <h3>{{paper.title}}</h3>
           </p>
         </div>
+        {% if paper.abstract%}
         <div class="paper_information col-10">
         <div id="A{{paper.pmid}}" class ="word_cloud pull-right "></div>
 
@@ -190,7 +189,7 @@
           .text(function(d) { return d.text; });
 }
         </script>
-
+        {%endif%}
           <p>
             <strong>Authors:</strong>
             {%for author in paper.authors%}
@@ -198,7 +197,10 @@
             {%endfor%}
           </p>
           <p>
-            score: {{paper.score}}
+            <strong>Eculdian distance</strong>: {{paper.score}}
+          </p>
+          <p class= "small">
+              (Bag of words score between grant abstract and paper abstract)
           </p>
           <p>
             <strong>Year:</strong>  {{paper.year}}
@@ -216,9 +218,7 @@
             {%endif%}
           </div>
         </article>
-    </li>
     {%endfor%}
-  </ul>
   {%endif%}
 </div>
 

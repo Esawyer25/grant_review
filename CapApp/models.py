@@ -239,7 +239,7 @@ class Publication(models.Model):
 
     year = models.IntegerField(null=True, blank=True)
 
-    score = models.DecimalField(max_digits=5, decimal_places=4, blank=True, null=True)
+    score = models.DecimalField(max_digits=6, decimal_places=4, blank=True, null=True)
 
     class Meta:
         ordering = ['-year',]

@@ -35,7 +35,6 @@ ALLOWED_HOSTS = [ 'grant-review-dev.us-west-2.elasticbeanstalk.com','127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
