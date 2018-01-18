@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import os
 import sys
-import django
-os.environ['DJANGO_SETTINGS_MODULE'] = 'CapProj.settings'
-django.setup()
+# import django
+# os.environ['DJANGO_SETTINGS_MODULE'] = 'CapProj.settings'
+# django.setup()
 
 
 if __name__ == "__main__":
