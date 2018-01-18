@@ -1,3 +1,5 @@
+##this version depolyed!!
+
 """
 Django settings for CapProj project.
 

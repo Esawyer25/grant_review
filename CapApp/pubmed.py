@@ -9,6 +9,7 @@ from itertools import chain
 
 import os
 if 'API_KEY' in os.environ:
+    API_KEY = os.environ.get('API_KEY')
     pass
 else:
     from CapProj.settings_secret import API_KEY
