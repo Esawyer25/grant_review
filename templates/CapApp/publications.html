@@ -51,6 +51,7 @@ circle:hover {
 .axis text {
     font-size: 10px;
 }
+
 </style>
 
   <div id= "grey">
@@ -262,7 +263,7 @@ var data = [],
 
   //map the domain to the x scale +10%
   xScale.domain([0,maxVal*1.10]);
-  xScale.domain([0,50]);
+  xScale.domain([0,60]);
 
   var svg = d3.select("#boxplot")
               .append("svg")
@@ -375,7 +376,7 @@ function type(d) {
 
         <div class="paper_header">
           <p>
-            <h3>{{paper.title}}</h3>
+            <h3><a href="https://www.ncbi.nlm.nih.gov/pubmed/{{paper.pmid}}">{{paper.title}}</a></h3>
           </p>
         </div>
 

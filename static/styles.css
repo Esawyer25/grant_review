@@ -3,6 +3,12 @@
    list-style-type: none;
 }
 
+.container2 {
+  margins: 40px;
+  padding: 40px;
+}
+
+
 h1 {
   color:white;
 }
