@@ -337,6 +337,45 @@ class Keyword(models.Model):
 
     grant_indirect_cost_15 = models.IntegerField(null=True, blank=True)
 
+    f31_count= models.IntegerField(null=True, blank=True)
+
+    f31_total_cost= models.IntegerField(null=True, blank=True)
+
+    f32_count= models.IntegerField(null=True, blank=True)
+
+    f32_total_cost= models.IntegerField(null=True, blank=True)
+
+    k99_count= models.IntegerField(null=True, blank=True)
+
+    k99_total_cost= models.IntegerField(null=True, blank=True)
+
+    r00_count= models.IntegerField(null=True, blank=True)
+
+    r00_total_cost= models.IntegerField(null=True, blank=True)
+
+    r01_count= models.IntegerField(null=True, blank=True)
+
+    r01_total_cost= models.IntegerField(null=True, blank=True)
+
+    r35_count= models.IntegerField(null=True, blank=True)
+
+    r35_total_cost= models.IntegerField(null=True, blank=True)
+
+    dp1_count= models.IntegerField(null=True, blank=True)
+
+    dp1_total_cost= models.IntegerField(null=True, blank=True)
+
+    dp2_count= models.IntegerField(null=True, blank=True)
+
+    dp2_total_cost= models.IntegerField(null=True, blank=True)
+
+
+
+
+
+
+
+
     def __str__(self):
         return self.keyword
 

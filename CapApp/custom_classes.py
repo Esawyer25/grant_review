@@ -26,8 +26,107 @@ class Add_Keyword:
         for grant in grant_list:
             new_word.grants.add(grant)
 
+        Add_Keyword.set_keyword_stats(new_word, grant_list)
+
         b = datetime.datetime.now()
         print(f'time in to create new keyword = {b-a}')
+
+    def set_keyword_stats(new_word, grant_list):
+        #grant_list = new_word.grants.all()
+        print(f'this is my grant_list {grant_list}')
+        print(f'in set keyword stats, this is my word {new_word.keyword}')
+        grant_stats = Stats.return_stats_by_year(grant_list, new_word.keyword)
+        print(f'these are the grant stats{grant_stats}')
+
+        #see if counting in thousands makes the numbers small enough
+
+        new_word.grant_count = grant_stats['totals']['grant_count']
+
+        new_word.grant_total_cost = round(grant_stats['totals']['grant_total_cost'],-3)/1000
+        print( f'this is the total cost {new_word.grant_total_cost}')
+
+        new_word.grant_direct_cost = round(grant_stats['totals']['grant_direct_cost'],-3)/1000
+        print( f'this is the direct cost {new_word.grant_direct_cost}')
+
+        new_word.grant_indirect_cost = round(grant_stats['totals']['grant_indirect_cost'],-3)/1000
+        print( f'this is the indirect cost {new_word.grant_indirect_cost}')
+
+        # new_word.grant_count_18 = grant_stats['2018']['grant_count']
+        #
+        # new_word.grant_total_cost_18 = grant_stats['2018']['grant_total_cost']
+        #
+        # new_word.grant_direct_cost_18 = grant_stats['2018']['grant_direct_cost']
+        #
+        # new_word.grant_indirect_cost_18 = grant_stats['2018']['grant_indirect_cost']
+
+        new_word.grant_count_17 = grant_stats['2017']['grant_count']
+
+        new_word.grant_total_cost_17 = round(grant_stats['2017']['grant_total_cost'],-3)/1000
+
+        new_word.grant_direct_cost_17 = round(grant_stats['2017']['grant_direct_cost'],-3)/1000
+
+        new_word.grant_indirect_cost_17 = round(grant_stats['2017']['grant_indirect_cost'],-3)/1000
+
+        new_word.grant_count_16 = grant_stats['2016']['grant_count']
+
+        new_word.grant_total_cost_16 = round(grant_stats['2016']['grant_total_cost'],-3)/1000
+
+        new_word.grant_direct_cost_16 = round(grant_stats['2016']['grant_direct_cost'],-3)/1000
+
+        new_word.grant_indirect_cost_16 = round(grant_stats['2016']['grant_indirect_cost'],-3)/1000
+
+        new_word.grant_count_15 = grant_stats['2015']['grant_count']
+
+        new_word.grant_total_cost_15 = round(grant_stats['2015']['grant_total_cost'],-3)/1000
+
+        new_word.grant_direct_cost_15 = round(grant_stats['2015']['grant_direct_cost'],-3)/1000
+
+        new_word.grant_indirect_cost_15 = round(grant_stats['2015']['grant_indirect_cost'],-3)/1000
+
+        new_word.f31_count= grant_stats['totals']['f31_count']
+        print(f'this is the f31 count {new_word.f31_count}')
+
+        new_word.f31_total_cost= round(grant_stats['totals']['f31_total_cost'],-3)/1000
+
+        new_word.f32_count= grant_stats['totals']['f32_count']
+
+        new_word.f32_total_cost= round(grant_stats['totals']['f32_total_cost'],-3)/1000
+
+        new_word.k99_count= grant_stats['totals']['k99_count']
+
+        new_word.k99_total_cost= round(grant_stats['totals']['k99_total_cost'],-3)/1000
+
+        new_word.r00_count= grant_stats['totals']['r00_count']
+
+        new_word.r00_total_cost= round(grant_stats['totals']['r00_total_cost'],-3)/1000
+
+        new_word.r01_count= grant_stats['totals']['r01_count']
+
+        new_word.r01_total_cost= round(grant_stats['totals']['r01_total_cost'],-3)/1000
+
+        new_word.r35_count= grant_stats['totals']['r35_count']
+
+        new_word.r35_total_cost= round(grant_stats['totals']['r35_total_cost'],-3)/1000
+
+        new_word.dp1_count= grant_stats['totals']['dp1_count']
+
+        new_word.dp1_total_cost= round(grant_stats['totals']['dp1_total_cost'],-3)/1000
+
+        new_word.dp2_count= grant_stats['totals']['dp2_count']
+
+        new_word.dp2_total_cost= round(grant_stats['totals']['dp2_total_cost'],-3)/1000
+
+        try:
+            Keyword.full_clean(new_word)
+        except ValidationError as e:
+            print(e)
+
+        try:
+            new_word.save()
+        except:
+            print(f"there was a problem saving the stats associated with Keyword {new_word}")
+
+
 
     def make_short_list(grant_list_long):
         if grant_list_long.count() > 100:
@@ -54,8 +153,10 @@ class Stats:
         total_cost = 0
         direct_cost = 0
         indirect_cost = 0
+        number = 0
         # if list.count() > 0:
         for item in list:
+            number += 1
             if item.total_cost:
                 if item.total_cost:
                      total_cost += item.total_cost
@@ -63,7 +164,8 @@ class Stats:
                     direct_cost += item.direct_cost_amt
                 if item.indirect_cost_amt:
                     indirect_cost += item.indirect_cost_amt
-        return {'total_cost':total_cost, 'direct_cost':direct_cost, 'indirect_cost':indirect_cost}
+        return {'total_cost':total_cost, 'direct_cost':direct_cost, 'indirect_cost':indirect_cost,
+        'number': number}
 
     def divide_by_FY(grant_list):
         # years = range(1985,2018,1)
@@ -176,63 +278,63 @@ class Stats:
         grant_f30 = grant_list.filter(activity="F30")
         costs = Stats.find_cost(grant_f30)
         f30_total_cost = costs['total_cost']
-        f30_count = grant_f30.count()
+        f30_count = costs['number']
 
         # Predoctoral Individual National Research Service Award
         grant_f31 = grant_list.filter(activity="F31")
         f31_total_cost = Stats.find_cost(grant_f31)
         costs = Stats.find_cost(grant_f31)
         f31_total_cost = costs['total_cost']
-        f31_count = grant_f31.count()
+        f31_count = costs['number']
 
         # Postdoctoral Individual National Research Service Award
         grant_f32 = grant_list.filter(activity="F32")
         f32_total_cost = Stats.find_cost(grant_f32)
         costs = Stats.find_cost(grant_f32)
         f32_total_cost = costs['total_cost']
-        f32_count = grant_f32.count()
+        f32_count = costs['number']
 
         #Career Transition Award
         grant_k99 = grant_list.filter(activity="K99")
         k99_total_cost = Stats.find_cost(grant_k99)
         costs = Stats.find_cost(grant_k99)
         k99_total_cost = costs['total_cost']
-        k99_count = grant_k99.count()
+        k99_count = costs['number']
 
         #Research Transition Award
         grant_r00 = grant_list.filter(activity="R00")
         r00_total_cost = Stats.find_cost(grant_r00)
         costs = Stats.find_cost(grant_r00)
         r00_total_cost = costs['total_cost']
-        r00_count = grant_r00.count()
+        r00_count = costs['number']
 
         #Research Project
         grant_r01 = grant_list.filter(activity="R01")
         r01_total_cost = Stats.find_cost(grant_r01)
         costs = Stats.find_cost(grant_r01)
         r01_total_cost = costs['total_cost']
-        r01_count = grant_r01.count
+        r01_count = costs['number']
 
         #Outstanding Investigator Award
         grant_r35 = grant_list.filter(activity="R35")
         r35_total_cost = Stats.find_cost(grant_r35)
         costs = Stats.find_cost(grant_r35)
         r35_total_cost = costs['total_cost']
-        r35_count = grant_r35.count
+        r35_count = costs['number']
 
         #NIH Director’s Pioneer Award (NDPA)
         grant_dp1 = grant_list.filter(activity="DP1")
         dp1_total_cost = Stats.find_cost(grant_dp1)
         costs = Stats.find_cost(grant_dp1)
         dp1_total_cost = costs['total_cost']
-        dp1_count = grant_dp1.count
+        dp1_count = costs['number']
 
         #NIH Director’s New Innovator Award
         grant_dp2 =grant_list.filter(activity="DP2")
         dp2_total_cost = Stats.find_cost(grant_dp2)
         costs = Stats.find_cost(grant_dp2)
         dp2_total_cost = costs['total_cost']
-        dp2_count = grant_dp1.count
+        dp2_count = costs['number']
 
         b = datetime.datetime.now()
         print(f'time elapsed in stats: {b-a}')

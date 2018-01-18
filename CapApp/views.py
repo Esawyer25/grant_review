@@ -154,23 +154,6 @@ def grants(request):
     #7)save stats in keyword
     #TODO: put this in database set up.
     keyword_object = Keyword.objects.get(keyword__iexact=query)
-    # print(f'I am saving the stats in the keyword object {keyword_object}')
-    # keyword_object.grant_count = grant_stats['totals']['grant_count']
-    # keyword_object.grant_total_cost = grant_stats['totals']['grant_total_cost']
-    # print(f' this is the total cost before save: {keyword_object.grant_total_cost}')
-    # keyword_object.grant_direct_cost = grant_stats['totals']['grant_direct_cost']
-    # keyword_object.grant_indirect_cost = grant_stats['totals']['grant_indirect_cost']
-    # try:
-    #     Keyword.full_clean(keyword_object)
-    # except ValidationError as e:
-    #     print(e)
-    # try:
-    #     keyword_object.save()
-    # except:
-    #     print(f"there was a problem with saving Keyword {keyword_object}")
-    # print(f' this is the total cost after save: {keyword_object.grant_total_cost}')
-
-
 
     return render(request, 'CapApp/grants.html',{'grants':grants, 'keyword':keyword_object, 'states_dict': states_dict, 'states_top_inst': states_top_inst})
 

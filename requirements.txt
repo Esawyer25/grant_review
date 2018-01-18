@@ -1,4 +1,4 @@
-aws-shell==0.2.0
+aws-sheld==0.2.0
 awscli==1.14.24
 awsebcli==3.12.1
 blessed==1.14.2

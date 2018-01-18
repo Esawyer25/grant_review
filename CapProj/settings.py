@@ -40,11 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'CapApp',
     'django.contrib.postgres',
     'django.contrib.admin',
     'django.contrib.humanize',
     'rest_framework',
-    'CapApp',
+
 ]
 
 MIDDLEWARE = [

@@ -59,9 +59,9 @@
 
     <div class="jumbotron">
       <h2>Summary Figures for Grants with Keyword <strong><em>{{keyword.keyword}}</em></strong> </h2>
-      <ul>
-        <li>
-          Cost table
+          <p>
+            Cost table (in thousands of dollars)
+          </p>
           <table id = "keyword_table">
             <tr>
               <th>
@@ -166,53 +166,146 @@
               </td>
             </tr>
           </table>
-          </li>
-          <li>
             <p>
               Funding by grant type:
             </p>
-          <ul>
-            <li>
-              NIH Director’s Pioneer Award (DP1):
-              {{grant_stats.totals.dp1_count}}
-              Total cost:  ${{grant_stats.totals.dp1_total_cost|intcomma}}
-            </li>
-            <li>
-              NIH Director’s New Innovator Award (DP2):
-              {{grant_stats.totals.dp2_count}}
-              Total cost: ${{grant_stats.dp2_total_cost|intcomma}}
-            </li>
-            <li>
-              Outstanding Investigator Awards (R35):
-              {{grant_stats.totals.r35_count}}
-              Total cost: ${{grant_stats.totals.r35_total_cost|intcomma}}
-            </li>
-            <li>
-              Research Project (R01):
-              {{grant_stats.r01_count}}
-              Total cost: ${{grant_stats.totals.r01_total_cost|intcomma}}
-            </li>
-            <li>
-              Research Transition Award (R00):
-              {{grant_stats.r00_count}}
-              Total cost: ${{grant_stats.totals.r00_total_cost|intcomma}}
-            </li>
-            <li>
-              Career Transition Award (K99):
-              {{grant_stats.totals.k99_count}}
-              Total cost: ${{grant_stats.totals.k99_total_cost|intcomma}}
-            </li>
-            <li>
-              Traning grants (F30/F31/F32):
-              {{grant_stats.totals.f30_count}}/{{grant_stats.totals.f31_count}}/{{grant_stats.totals.f32_count}}
-              Total cost: ${{grant_stats.totals.f30_total_cost|intcomma}}/ ${{grant_stats.totals.f31_total_cost|intcomma}}/ ${{grant_stats.totals.f32_total_cost|intcomma}}
-            </li>
-          </ul>
-          </li>
-        </li>
+            <table id = "keyword_table">
+              <tr>
+                <th>
+                  Award Name
+                </th>
+                <th>
+                  Award code
+                </th>
+                <th>
+                  Number of awards
+                </th>
+                <th>
+                  Total cost
+                </th>
+              </tr>
 
+              <tr>
+                <td>
+                  NIH Director’s Pioneer Award
+                </td>
+                <td>
+                  DP1
+                </td>
+                <td>
+                  {{keyword.dp1_count|intcomma}}
+                </td>
+                <td>
+                  {{keyword.dp1_total_cost|intcomma}}
+                </td>
+              </tr>
 
-      </ul>
+              <tr>
+                <td>
+                  NIH Director’s New Innovator Award
+                </td>
+                <td>
+                  DP2
+                </td>
+                <td>
+                  {{keyword.dp2_count|intcomma}}
+                </td>
+                <td>
+                  {{keyword.dp2_total_cost|intcomma}}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Outstanding Investigator Awards
+                </td>
+                <td>
+                  R35
+                </td>
+                <td>
+                  {{keyword.r35_count|intcomma}}
+                </td>
+                <td>
+                  {{keyword.r35_total_cost|intcomma}}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Research Project
+                </td>
+                <td>
+                  R01
+                </td>
+                <td>
+                  {{keyword.r01_count|intcomma}}
+                </td>
+                <td>
+                  {{keyword.r01_total_cost|intcomma}}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Research Transition Award
+                </td>
+                <td>
+                  R00
+                </td>
+                <td>
+                  {{keyword.r00_count|intcomma}}
+                </td>
+                <td>
+                  {{keyword.r00_total_cost|intcomma}}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Career Transition Award
+                </td>
+                <td>
+                  K99
+                </td>
+                <td>
+                  {{keyword.k99_count|intcomma}}
+                </td>
+                <td>
+                  {{keyword.k99_total_cost|intcomma}}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Postdoctoral Individual National Research Service Award
+                </td>
+                <td>
+                  F32
+                </td>
+                <td>
+                  {{keyword.f32_count|intcomma}}
+                </td>
+                <td>
+                  {{keyword.f32_total_cost|intcomma}}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Predoctoral Individual National Research Service Award
+                </td>
+                <td>
+                  F31
+                </td>
+                <td>
+                  {{keyword.f31_count|intcomma}}
+                </td>
+                <td>
+                  {{keyword.f31_total_cost|intcomma}}
+                </td>
+              </tr>
+
+            </table>
     </div>
     <div>
       <h4>Location of funded grants</h4>
