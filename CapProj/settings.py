@@ -12,8 +12,11 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 if 'SECRET_KEY' in os.environ:
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    print('i got secret from os')
     pass
 else:
+    print('i got secret from file')
     from .settings_secret import SECRET_KEY
 
 
