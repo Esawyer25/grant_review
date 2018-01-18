@@ -2,7 +2,7 @@
 import os
 import sys
 import django
-settings.configure()
+os.environ['DJANGO_SETTINGS_MODULE'] = 'CapProj.settings'
 django.setup()
 
 
