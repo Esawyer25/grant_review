@@ -2,9 +2,8 @@
 import os
 import sys
 
-#uncomment for deployment
+#uncomment for deployment?
 # import django
-
 # django.setup()
 
 
