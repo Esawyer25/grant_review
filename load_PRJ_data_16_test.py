@@ -14,8 +14,8 @@ else:                  # Windows
 rel_path = '../venv/%s/activate_this.py' % bin_name
 activate_this = os.path.join(PATH, rel_path)
 
-sys.path.append("../")
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "CapProj.settings")
+sys.path.append('../')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'CapProj.settings')
 
 django.setup()
 from django.core.exceptions import ValidationError
@@ -25,27 +25,27 @@ import csv
 
 
 def date_normal(input):
-    if input=="":
-        temp = "1111-11-11"
+    if input=='':
+        temp = '1111-11-11'
     else:
         temp = input
-        if temp[1] == "/":
-            temp = "0" + temp
-        if temp[4] == "/":
-            temp = temp[0:3] + "0" + temp[3:len(temp)]
-        temp = temp[6:10] + "-"+ temp[0:2] + "-" + temp[3:5]
+        if temp[1] == '/':
+            temp = '0' + temp
+        if temp[4] == '/':
+            temp = temp[0:3] + '0' + temp[3:len(temp)]
+        temp = temp[6:10] + '-'+ temp[0:2] + '-' + temp[3:5]
 
     return temp
 
 def make_array_feild(data):
-    list = data.split(";")
+    list = data.split(';')
     array= {}
     for item in list:
         item = item.title
-        if item == "":
+        if item == '':
             list.remove(item)
-        if "(contact)" in item:
-            item.replace("(contact)","*")
+        if '(contact)' in item:
+            item.replace('(contact)','*')
     array = set(list)
     return array
 
@@ -62,7 +62,7 @@ for zip_file in zip_files:
 
 # os.remove(csv_file_path)
 
-        dataReader = csv.reader(open(csv_file_path, encoding = "ISO-8859-1"), delimiter=',', quotechar='"')
+        dataReader = csv.reader(open(csv_file_path, encoding = 'ISO-8859-1'), delimiter=',', quotechar='"')
 
         index = -1
         success = 0
@@ -121,7 +121,7 @@ for zip_file in zip_files:
                 grant.org_dept = row[20]
 
                 # print(row[21])
-                if row[21] == "":
+                if row[21] == '':
                     grant.org_district = None
                 else:
                     grant.org_district = row[21]
@@ -175,31 +175,31 @@ for zip_file in zip_files:
                 grant.suffix = row[40]
 
                 # print(row[41])
-                if row[41] == "":
+                if row[41] == '':
                     grant.support_year = None
                 else:
                     grant.support_year = row[41]
 
                 # print(row[42])
-                if row[42] == "":
+                if row[42] == '':
                     grant.direct_cost_amt = None
                 else:
                     grant.direct_cost_amt = row[42]
 
                     # print(row[43])
-                if row[43] == "":
+                if row[43] == '':
                     grant.indirect_cost_amt = None
                 else:
                     grant.indirect_cost_amt = row[43]
 
             # print(row[44])
-                if row[44] == "":
+                if row[44] == '':
                     grant.total_cost = None;
                 else:
                     grant.total_cost = row[44]
 
             # print(row[45])
-                if row[45] == "":
+                if row[45] == '':
                     grant.total_cost_sub_project = None
                 else:
                     grant.total_cost_sub_project = row[45]
@@ -215,9 +215,9 @@ for zip_file in zip_files:
                     # print(f"saved application_id {grant.application_id}")
                     # print(f"saved {success} out of {index}")
                 except:
-                    print(f'there was a problem with row {index}, application id: {row[0]}, file {csv_file_path}')
+                    print('there was a problem with row')
                     # print(f"saved {success} out of {index}")
-        print(f"{csv_file_path} saved {success} out of {index}")
+        print(f'{csv_file_path} saved {success} out of {index}'')
 
         print(f'removing {csv_file_path}')
         os.remove(csv_file_path)
@@ -235,20 +235,13 @@ for zip_file in zip_files:
 # U - Cooperative Agreements (e.g. U01, U09)
 # Y - Inter-Agency/Intra-Agency Agreements (e.g. Y01, Y02)
 # Z - Intramural Research (e.g. Z01)
-groups= ["C", "G", "H", "L", "O", "P", "T", "U", "V", "I", "M", "N", "X" "Y,", "Z", " R24", "KL2", "R4", "R18", "R13", "R24", "RM1"]
+groups= ['C', 'G', 'H', 'L', 'O', 'P', 'T', 'U', 'V', 'I', 'M', 'N', 'X' 'Y,', 'Z', 'R24', 'KL2', 'R4', 'R18', 'R13', 'R24', 'RM1']
+
 for code in groups:
     temp = Grant.objects.filter(activity__startswith = code)
     print(f'deleting {temp.count()} grants starting with {code}')
     temp.delete()
 
-    #IK3 = Non-DHHS Nursing Research Initiative
-# activity_codes = ["IK3"]
-# for code in activity_codes:
-#     temp = Grant.objects.filter(activity = code)
-#     print(f'deleting {temp.count()} {code} grants')
-#     temp.delete()
-
-# csv_PRJABS_files =["seed_data/PRJABS_csv/RePORTER_PRJABS_C_FY2015.csv","seed_data/PRJABS_csv/RePORTER_PRJABS_C_FY2016.csv"]
 
 zip_files = [
 'seed_data/zipfiles_PRJ_ABS/RePORTER_PRJABS_C_FY2016.zip',
@@ -263,7 +256,7 @@ for zip_file in zip_files:
         print(csv_file_path)
         zf.close()
 
-    dataReader = csv.reader(open(csv_file_path, encoding = "ISO-8859-1"), delimiter=',', quotechar='"')
+    dataReader = csv.reader(open(csv_file_path, encoding = 'ISO-8859-1'), delimiter=',', quotechar='"')
 
     index = -1
     success = 0
@@ -273,12 +266,12 @@ for zip_file in zip_files:
             try:
                 focal = Grant.objects.get(application_id= row[0])
                 abstract_text = row[1]
-                if abstract_text[0] == "?":
+                if abstract_text[0] == '?':
                     abstract_text = abstract_text[1:]
 
-                string = "Abstract: DESCRIPTION (provided by applicant): "
+                string = 'Abstract: DESCRIPTION (provided by applicant): '
                 if string in abstract_text:
-                     abstract_text = abstract_text.replace(string, "")
+                     abstract_text = abstract_text.replace(string, '')
 
                 # if string = "PROJECT SUMMARY/ ABSTRACT DESCRIPTION: See instructions. State the application's broad, long-term objectives and specific aims, making reference to the health relatedness of the project (i.e., relevance to the mission of the agency). Describe concisely the research design and methods for achieving these goals. Describe the rationale and techniques you will use to pursue these goals."
                 #
@@ -290,7 +283,7 @@ for zip_file in zip_files:
                 # string ="In addition, in two or three sentences, describe in plain, lay language the relevance of this research to public health. If the application is funded, this description, as is, will become public information. Therefore, do not include proprietary/confidential information. DO NOT EXCEED THE SPACE PROVIDED."
 
                 if string in abstract_text:
-                     abstract_text = abstract_text.replace(string, "")
+                     abstract_text = abstract_text.replace(string, '')
 
                 focal.abstract_text = abstract_text
 
@@ -309,8 +302,8 @@ for zip_file in zip_files:
             # print(f"saved application_id {grant.application_id}")
             # print(f"saved {success} out of {index}")
             except:
-                print(f"there was a problem with row {index}, application id: {row[0]}, file: {csv_file_path}")
+                print(f'there was a problem with row {index}, application id: {row[0]}, file: {csv_file_path}'')
                 # print(f"saved {success} out of {index}")
-    print(f"file {csv_file_path} saved {success} out of {index}")
+    print(f'file {csv_file_path} saved {success} out of {index}'')
 
     os.remove(csv_file_path)
