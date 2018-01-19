@@ -50,16 +50,22 @@ for grant in all_grants:
     #4)update the total costs associated with the project feilds in the grant objects
     all_related_grants = Related_grant.objects.all()
 
-    for related_grant_object in all_related_grants
+
+    for related_grant_object in all_related_grants:
         # related_grant_object = grant.related_grant_set.get()
         total_cost = 0
         indirect = 0
         direct = 0
         assoc_grants = related_grant_object.grants.all()
-        for assoc_grant in assoc_grants
-            total_cost += assoc_grant.total_cost
-            indirect += assoc_grant.indirect_cost_amt
-            direct += assoc_grant.direct_cost_amt
+        for assoc_grant in assoc_grants:
+            if assoc_grant.total_cost:
+                total_cost += assoc_grant.total_cost
+
+            if assoc_grant.indirect_cost_amt:
+                indirect += assoc_grant.indirect_cost_amt
+
+            if assoc_grant.direct_cost_amt:
+                direct += assoc_grant.direct_cost_amt
 
         related_grant_object.total_funding_of_core_numb = total_cost
         grant.total_funding_of_core_numb = total_cost
@@ -75,6 +81,7 @@ for grant in all_grants:
 
         try:
             related_grant_object.save()
+            print (f'new grant_related object {grant.core_project_num}, total_cost = {total_cost}')
         except:
             print(f"there was a problem saving total cost info for related_grant_object {related_grant_object.core_project_num}")
 

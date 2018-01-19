@@ -12,9 +12,9 @@ import json
 from django.core.exceptions import ValidationError
 
 # from django.core.urlresolvers import reverse
-from CapApp.pubmed import Pubmed
+# from CapApp.pubmed import Pubmed
 from CapApp.models import Grant, Keyword, Publication, Related_grant
-from CapApp.custom_classes import Stats, Add_Keyword, Score
+from CapApp.custom_classes import Stats, Add_Keyword, Score, Publication_methods, Relate_grants
 
 # Create your views here.
 
@@ -82,50 +82,63 @@ def grants(request):
     #if this works consider moving it to a script on
     #data base launch
     #TODO: Revisit this when you are reloading the database. Should be able to delete all of this.
-    for grant in grant_list_short:
-        #get the related_grants object
-        related_grant_object = grant.related_grant_set.get()
-
-        #if the grant_object already has the total costs stored, use that.
-        if related_grant_object.total_funding_of_core_numb:
-            grant.total_funding_of_core_numb = related_grant_object.total_funding_of_core_numb
-
-        if related_grant_object.total_direct_of_core_numb:
-            grant.total_direct_of_core_numb = related_grant_object.total_direct_of_core_numb
-
-        if related_grant_object.total_indirect_of_core_numb:
-            grant.total_indirect_of_core_numb = related_grant_object.total_indirect_of_core_numb
-
-        #if it doesn't have the total cost scored, calculate it
-        if grant.total_funding_of_core_numb and grant.total_direct_of_core_numb and grant.total_indirect_of_core_numb:
-            pass
-        else:
-            #find all the grants associated with that object
-            assoc_grants = related_grant_object.grants.all()
-            total_cost = 0
-            indirect = 0
-            direct = 0
-            for assoc_grant in assoc_grants:
-                if assoc_grant.total_cost:
-                    total_cost += assoc_grant.total_cost
-
-                if assoc_grant.indirect_cost_amt:
-                    indirect += assoc_grant.indirect_cost_amt
-
-                if assoc_grant.direct_cost_amt:
-                    direct += assoc_grant.direct_cost_amt
-
-            related_grant_object.total_funding_of_core_numb = total_cost
-            grant.total_funding_of_core_numb = total_cost
-
-            related_grant_object.total_indirect_of_core_numb = indirect
-            grant.total_indirect_of_core_numb = indirect
-
-            related_grant_object.total_direct_of_core_numb = direct
-            grant.total_direct_of_core_numb = direct
-
-            related_grant_object.save()
-            grant.save()
+    Relate_grants.set_related_grant_stats(grant_list_short)
+    # for grant in grant_list_short:
+    #     #get the related_grants object
+    #     related_grant_object = None
+    #     try:
+    #         related_grant_object = grant.related_grant_set.get()
+    #     except:
+    #         pass
+    #
+    #     #if the grant_object already has the total costs stored, use that.
+    #     if related_grant_object:
+    #         try:
+    #             grant.total_funding_of_core_numb = related_grant_object.total_funding_of_core_numb
+    #         except:
+    #             pass
+    #
+    #         try:
+    #             grant.total_direct_of_core_numb = related_grant_object.total_direct_of_core_numb
+    #         except:
+    #             pass
+    #
+    #         try:
+    #             grant.total_indirect_of_core_numb = related_grant_object.total_indirect_of_core_numb
+    #         except:
+    #             pass
+    #     #if it doesn't have the total cost scored, calculate it
+    #     else:
+    #         #find all the grants associated with that object
+    #         print('saving new related_grant_object')
+    #         assoc_grants = Grant.objects.filter(core_project_num = grant.core_project_num)
+    #         total_cost = 0
+    #         indirect = 0
+    #         direct = 0
+    #         for assoc_grant in assoc_grants:
+    #             if assoc_grant.total_cost:
+    #                 total_cost += assoc_grant.total_cost
+    #
+    #             if assoc_grant.indirect_cost_amt:
+    #                 indirect += assoc_grant.indirect_cost_amt
+    #
+    #             if assoc_grant.direct_cost_amt:
+    #                 direct += assoc_grant.direct_cost_amt
+    #
+    #         new_R_G_O= Related_grant()
+    #         new_R_G_O.total_funding_of_core_numb = total_cost
+    #         grant.total_funding_of_core_numb = total_cost
+    #
+    #         new_R_G_O.total_indirect_of_core_numb = indirect
+    #         grant.total_indirect_of_core_numb = indirect
+    #
+    #         new_R_G_O.total_direct_of_core_numb = direct
+    #         grant.total_direct_of_core_numb = direct
+    #
+    #         new_R_G_O.save()
+    #         grant.save()
+    #
+    #         new_R_G_O.grants.set(assoc_grants)
 
         # print (f'total funding of grant number {grant.core_project_num} is:  {grant.total_funding_of_core_numb}')
 
@@ -166,69 +179,24 @@ def publications(request):
     focal = Grant.objects.get(application_id = app_id)
     #list_of_papers returns a list of all Grant_Publication.objects with that project number
     list_papers = focal.list_of_papers()
+    pubs = Publication_methods.return_list_of_publications(list_papers)
 
-    all_papers = []
-    index = 1
-    for paper in list_papers:
-        temp = None
-        print(f'this is the pmid{paper.pmid}')
-        try:
-            Publication.objects.get(pmid = paper.pmid)
-            temp = Publication.objects.get(pmid = paper.pmid)
-            # print(temp)
-            pub = temp
-        except:
-            temp = (Pubmed.parse_xml_web(paper.pmid, sleep=0.5, save_xml=False))
-            # print(temp)
-            pub = Publication()
-            pub.pmid = paper.pmid
-            pub.title = temp['title']
-            pub.abstract = temp['abstract']
-            pub.journal = temp['journal']
-            pub.affiliation = temp['affiliation']
-
-            list = temp['authors'].split(";")
-            for item in list:
-                item = item.title
-                if item == "":
-                    list.remove(item)
-                # if "(contact)" in item:
-                #     item.replace("(contact)","*")
-
-
-            pub.authors = list
-            pub.year = temp['year']
-            try:
-                Publication.full_clean(pub)
-            except ValidationError as e:
-                print(e)
-
-            try:
-                pub.save()
-                success +=1
-            except:
-                print(f"there was a problem saving publication {paper.pmid}")
-
-
-        all_papers.append(pub)
-        print('I am going to calculate the score')
-
-
-#need to make this eculdian
+    # cleaned_grantab_text =
+    # cleaned_paperab_text =
+    for pub in pubs:
         if pub.abstract == "":
             pass
         else:
-            score = Stats.euclidian(focal.abstract_text, pub.abstract)
+            cleaned_grantab = Stats.remove_common_words(focal.abstract_text)
+            cleaned_pubab = Stats.remove_common_words(pub.abstract)
+            score = Stats.euclidian(cleaned_grantab, cleaned_pubab)
             print(f'this is the eculdian score: {score}')
             pub.score = round(score, 3)
             pub.save()
-        # all_papers.append(Pubmed.parse_xml_web(paper.pmid, sleep=2, save_xml=False))
-        index += 1
-        # try Related_grant.objects.get(core_project_num = focal.core_project_num):
 
     all_papers_score = Score.return_all_scores
     n = Score.return_n
-    focal_papers_score = Score.return_focal_scores(all_papers)
+    focal_papers_score = Score.return_focal_scores(pubs)
     box_plot_data ={"n": n, "all_papers_score": all_papers_score, "focal_papers_score": focal_papers_score}
 
 
@@ -239,21 +207,5 @@ def publications(request):
     dif_grant = related.exclude(project_title = focal.project_title)
     print(f'same grant dif year: {same_grant_dif_year}')
     print(f'dif grant: {dif_grant}')
-        # except:
-            # related_grants = None
 
-
-        # time.sleep(0.5)
-    return render(request, 'CapApp/publications.html', {'all_papers':all_papers, 'focal': focal, 'same_grant_dif_year': same_grant_dif_year, 'all_papers_score':all_papers_score, 'focal_papers_score':focal_papers_score, 'n':n })
-
-
-# def your_view(request):
-#     ''' This could be your actual view or a new one '''
-#     # Your code
-#     if request.method == 'GET': # If the form is submitted
-#
-#         search_query = request.GET.get('search_box', None)
-
-# def help(request):
-#     helpdict = {'help_insert': 'HELP PAGE'}
-#     return render(request, 'CapApp/help.html',context=helpdict)
+    return render(request, 'CapApp/publications.html', {'pubs':pubs, 'focal': focal, 'same_grant_dif_year': same_grant_dif_year, 'all_papers_score':all_papers_score, 'focal_papers_score':focal_papers_score, 'n':n })

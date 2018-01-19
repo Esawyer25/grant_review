@@ -370,8 +370,8 @@ function type(d) {
   <h2>
     Resulting papers
   </h2>
-  {% if all_papers%}
-    {% for paper in all_papers %}
+  {% if pubs%}
+    {% for paper in pubs %}
       <article class = "paper-summary">
 
         <div class="paper_header">
@@ -433,7 +433,7 @@ function type(d) {
             <strong>Comparison Score</strong>: {{paper.score}}
           </p>
           <p class= "small">
-              (Score is the eculidian distance between the "bag-of-words" representing the grant abstract and the paper abstract)
+              (Score is the eculidian distance between the "bag-of-words" representing the grant abstract and the paper abstract.  Midline = Median, w)
           </p>
           {%endif%}
           <p>

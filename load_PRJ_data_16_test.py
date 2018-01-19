@@ -77,7 +77,7 @@ for zip_file in zip_files:
                 # print(row[1])
                 grant.activity = row [1]
                 # print(row[2])
-                grant.administering_ic = row[2].title
+                grant.administering_ic = row[2]
                 # print(row[3])
                 grant.application_type = row[3]
 
@@ -235,7 +235,7 @@ for zip_file in zip_files:
 # U - Cooperative Agreements (e.g. U01, U09)
 # Y - Inter-Agency/Intra-Agency Agreements (e.g. Y01, Y02)
 # Z - Intramural Research (e.g. Z01)
-groups= ["C", "G", "H", "L", "O", "P", "T", "U", "V", "I", "M", "N", "X" "Y,", "Z"]
+groups= ["C", "G", "H", "L", "O", "P", "T", "U", "V", "I", "M", "N", "X" "Y,", "Z", " R24", "KL2", "R4", "R18", "R13", "R24", "RM1"]
 for code in groups:
     temp = Grant.objects.filter(activity__startswith = code)
     print(f'deleting {temp.count()} grants starting with {code}')
@@ -277,12 +277,19 @@ for zip_file in zip_files:
                     abstract_text = abstract_text[1:]
 
                 string = "Abstract: DESCRIPTION (provided by applicant): "
-                if string in abstract_text
+                if string in abstract_text:
                      abstract_text = abstract_text.replace(string, "")
 
-                if string = "PROJECT SUMMARY/ ABSTRACT DESCRIPTION: See instructions. State the application's broad, long-term objectives and specific aims, making reference to the health relatedness of the project (i.e., relevance to the mission of the agency). Describe concisely the research design and methods for achieving these goals. Describe the rationale and techniques you will use to pursue these goals. In addition, in two or three sentences, describe in plain, lay language the relevance of this research to public health. If the application is funded, this description, as is, will become public information. Therefore, do not include proprietary/confidential information. DO NOT EXCEED THE SPACE PROVIDED."
+                # if string = "PROJECT SUMMARY/ ABSTRACT DESCRIPTION: See instructions. State the application's broad, long-term objectives and specific aims, making reference to the health relatedness of the project (i.e., relevance to the mission of the agency). Describe concisely the research design and methods for achieving these goals. Describe the rationale and techniques you will use to pursue these goals."
+                #
+                # if string in abstract_text:
+                #      abstract_text = abstract_text.replace(string, "")
+                #
+                # focal.abstract_text = abstract_text
+                #
+                # string ="In addition, in two or three sentences, describe in plain, lay language the relevance of this research to public health. If the application is funded, this description, as is, will become public information. Therefore, do not include proprietary/confidential information. DO NOT EXCEED THE SPACE PROVIDED."
 
-                if string in abstract_text
+                if string in abstract_text:
                      abstract_text = abstract_text.replace(string, "")
 
                 focal.abstract_text = abstract_text

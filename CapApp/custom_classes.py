@@ -1,9 +1,54 @@
 from django.core.exceptions import ValidationError
-from CapApp.models import Grant, Grant_Publication, Keyword, Publication
+from CapApp.models import Grant, Grant_Publication, Keyword, Publication, Related_grant
 import datetime
 import json
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import euclidean_distances
+from CapApp.pubmed import Pubmed
+
+class Publication_methods:
+    def return_list_of_publications(list_papers):
+        pubs = []
+        for paper in list_papers:
+            temp = None
+            print(f'this is the pmid{paper.pmid}')
+            try:
+                Publication.objects.get(pmid = paper.pmid)
+                temp = Publication.objects.get(pmid = paper.pmid)
+                # print(temp)
+                pub = temp
+            except:
+                temp = (Pubmed.parse_xml_web(paper.pmid, sleep=0.5, save_xml=False))
+                # print(temp)
+                pub = Publication()
+                pub.pmid = paper.pmid
+                pub.title = temp['title']
+                pub.abstract = temp['abstract']
+                pub.journal = temp['journal']
+                pub.affiliation = temp['affiliation']
+
+                list = temp['authors'].split(";")
+                for item in list:
+                    item = item.title
+                    if item == "":
+                        list.remove(item)
+
+                pub.authors = list
+                pub.year = temp['year']
+                try:
+                    Publication.full_clean(pub)
+                except ValidationError as e:
+                    print(e)
+
+                try:
+                    pub.save()
+                    print(f'I saved this pub pmid: {pub.pmid}')
+                except:
+                    print(f"there was a problem saving publication {paper.pmid}")
+            pubs.append(pub)
+
+        return (pubs)
+
 
 class Score:
     def return_all_scores():
@@ -374,77 +419,29 @@ class Stats:
 
         return grant_stats_dict
 
-    # def ab_word_list(abstract):
-    #     COMMON_WORDS_SET = set(['', 'What', 'Had', 'Has', 'Be', 'We', 'His', 'Her', 'Not', 'Now', 'By', 'On', 'Did', 'Of', 'She', 'Can', 'Or', 'Day', 'Are', 'Go', 'Find', 'From', 'For', 'Long', 'Which', 'More', 'That', 'Water', 'Part', 'Than', 'He', 'Made', 'Word', 'Look', 'This', 'Could', 'Up', 'Were', 'My', 'First', 'People', 'Use', 'Said', 'Would', 'No', 'Make', 'There', 'When', 'Two', 'Their', 'Way', 'Was', 'Get', 'But', 'Come', 'These', 'So', 'Been', 'Time', 'And', 'How', 'Into', 'Number', 'Him', 'Down', 'See', 'Your', 'Out', 'Write', 'To', 'Other', 'Call', 'You', 'An', 'Each', 'Do', 'Them', 'Oil', 'May', 'Who', 'They', 'Many', 'With', 'A', 'About', 'Like', 'Then', 'I', 'Will', 'The', 'All', 'Is', 'Some', 'It', 'One', 'As', 'At', 'Have', 'In', 'Its', 'If', 'Dr', 'And/or', 'May','To','Project', 'From','On', 'Our', 'Such'])
-    #
-    #     COMMON_PUNTUATION =set(['.','?',',', ';', ':' '1)','2)','3)','4)', ')', ')', '#1', ' 1 ', ' 2 ', ' 3 ', ' 4 ', ' 5 ', ' 6 ', ' 7 ', ' 8 ', ' 9 ', ' = '])
-    #     for punt in COMMON_PUNTUATION:
-    #         abstract = abstract.replace(punt, "")
-    #
-    #     abstract = abstract.split(" ")
-    #     abstract_list = []
-    #     for word in abstract:
-    #         abstract_list.append(word.capitalize())
-    #
-    #     remove_list = []
-    #     for word in abstract_list:
-    #         if word in COMMON_WORDS_SET:
-    #             remove_list.append(word)
-    #
-    #     for word in remove_list:
-    #         abstract_list.remove(word)
-    #     return abstract_list
+    def remove_common_words(abstract):
+        COMMON_WORDS_SET = set(['', 'A', 'What', 'Had', 'Has', 'Be', 'We', 'His', 'Her', 'Not', 'Now', 'By', 'On', 'Did', 'Of', 'She', 'Can', 'Or', 'Day', 'Are', 'Go', 'Find', 'From', 'For', 'Long', 'Which', 'More', 'That', 'Water', 'Part', 'Than', 'He', 'Made', 'Word', 'Look', 'This', 'Could', 'Up', 'Were', 'My', 'First', 'People', 'Use', 'Said', 'Would', 'No', 'Make', 'There', 'When', 'Two', 'Their', 'Way', 'Was', 'Get', 'But', 'Come', 'These', 'So', 'Been', 'Time', 'And', 'How', 'Into', 'Number', 'Him', 'Down', 'See', 'Your', 'Out', 'Write', 'To', 'Other', 'Call', 'You', 'An', 'Each', 'Do', 'Them', 'Oil', 'May', 'Who', 'They', 'Many', 'With', 'A', 'About', 'Like', 'Then', 'I', 'Will', 'The', 'All', 'Is', 'Some', 'It', 'One', 'As', 'At', 'Have', 'In', 'Its', 'If', 'Dr', 'And/or', 'May','To','Project', 'From','On', 'Our', 'Such', 'Description', '(provided', 'Applicant:', 'Where', 'Mostly', 'Here', 'Propose', 'Hypothesis', 'Address', 'Also', 'Already', 'Every', 'Aim', 'Finally', 'Although', 'Over', 'While', 'Study', 'Very', 'Well', 'Also', 'Of', 'Why'])
 
-    # def grantab_dict(abstract_list):
-    #     ab_dict = {}
-    #     for word in abstract_list:
-    #         word = word.capitalize()
-    #         try:
-    #             value = ab_dict[word]
-    #         except KeyError:
-    #             value = None
-    #         if value:
-    #             ab_dict[word][0] += 1
-    #         else:
-    #             ab_dict[word] = [1, 0]
-    #     return ab_dict
+        COMMON_PUNTUATION =set(['.','?',',', ';', ':' '1)','2)','3)','4)', ')', ')', '#1', ' 1 ', ' 2 ', ' 3 ', ' 4 ', ' 5 ', ' 6 ', ' 7 ', ' 8 ', ' 9 ', ' = ', '1:', '2:', '3:', '4:', ' - '])
 
-    # def make_similarity_dict(grant_ab, paper_ab):
-    #     #make a dict with the words in the grant_ab
-    #     #{word: [1], other: [2]}
-    #     grant_ab_list = Stats.ab_word_list(grant_ab)
-    #     print ('I made an grant_ab_list')
-    #     grant_ab_dict = Stats.grantab_dict(grant_ab_list)
-    #     print ('I made an grant_ab_dict')
-    #     #add the words in the paper ab to the dict
-    #     paper_ab_list = Stats.ab_word_list(paper_ab)
-    #     print ('I made an paper_ab_list')
-    #     for word in paper_ab_list:
-    #         word.capitalize()
-    #         #if the word is already in the dict
-    #         try:
-    #             value = grant_ab_dict[word]
-    #         except KeyError:
-    #             value = None
-    #
-    #         if value:
-    #             grant_ab_dict[word][1] += 1
-    #         else:
-    #             grant_ab_dict[word]= [0, 1]
-    #     similarity_score = Stats.similarity_score(grant_ab_dict, len(grant_ab_list), len(paper_ab_list))
-    #     print(f'this is the similarity_score {similarity_score}')
-    #     return similarity_score
 
-    # def similarity_score(grant_ab_dict, grant_length, paper_length):
-    #     similar = 0
-    #     different = 0
-    #     for word, values in grant_ab_dict.items():
-    #         if values[0] > 0 and values[1] > 0:
-    #             similar += 1
-    #         else:
-    #             different += 1
-    #     score = similar/ grant_length
-    #     return score
+        for punt in COMMON_PUNTUATION:
+            abstract = abstract.replace(punt, "")
+
+        abstract = abstract.split(" ")
+        abstract_list = []
+        for word in abstract:
+            abstract_list.append(word.capitalize())
+
+            remove_list = []
+            for word in abstract_list:
+                if word in COMMON_WORDS_SET:
+                    remove_list.append(word)
+
+        for word in remove_list:
+            abstract_list.remove(word)
+
+        return ' '.join(abstract_list)
 
     def euclidian(grant_ab, paper_ab):
 
@@ -464,7 +461,64 @@ class Stats:
         return(euclidean_distances(features[0], f)[0][0])
 
 
+class Relate_grants:
+    def set_related_grant_stats(grant_list):
+        for grant in grant_list:
+            #get the related_grants object
+            related_grant_object = None
+            try:
+                related_grant_object = grant.related_grant_set.get()
+            except:
+                pass
 
+            #if the grant_object already has the total costs stored, use that.
+            if related_grant_object:
+                try:
+                    grant.total_funding_of_core_numb = related_grant_object.total_funding_of_core_numb
+                except:
+                    pass
 
+                try:
+                    grant.total_direct_of_core_numb = related_grant_object.total_direct_of_core_numb
+                except:
+                    pass
+
+                try:
+                    grant.total_indirect_of_core_numb = related_grant_object.total_indirect_of_core_numb
+                except:
+                    pass
+            #if it doesn't have the total cost scored, calculate it
+            else:
+                #find all the grants associated with that object
+                print('saving new related_grant_object')
+                assoc_grants = Grant.objects.filter(core_project_num = grant.core_project_num)
+                total_cost = 0
+                indirect = 0
+                direct = 0
+                for assoc_grant in assoc_grants:
+                    if assoc_grant.total_cost:
+                        total_cost += assoc_grant.total_cost
+
+                    if assoc_grant.indirect_cost_amt:
+                        indirect += assoc_grant.indirect_cost_amt
+
+                    if assoc_grant.direct_cost_amt:
+                        direct += assoc_grant.direct_cost_amt
+
+                new_R_G_O= Related_grant()
+                new_R_G_O.total_funding_of_core_numb = total_cost
+                grant.total_funding_of_core_numb = total_cost
+
+                new_R_G_O.total_indirect_of_core_numb = indirect
+                grant.total_indirect_of_core_numb = indirect
+
+                new_R_G_O.total_direct_of_core_numb = direct
+                grant.total_direct_of_core_numb = direct
+
+                new_R_G_O.save()
+                grant.save()
+
+                new_R_G_O.grants.set(assoc_grants)
+        return(grant_list)
         #make hash of grant_ab
         #{word: 2}
