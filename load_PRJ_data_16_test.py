@@ -217,29 +217,16 @@ for zip_file in zip_files:
                 except:
                     print('there was a problem with row')
                     # print(f"saved {success} out of {index}")
-        print(f'{csv_file_path} saved {success} out of {index}'')
+        # print(f'{csv_file_path} saved {success} out of {index}')
 
-        print(f'removing {csv_file_path}')
+        # print(f'removing {csv_file_path}')
         os.remove(csv_file_path)
 
-# C - Research Construction Programs (e.g. C06)
-# D - Training Projects (e.g. D43)
-# F - Fellowship Programs (e.g. F31, F32)
-# K - Research Career Programs (e.g. K08, K24)
-# M - General Clinical Research Centers Programs (e.g. M01)
-# N - Research and Development-Related Contracts (e.g. N01, N02)
-# P - Research Program Projects and Centers (e.g. P30, P50)
-# R - Research Projects (e.g. R01, R21)
-# S - Research-Related Programs (e.g. S10)
-# T - Training Programs (e.g. T32, T37)
-# U - Cooperative Agreements (e.g. U01, U09)
-# Y - Inter-Agency/Intra-Agency Agreements (e.g. Y01, Y02)
-# Z - Intramural Research (e.g. Z01)
 groups= ['C', 'G', 'H', 'L', 'O', 'P', 'T', 'U', 'V', 'I', 'M', 'N', 'X' 'Y,', 'Z', 'R24', 'KL2', 'R4', 'R18', 'R13', 'R24', 'RM1']
 
 for code in groups:
     temp = Grant.objects.filter(activity__startswith = code)
-    print(f'deleting {temp.count()} grants starting with {code}')
+
     temp.delete()
 
 
@@ -302,8 +289,8 @@ for zip_file in zip_files:
             # print(f"saved application_id {grant.application_id}")
             # print(f"saved {success} out of {index}")
             except:
-                print(f'there was a problem with row {index}, application id: {row[0]}, file: {csv_file_path}'')
+                # print(f'there was a problem with row {index}, application id: {row[0]}, file: {csv_file_path}'')
                 # print(f"saved {success} out of {index}")
-    print(f'file {csv_file_path} saved {success} out of {index}'')
+    # print(f'file {csv_file_path} saved {success} out of {index}'')
 
     os.remove(csv_file_path)
