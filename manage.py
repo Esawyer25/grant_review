@@ -3,8 +3,8 @@ import os
 import sys
 
 #uncomment for deployment?
-# import django
-# django.setup()
+import django
+django.setup()
 
 
 if __name__ == "__main__":
