@@ -215,7 +215,7 @@ for zip_file in zip_files:
                     # print(f"saved application_id {grant.application_id}")
                     # print(f"saved {success} out of {index}")
                 except:
-                    print(f"there was a problem with row {index}, application id: {row[0]}, file {csv_file_path}")
+                    print(f'there was a problem with row {index}, application id: {row[0]}, file {csv_file_path}')
                     # print(f"saved {success} out of {index}")
         print(f"{csv_file_path} saved {success} out of {index}")
 
