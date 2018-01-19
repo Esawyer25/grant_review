@@ -276,6 +276,15 @@ for zip_file in zip_files:
                 if abstract_text[0] == "?":
                     abstract_text = abstract_text[1:]
 
+                string = "Abstract: DESCRIPTION (provided by applicant): "
+                if string in abstract_text
+                     abstract_text = abstract_text.replace(string, "")
+
+                if string = "PROJECT SUMMARY/ ABSTRACT DESCRIPTION: See instructions. State the application's broad, long-term objectives and specific aims, making reference to the health relatedness of the project (i.e., relevance to the mission of the agency). Describe concisely the research design and methods for achieving these goals. Describe the rationale and techniques you will use to pursue these goals. In addition, in two or three sentences, describe in plain, lay language the relevance of this research to public health. If the application is funded, this description, as is, will become public information. Therefore, do not include proprietary/confidential information. DO NOT EXCEED THE SPACE PROVIDED."
+
+                if string in abstract_text
+                     abstract_text = abstract_text.replace(string, "")
+
                 focal.abstract_text = abstract_text
 
                 try:
