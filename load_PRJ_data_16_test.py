@@ -217,10 +217,10 @@ for zip_file in zip_files:
                 except:
                     print('there was a problem with row')
                     # print(f"saved {success} out of {index}")
-        # print(f'{csv_file_path} saved {success} out of {index}')
+            print('i have reached the end of a row')
 
-        # print(f'removing {csv_file_path}')
-        os.remove(csv_file_path)
+    os.remove(csv_file_path)
+    print('I HAVE REACHED THE END OF A FILE')
 
 groups= ['C', 'G', 'H', 'L', 'O', 'P', 'T', 'U', 'V', 'I', 'M', 'N', 'X' 'Y,', 'Z', 'R24', 'KL2', 'R4', 'R18', 'R13', 'R24', 'RM1']
 
@@ -282,13 +282,14 @@ for zip_file in zip_files:
             except:
                 pass
 
-
             try:
                 focal.save()
                 success +=1
+                print('saved a grant abstrat')
             # print(f"saved application_id {grant.application_id}")
             # print(f"saved {success} out of {index}")
             except:
+                pass
                 # print(f'there was a problem with row {index}, application id: {row[0]}, file: {csv_file_path}'')
                 # print(f"saved {success} out of {index}")
     # print(f'file {csv_file_path} saved {success} out of {index}'')
