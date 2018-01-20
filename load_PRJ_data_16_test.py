@@ -190,25 +190,25 @@ for zip_file in zip_files:
 
                 # print(row[42])
                 if row[42] == '':
-                    grant.direct_cost_amt = None
+                    grant.direct_cost_amt = 0
                 else:
                     grant.direct_cost_amt = row[42]
 
                     # print(row[43])
                 if row[43] == '':
-                    grant.indirect_cost_amt = None
+                    grant.indirect_cost_amt = 0
                 else:
                     grant.indirect_cost_amt = row[43]
 
             # print(row[44])
                 if row[44] == '':
-                    grant.total_cost = None;
+                    grant.total_cost = 0;
                 else:
                     grant.total_cost = row[44]
 
             # print(row[45])
                 if row[45] == '':
-                    grant.total_cost_sub_project = None
+                    grant.total_cost_sub_project = 0
                 else:
                     grant.total_cost_sub_project = row[45]
 

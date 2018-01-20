@@ -9,43 +9,48 @@ from CapApp.pubmed import Pubmed
 class Publication_methods:
     def return_list_of_publications(list_papers):
         pubs = []
+        pmids = []
         for paper in list_papers:
-            temp = None
-            print(f'this is the pmid{paper.pmid}')
-            try:
-                Publication.objects.get(pmid = paper.pmid)
-                temp = Publication.objects.get(pmid = paper.pmid)
-                # print(temp)
-                pub = temp
-            except:
-                temp = (Pubmed.parse_xml_web(paper.pmid, sleep=0.5, save_xml=False))
-                # print(temp)
-                pub = Publication()
-                pub.pmid = paper.pmid
-                pub.title = temp['title']
-                pub.abstract = temp['abstract']
-                pub.journal = temp['journal']
-                pub.affiliation = temp['affiliation']
-
-                list = temp['authors'].split(";")
-                for item in list:
-                    item = item.title
-                    if item == "":
-                        list.remove(item)
-
-                pub.authors = list
-                pub.year = temp['year']
+            if paper.pmid in pmids:
+                pass
+            else:
+                pmids.append(paper.pmid)
+                temp = None
+                print(f'this is the pmid{paper.pmid}')
                 try:
-                    Publication.full_clean(pub)
-                except ValidationError as e:
-                    print(e)
-
-                try:
-                    pub.save()
-                    print(f'I saved this pub pmid: {pub.pmid}')
+                    Publication.objects.get(pmid = paper.pmid)
+                    temp = Publication.objects.get(pmid = paper.pmid)
+                    # print(temp)
+                    pub = temp
                 except:
-                    print(f"there was a problem saving publication {paper.pmid}")
-            pubs.append(pub)
+                    temp = (Pubmed.parse_xml_web(paper.pmid, sleep=0.5, save_xml=False))
+                    # print(temp)
+                    pub = Publication()
+                    pub.pmid = paper.pmid
+                    pub.title = temp['title']
+                    pub.abstract = temp['abstract']
+                    pub.journal = temp['journal']
+                    pub.affiliation = temp['affiliation']
+
+                    list = temp['authors'].split(";")
+                    for item in list:
+                        item = item.title
+                        if item == "":
+                            list.remove(item)
+
+                    pub.authors = list
+                    pub.year = temp['year']
+                    try:
+                        Publication.full_clean(pub)
+                    except ValidationError as e:
+                        print(e)
+
+                    try:
+                        pub.save()
+                        print(f'I saved this pub pmid: {pub.pmid}')
+                    except:
+                        print(f"there was a problem saving publication {paper.pmid}")
+                pubs.append(pub)
 
         return (pubs)
 
@@ -467,81 +472,60 @@ class Relate_grants:
         print(grant_list)
         for grant in grant_list:
             #get the related_grants object
-            related_grant_object = None
-            print(related_grant_object)
+            rgo= None
             try:
-                related_grant_object = grant.related_grant_set.get()
-                print(f'I found this is related_grant_set: {related_grant_object}' )
+                rgo = grant.related_grant_set.get()
+                print(f'I found this related_grant_set: {related_grant_object}' )
             except:
                 pass
+            print(rgo)
+        #if there is no related_grant_object, make one.
+            if rgo == None:
+                print('saving new related_grant_object')
+                assoc_grants = Grant.objects.filter(core_project_num = grant.core_project_num)
+                total_cost = 0
+                indirect = 0
+                direct = 0
+                for assoc_grant in assoc_grants:
+                    if assoc_grant.total_cost:
+                        total_cost +=   assoc_grant.total_cost
 
+                    if assoc_grant.indirect_cost_amt:
+                        indirect += assoc_grant.indirect_cost_amt
 
+                    if assoc_grant.direct_cost_amt:
+                        direct +=  assoc_grant.direct_cost_amt
 
-            #if the grant_object already has the total costs stored, use that.
-            # if related_grant_object:
-            #     print('i am in first if')
-            #     try:
-            #         grant.total_funding_of_core_numb = related_grant_object.total_funding_of_core_numb
-            #     except:
-            #         pass
-            #
-            #     try:
-            #         grant.total_direct_of_core_numb = related_grant_object.total_direct_of_core_numb
-            #     except:
-            #         pass
-            #
-            #     try:
-            #         grant.total_indirect_of_core_numb = related_grant_object.total_indirect_of_core_numb
-            #     except:
-            #         pass
-            #     try
-            #     grant.save()
-            #if it doesn't have the total cost scored, calculate it
-            # else:
-                #find all the grants associated with that object
-            print('saving new related_grant_object')
-            assoc_grants = Grant.objects.filter(core_project_num = grant.core_project_num)
-            total_cost = 0
-            indirect = 0
-            direct = 0
-            for assoc_grant in assoc_grants:
-                if assoc_grant.total_cost:
-                    total_cost += assoc_grant.total_cost
+                rgo= Related_grant()
 
-                if assoc_grant.indirect_cost_amt:
-                    indirect += assoc_grant.indirect_cost_amt
+                rgo.core_project_num = grant.core_project_num
 
-                if assoc_grant.direct_cost_amt:
-                    direct += assoc_grant.direct_cost_amt
+                rgo.total_funding_of_core_numb = total_cost
 
-            new_R_G_O= Related_grant()
-            
-            new_R_G_O.core_project_num = grant.core_project_num
+                rgo.total_indirect_of_core_numb = indirect
 
-            new_R_G_O.total_funding_of_core_numb = total_cost
-            grant.total_funding_of_core_numb = total_cost
+                rgo.total_direct_of_core_numb = direct
+                try:
+                    rgo.save()
+                    print('this is the new_R_G_O ')
+                    print(rgo.core_project_num)
 
-            new_R_G_O.total_indirect_of_core_numb = indirect
-            grant.total_indirect_of_core_numb = indirect
+                except ValidationError as e:
+                    print(e)
 
-            new_R_G_O.total_direct_of_core_numb = direct
-            grant.total_direct_of_core_numb = direct
+                try:
+                    rgo.grants.set(assoc_grants)
+                except:
+                    print("there was a problem setting the RGO")
+            #set grant attributes based on rgo
+            grant.total_funding_of_core_numb = rgo.total_funding_of_core_numb
+            grant.total_indirect_of_core_numb = rgo.total_indirect_of_core_numb
+            grant.total_direct_of_core_numb = rgo.total_direct_of_core_numb
 
-            try:
-                new_R_G_O.save()
-                print('this is the new_R_G_O core_project_num')
-                print(new_R_G_O.core_project_num)
-
-            except:
-                print("there was a problem saving the rgo")
             try:
                 grant.save()
-            except:
-                print("there was a problem saving the grant")
-            try:
-                new_R_G_O.grants.set(assoc_grants)
-            except:
-                print("there was a problem setting the RGO")
+            except ValidationError as e:
+                print(e)
 
         return(grant_list)
         #make hash of grant_ab

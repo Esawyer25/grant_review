@@ -69,6 +69,11 @@ for word in keywords:
 
     Add_Keyword.set_keyword_stats(new_word, grant_list)
 
+    Related_grants.set_related_grant_stats(grant_list)
+
+
+
+
     # grant_stats = Stats.return_stats_by_year(grant_list, word)
     #
     # new_word.grant_count = grant_stats['totals']['grant_count']

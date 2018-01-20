@@ -205,7 +205,15 @@ class Grant(models.Model):
 #could I save this as an attribute instead of calculating it every time
     def number_of_papers(self):
         paper_list = Grant_Publication.objects.filter(project_number= self.core_project_num)
-        paper_number = paper_list.count()
+        pmids = []
+        count = 0
+        for paper in paper_list:
+            if paper.pmid in pmids:
+                pass
+            else:
+                pmids.append(paper.pmid)
+                count +=1
+        paper_number = count
         return paper_number
 
 
@@ -223,7 +231,7 @@ class Grant_Publication(models.Model):
     #     return self.pmid
 
 class Publication(models.Model):
-    pmid = models.CharField(max_length=16, null=True, blank=True,unique=True)
+    pmid = models.CharField(max_length=16, null=True, blank=True, unique=True)
 
     title = models.CharField(max_length=500, null=True, blank=True)
 
