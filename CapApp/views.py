@@ -79,69 +79,7 @@ def grants(request):
         grant_list_short = Add_Keyword.make_short_list(grant_list_long)
 
     #4) find total cost associated with grant
-    #if this works consider moving it to a script on
-    #data base launch
-    #TODO: Revisit this when you are reloading the database. Should be able to delete all of this.
     Relate_grants.set_related_grant_stats(grant_list_short)
-    # for grant in grant_list_short:
-    #     #get the related_grants object
-    #     related_grant_object = None
-    #     try:
-    #         related_grant_object = grant.related_grant_set.get()
-    #     except:
-    #         pass
-    #
-    #     #if the grant_object already has the total costs stored, use that.
-    #     if related_grant_object:
-    #         try:
-    #             grant.total_funding_of_core_numb = related_grant_object.total_funding_of_core_numb
-    #         except:
-    #             pass
-    #
-    #         try:
-    #             grant.total_direct_of_core_numb = related_grant_object.total_direct_of_core_numb
-    #         except:
-    #             pass
-    #
-    #         try:
-    #             grant.total_indirect_of_core_numb = related_grant_object.total_indirect_of_core_numb
-    #         except:
-    #             pass
-    #     #if it doesn't have the total cost scored, calculate it
-    #     else:
-    #         #find all the grants associated with that object
-    #         print('saving new related_grant_object')
-    #         assoc_grants = Grant.objects.filter(core_project_num = grant.core_project_num)
-    #         total_cost = 0
-    #         indirect = 0
-    #         direct = 0
-    #         for assoc_grant in assoc_grants:
-    #             if assoc_grant.total_cost:
-    #                 total_cost += assoc_grant.total_cost
-    #
-    #             if assoc_grant.indirect_cost_amt:
-    #                 indirect += assoc_grant.indirect_cost_amt
-    #
-    #             if assoc_grant.direct_cost_amt:
-    #                 direct += assoc_grant.direct_cost_amt
-    #
-    #         new_R_G_O= Related_grant()
-    #         new_R_G_O.total_funding_of_core_numb = total_cost
-    #         grant.total_funding_of_core_numb = total_cost
-    #
-    #         new_R_G_O.total_indirect_of_core_numb = indirect
-    #         grant.total_indirect_of_core_numb = indirect
-    #
-    #         new_R_G_O.total_direct_of_core_numb = direct
-    #         grant.total_direct_of_core_numb = direct
-    #
-    #         new_R_G_O.save()
-    #         grant.save()
-    #
-    #         new_R_G_O.grants.set(assoc_grants)
-
-        # print (f'total funding of grant number {grant.core_project_num} is:  {grant.total_funding_of_core_numb}')
-
 
     #5)Paginate the first 100 results
     c = datetime.datetime.now()

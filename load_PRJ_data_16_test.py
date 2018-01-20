@@ -4,6 +4,12 @@ import sys
 
 PATH=os.path.abspath(os.path.dirname(__file__))
 
+if 'SECRET_KEY' in os.environ:
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    pass
+else:
+    from .settings_secret import SECRET_KEY
+
 if os.name == 'posix': # Unix based systems
     bin_name = 'bin'
 else:                  # Windows
@@ -19,7 +25,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'CapProj.settings')
 
 django.setup()
 from django.core.exceptions import ValidationError
-from CapApp.models import Grant
+from CapApp.models import Grant, Keyword
+from CapApp.custom_classes import Stats, Add_Keyword
 
 import csv
 
@@ -51,7 +58,8 @@ def make_array_feild(data):
 
 import zipfile
 
-zip_files = ['seed_data/zipfiles_PRJ/RePORTER_PRJ_C_FY2016.zip', 'seed_data/zipfiles_PRJ/RePORTER_PRJ_C_FY2015.zip']
+# zip_files = ['seed_data/zipfiles_PRJ/RePORTER_PRJ_C_FY2016.zip', 'seed_data/zipfiles_PRJ/RePORTER_PRJ_C_FY2015.zip']
+zip_files = ['seed_data/zipfiles_PRJ/RePORTER_PRJ_C_FY2016.zip']
 
 for zip_file in zip_files:
     zf = zipfile.ZipFile(zip_file, 'r')
@@ -230,11 +238,12 @@ for code in groups:
     temp.delete()
 
 
-zip_files = [
-'seed_data/zipfiles_PRJ_ABS/RePORTER_PRJABS_C_FY2016.zip',
-'seed_data/zipfiles_PRJ_ABS/RePORTER_PRJABS_C_FY2015.zip',]
+# zip_files = [
+# 'seed_data/zipfiles_PRJ_ABS/RePORTER_PRJABS_C_FY2016.zip',
+# 'seed_data/zipfiles_PRJ_ABS/RePORTER_PRJABS_C_FY2015.zip',]
 
-# zip_files = ['zipfiles_PRJ_ABS/RePORTER_PRJ_C_FY2016.zip', 'zipfiles_PRJ_ABS/RePORTER_PRJ_C_FY2015.zip']
+zip_files = [
+'seed_data/zipfiles_PRJ_ABS/RePORTER_PRJABS_C_FY2016.zip']
 
 for zip_file in zip_files:
     zf = zipfile.ZipFile(zip_file, 'r')
@@ -259,15 +268,6 @@ for zip_file in zip_files:
                 string = 'Abstract: DESCRIPTION (provided by applicant): '
                 if string in abstract_text:
                      abstract_text = abstract_text.replace(string, '')
-
-                # if string = "PROJECT SUMMARY/ ABSTRACT DESCRIPTION: See instructions. State the application's broad, long-term objectives and specific aims, making reference to the health relatedness of the project (i.e., relevance to the mission of the agency). Describe concisely the research design and methods for achieving these goals. Describe the rationale and techniques you will use to pursue these goals."
-                #
-                # if string in abstract_text:
-                #      abstract_text = abstract_text.replace(string, "")
-                #
-                # focal.abstract_text = abstract_text
-                #
-                # string ="In addition, in two or three sentences, describe in plain, lay language the relevance of this research to public health. If the application is funded, this description, as is, will become public information. Therefore, do not include proprietary/confidential information. DO NOT EXCEED THE SPACE PROVIDED."
 
                 if string in abstract_text:
                      abstract_text = abstract_text.replace(string, '')
@@ -294,4 +294,77 @@ for zip_file in zip_files:
                 # print(f"saved {success} out of {index}")
     # print(f'file {csv_file_path} saved {success} out of {index}'')
 
+    os.remove(csv_file_path)
+
+###add keywords
+    keywords =["Primate", "Autism", "Primate", "Pain"]
+
+    for word in keywords:
+        word = word.capitalize()
+        print(f'this is the word: {word}')
+        try:
+            new_word = Keyword.objects.get(keyword__iexact=word)
+        except:
+            new_word = None
+
+        if new_word:
+            print(f'this is a repeat: {word}')
+        else:
+            new_word = Keyword()
+            new_word.keyword = word
+            new_word.searches = 0
+
+            try:
+                Keyword.full_clean(new_word)
+            except ValidationError as e:
+                print(e)
+
+
+            try:
+                new_word.save()
+                print(f'saved new keyword {new_word.keyword}')
+            except:
+                print(f"there was a problem saving with Keyword {word}")
+
+
+        grant_list =Grant.objects.filter(project_terms__search=word)
+        for grant in grant_list:
+            new_word.grants.add(grant)
+
+        Add_Keyword.set_keyword_stats(new_word, grant_list)
+
+### add link table
+zip_files = ['seed_data/zipfiles_linktables/RePORTER_PUBLNK_C_2016.zip']
+
+for zip_file in zip_files:
+    zf = zipfile.ZipFile(zip_file, 'r')
+    for zi in zf.infolist():
+        csv_file_path= zf.extract(zi)
+        print(csv_file_path)
+        zf.close()
+
+        dataReader = csv.reader(open(csv_file_path, encoding = "ISO-8859-1"), delimiter=',', quotechar='"')
+
+        for row in dataReader:
+
+            if row[0] != 'PMID': # Ignore the headerrow,
+        #consider only importing rows where the project_number exists in the database
+                grant_pub = Grant_Publication()
+            # print(row[0])
+                grant_pub.pmid = row[0]
+            # print(row[1])
+                grant_pub.project_number = row[1]
+
+                try:
+                    Grant_Publication.full_clean(grant_pub)
+                except ValidationError as e:
+                    print(e)
+
+                try:
+                        grant_pub.save()
+                        print('saved a link')
+                except:
+                    print('there was a problem with row with a link')
+
+        print(csv_file_path)
     os.remove(csv_file_path)
