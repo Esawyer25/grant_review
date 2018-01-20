@@ -291,7 +291,7 @@ class Publication(models.Model):
 
 
 class Keyword(models.Model):
-    keyword = models.CharField(max_length=100, null=True,unique=True)
+    keyword = models.CharField(max_length=100, null=True, unique=True)
 
     grants = models.ManyToManyField(Grant)
 
@@ -377,7 +377,7 @@ class Keyword(models.Model):
         ordering = ['-searches',]
 
 class Related_grant(models.Model):
-    core_project_num = models.CharField(max_length=30, null=True, blank=True)
+    core_project_num = models.CharField(max_length=30, null=True, blank=True, unique = True)
 
     grants = models.ManyToManyField(Grant)
 
@@ -387,8 +387,8 @@ class Related_grant(models.Model):
 
     total_indirect_of_core_numb = models.IntegerField(null=True, blank=True)
 
-    def __str__(self):
-        return self.core_project_num
+    # def __str__(self):
+    #     return self.core_project_num
 
 
 

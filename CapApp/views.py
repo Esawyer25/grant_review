@@ -137,8 +137,17 @@ def publications(request):
     focal_papers_score = Score.return_focal_scores(pubs)
     box_plot_data ={"n": n, "all_papers_score": all_papers_score, "focal_papers_score": focal_papers_score}
 
-
+    related_grant_object = None
+    try:
+        related_grant_object = Related_grant.objects.get(core_project_num = focal.core_project_num)
+        print('I found a related_grant_object')
+    except ValidationError:
+        print('I can not find a related_grant_object')
+        Relate_grants.set_related_grant_stats([focal])
+        
+    print(f'core_project_num: {focal.core_project_num}')
     related_grant_object = Related_grant.objects.get(core_project_num = focal.core_project_num)
+
     related = related_grant_object.grants.all()
     same_grant_dif_year = related.filter(project_title = focal.project_title)
     same_grant_dif_year = same_grant_dif_year.exclude(FY=focal.FY)
