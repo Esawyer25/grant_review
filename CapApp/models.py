@@ -345,6 +345,16 @@ class Keyword(models.Model):
 
     grant_indirect_cost_15 = models.IntegerField(null=True, blank=True)
 
+    grant_indirect_cost_16 = models.IntegerField(null=True, blank=True)
+
+    grant_count_14 = models.IntegerField(null=True, blank=True)
+
+    grant_total_cost_14 = models.IntegerField(null=True, blank=True)
+
+    grant_direct_cost_14 = models.IntegerField(null=True, blank=True)
+
+    grant_indirect_cost_14 = models.IntegerField(null=True, blank=True)
+
     f31_count= models.IntegerField(null=True, blank=True)
 
     f31_total_cost= models.IntegerField(null=True, blank=True)

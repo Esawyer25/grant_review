@@ -165,6 +165,14 @@ class Add_Keyword:
 
         new_word.grant_indirect_cost_15 = round(grant_stats['2015']['grant_indirect_cost'],-3)/1000
 
+        new_word.grant_count_14 = grant_stats['2014']['grant_count']
+
+        new_word.grant_total_cost_14 = round(grant_stats['2014']['grant_total_cost'],-3)/1000
+
+        new_word.grant_direct_cost_14 = round(grant_stats['2014']['grant_direct_cost'],-3)/1000
+
+        new_word.grant_indirect_cost_14 = round(grant_stats['2014']['grant_indirect_cost'],-3)/1000
+
         new_word.f31_count= grant_stats['totals']['f31_count']
         print(f'this is the f31 count {new_word.f31_count}')
 
@@ -270,7 +278,7 @@ class Stats:
         grant_dict = Stats.divide_by_FY(grant_list)
         stats_dict = {}
         stats_dict['totals'] = Stats.return_stats_dict(grant_list, query)
-        years = range(2015, 2018, 1)
+        years = range(2014, 2019, 1)
         for year in years:
             year_str = str(year)
             stats_dict[year_str] = Stats.return_stats_dict(grant_dict[year_str], query)
