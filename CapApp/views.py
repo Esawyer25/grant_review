@@ -61,7 +61,6 @@ def index(request):
         if keyword.grant_total_cost_17:
             keyword_2017['Year'] = 2017
             keyword_2017['keyword'] =keyword.keyword
-            keyword.grant_total_cost_17:
             keyword_2017['total_cost'] =round((keyword.grant_total_cost_17/1000), 1)
         else:
             pass
