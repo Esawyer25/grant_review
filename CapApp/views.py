@@ -58,9 +58,11 @@ def index(request):
         # keyword_2018[keyword] = keyword.keyword
         # keyword_2018[total_cost_18] =keyword.grant_total_cost_18
 
-        keyword_2017['Year'] = 2017
-        keyword_2017['keyword'] =keyword.keyword
-        keyword_2017['total_cost'] =round((keyword.grant_total_cost_17/1000), 1)
+
+        # keyword_2017['Year'] = 2017
+        # keyword_2017['keyword'] =keyword.keyword
+        # keyword.grant_total_cost_17:
+        # keyword_2017['total_cost'] =round((keyword.grant_total_cost_17/1000), 1)
 
         keyword_2016['Year'] = 2016
         keyword_2016['keyword'] =keyword.keyword
