@@ -54,9 +54,12 @@ def index(request):
         keyword_2016 = {}
         keyword_2015 = {}
 
-        # keyword_2018['Year'] = 2018
-        # keyword_2018[keyword] = keyword.keyword
-        # keyword_2018[total_cost_18] =keyword.grant_total_cost_18
+        if keyword.grant_total_cost_17:
+            keyword_2018['Year'] = 2018
+            keyword_2018[keyword] = keyword.keyword
+            keyword_2018[total_cost_18] =keyword.grant_total_cost_18
+        else:
+            pass
 
         if keyword.grant_total_cost_17:
             keyword_2017['Year'] = 2017
