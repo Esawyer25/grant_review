@@ -46,7 +46,38 @@ def index(request):
             request.session['query'] = q.rstrip()
             return HttpResponseRedirect('grants')
 
-    return render(request, 'CapApp/index.html', {'top_twenty_searches': top_twenty_searches, 'errors': errors})
+    #return a hash for the d3 scatterplot
+    scatter_dict =[]
+    for keyword in top_twenty_searches:
+        keyword_2018 = {}
+        keyword_2017 = {}
+        keyword_2016 = {}
+        keyword_2015 = {}
+
+        keyword_2017['Year'] = 2018
+        # keyword_2018[keyword] = keyword.keyword
+        # keyword_2018[total_cost_18] =keyword.grant_total_cost_18
+
+        keyword_2017['Year'] = 2017
+        keyword_2017['keyword'] =keyword.keyword
+        keyword_2017['total_cost'] =round((keyword.grant_total_cost_17/1000), 1)
+
+        keyword_2016['Year'] = 2016
+        keyword_2016['keyword'] =keyword.keyword
+        keyword_2016['total_cost'] =round((keyword.grant_total_cost_16/1000), 1)
+
+        keyword_2015['Year'] = 2015
+        keyword_2015['keyword'] =keyword.keyword
+        keyword_2015['total_cost'] =round((keyword.grant_total_cost_15/1000), 1)
+
+        # scatter_dict.append(keyword_2018)
+        scatter_dict.append(keyword_2017)
+        scatter_dict.append(keyword_2016)
+        scatter_dict.append(keyword_2015)
+
+    scatter_dict = json.dumps(scatter_dict)
+
+    return render(request, 'CapApp/index.html', {'top_twenty_searches': top_twenty_searches, 'errors': errors, 'scatter_dict': scatter_dict})
 
 
 
