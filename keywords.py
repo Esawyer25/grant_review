@@ -21,10 +21,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "CapProj.settings")
 django.setup()
 from django.core.exceptions import ValidationError
 from CapApp.models import Keyword, Grant
-from CapApp.custom_classes import Stats, Add_Keyword
+from CapApp.custom_classes import Stats, Add_Keyword, Relate_grants
 
 
-keywords =["Primate", "Autism", "Primate", "Pain", "Electrosensory", "Cancer", "big data", "biotechnology", "Lung", "Pulmonary fibrosis",  "evolution", "immunotherapy", "somatosensory", "learning", "memory","gender", "therapy", "cancer", "AIDS", "HIV", "cardiac", "stroke"]
+keywords =["Primate", "Autism", "Pain", "Electrosensory", "Cancer", "big data", "biotechnology", "Lung", "Pulmonary fibrosis",  "evolution", "immunotherapy", "somatosensory", "learning", "memory","gender", "therapy", "cancer", "AIDS", "HIV", "cardiac", "stroke"]
 
 # "machine learning", "nanotechnology", "adaptive immune response", "adaptive immunity", "adult", "youth", "disability", "flu", "deppression", "vaccine", "dementia", "malignant", "transplant", "somatosensory", "vision", "audition", "Hodgkin's Disease", "convergance", "cure", "olfaction","Acquired Cognitive Impairment","Acute Respiratory Distress Syndrome", "Adolescent Sexual Activity","data mining", "Agent Orange","Dioxin","Aging","Alcoholism","Allergic Rhinitis", "Hay Fever","ALS","Alzheimer's Disease","Alzheimer's","Alzheimer", "Alzheimer's Disease Related Dementias","American Indians","Alaska Natives","Anorexia","Anthrax","Antimicrobial Resistance","Anxiety Disorders","Aphasia", "Arctic","Arthritis","Assistive Technology","Asthma","Ataxia Telangiectasia","Louis–Bar syndrome", "Atherosclerosis","Attention Deficit Disorder","ADD","Autism","Autoimmune Disease","Back Pain","Batten Disease","Behavioral and Social Science","Biodefense","Bioengineering","Biotechnology","Bipolar Disorder","Brain Cancer","Brain Disorders","Breast Cancer","Burden of Illness","Cachexia","Cancer", "Cancer Genomics","Cannabinoid","Cardiovascular","Caregiving","Cerebral Palsy","Cerebrovascular","Cervical Cancer","Charcot-Marie-Tooth Disease","Child Abuse", "Neglect", "Childhood Leukemia", "Leukemia","Chronic Fatigue Syndrome", "ME/CFS","Chronic Liver Disease", "Cirrhosis","Chronic Obstructive", "Pulmonary Disease","Climate Change","Clinical Trials", "Colo-Rectal Cancer", "Alternative Medicine","Congenital","Congenital Heart Disease","Muscular Dystrophy","Congenital Structural Anomalies","Contraception","Reproduction","Cooley's Anemia","Crohn's Disease","Cystic Fibrosis","Dementia","Craniofacial Disease","Dental","Depression","Diabetes","Prader-Willi syndrome","Prader-Willi"]
 #"Diet","Fat","Obesity","Dietary Supplements","Diethylstilbestrol","DES","Digestive Diseases","Gallbladder","Peptic Ulcer","Down Syndrome","Drug Abuse","Duchenne","Duchenne Muscular Dystrophy","Becker","Becker Muscular Dystrophy","Muscular Dystrophy","Dystonia","Eating Disorders","Eczema","Atopic Dermatitis","Emergency Care","Emerging Infectious Diseases","Emphysema","Endocannabinoid","Endocrine Disruptors","Endometriosis","Epilepsy","Estrogen","Eye Disease","Facioscapulohumeral Muscular Dystrophy","Facioscapulohumeral","Fetal Alcohol Syndrome","Fibroid Tumors ","Uterine","Fibromyalgia","Food Allergies","Allergies","Foodborne Illness","Fragile X Syndrome","Frontotemporal Dementia ","FTD","Gene Therapy","Genetic Testing","Genetics","Global Warming","Climate Change","Headaches","Migrane","Health Disparities","Indoor Air Pollution","Health Services","Heart Disease","Coronary Heart Disease","Hematology","Hepatitis","Hepatitis A","Hepatitis B","Hepatitis C","HIV/AIDS","Hodgkin's Disease","Homelessness","Homicide","HPV","Cervical Cancer Vaccines"
@@ -71,7 +71,7 @@ for word in keywords:
 
     Add_Keyword.set_keyword_stats(new_word, grant_list)
 
-    Related_grants.set_related_grant_stats(grant_list)
+    Relate_grants.set_related_grant_stats(grant_list)
 
 
 
