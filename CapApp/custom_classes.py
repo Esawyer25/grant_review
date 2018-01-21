@@ -133,13 +133,13 @@ class Add_Keyword:
         new_word.grant_indirect_cost = round(grant_stats['totals']['grant_indirect_cost'],-3)/1000
         print( f'this is the indirect cost {new_word.grant_indirect_cost}')
 
-        # new_word.grant_count_18 = grant_stats['2018']['grant_count']
-        #
-        # new_word.grant_total_cost_18 = grant_stats['2018']['grant_total_cost']
-        #
-        # new_word.grant_direct_cost_18 = grant_stats['2018']['grant_direct_cost']
-        #
-        # new_word.grant_indirect_cost_18 = grant_stats['2018']['grant_indirect_cost']
+        new_word.grant_count_18 = grant_stats['2018']['grant_count']
+
+        new_word.grant_total_cost_18 = grant_stats['2018']['grant_total_cost']
+
+        new_word.grant_direct_cost_18 = grant_stats['2018']['grant_direct_cost']
+
+        new_word.grant_indirect_cost_18 = grant_stats['2018']['grant_indirect_cost']
 
         new_word.grant_count_17 = grant_stats['2017']['grant_count']
 
