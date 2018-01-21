@@ -8,7 +8,7 @@ if 'SECRET_KEY' in os.environ:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     pass
 else:
-    from .settings_secret import SECRET_KEY
+    from CapProj.settings_secret import SECRET_KEY
 
 if os.name == 'posix': # Unix based systems
     bin_name = 'bin'
@@ -59,7 +59,7 @@ def make_array_feild(data):
 import zipfile
 
 # zip_files = ['seed_data/zipfiles_PRJ/RePORTER_PRJ_C_FY2016.zip', 'seed_data/zipfiles_PRJ/RePORTER_PRJ_C_FY2015.zip']
-zip_files = ['seed_data/zipfiles_PRJ/RePORTER_PRJ_C_FY2016.zip']
+zip_files = ['seed_data/zipfiles_PRJ/RePORTER_PRJ_C_FY2016.zip', 'seed_data/zipfiles_PRJ/RePORTER_PRJ_C_FY2015.zip']
 
 for zip_file in zip_files:
     zf = zipfile.ZipFile(zip_file, 'r')
@@ -230,20 +230,24 @@ for zip_file in zip_files:
     os.remove(csv_file_path)
     print('I HAVE REACHED THE END OF A FILE')
 
-groups= ['C', 'G', 'H', 'L', 'O', 'P', 'T', 'U', 'V', 'I', 'M', 'N', 'X', 'Y', 'Z', 'R24', 'KL2', 'R4', 'R18', 'R13', 'R24', 'RM1']
+groups= ['C', 'G', 'H', 'L', 'O', 'P', 'T', 'U', 'V', 'I', 'M', 'N', 'X', 'Y', 'Z']
 
 for code in groups:
     temp = Grant.objects.filter(activity__startswith = code)
-
     temp.delete()
 
+activity_codes = ["IK3", 'R24', 'KL2', 'R4', 'R18', 'R13', 'R24', 'RM1']
+for code in activity_codes:
+    temp = Grant.objects.filter(activity = code)
+    temp.delete()
 
 # zip_files = [
 # 'seed_data/zipfiles_PRJ_ABS/RePORTER_PRJABS_C_FY2016.zip',
 # 'seed_data/zipfiles_PRJ_ABS/RePORTER_PRJABS_C_FY2015.zip',]
 
 zip_files = [
-'seed_data/zipfiles_PRJ_ABS/RePORTER_PRJABS_C_FY2016.zip']
+'seed_data/zipfiles_PRJ_ABS/RePORTER_PRJABS_C_FY2016.zip','seed_data/zipfiles_PRJ_ABS/RePORTER_PRJABS_C_FY2015.zip'
+]
 
 for zip_file in zip_files:
     zf = zipfile.ZipFile(zip_file, 'r')
@@ -284,7 +288,6 @@ for zip_file in zip_files:
 
             try:
                 focal.save()
-                success +=1
                 print('saved a grant abstrat')
             # print(f"saved application_id {grant.application_id}")
             # print(f"saved {success} out of {index}")
@@ -297,44 +300,44 @@ for zip_file in zip_files:
     os.remove(csv_file_path)
 
 ###add keywords
-    keywords =["Primate", "Autism", "Primate", "Pain"]
-
-    for word in keywords:
-        word = word.capitalize()
-        print(f'this is the word: {word}')
-        try:
-            new_word = Keyword.objects.get(keyword__iexact=word)
-        except:
-            new_word = None
-
-        if new_word:
-            print(f'this is a repeat: {word}')
-        else:
-            new_word = Keyword()
-            new_word.keyword = word
-            new_word.searches = 0
-
-            try:
-                Keyword.full_clean(new_word)
-            except ValidationError as e:
-                print(e)
-
-
-            try:
-                new_word.save()
-                print(f'saved new keyword {new_word.keyword}')
-            except:
-                print(f"there was a problem saving with Keyword {word}")
-
-
-        grant_list =Grant.objects.filter(project_terms__search=word)
-        for grant in grant_list:
-            new_word.grants.add(grant)
-
-        Add_Keyword.set_keyword_stats(new_word, grant_list)
+    # keywords =["Primate", "Autism", "Primate", "Pain", "Somatosensory"]
+    #
+    # for word in keywords:
+    #     word = word.capitalize()
+    #     print(f'this is the word: {word}')
+    #     try:
+    #         new_word = Keyword.objects.get(keyword__iexact=word)
+    #     except:
+    #         new_word = None
+    #
+    #     if new_word:
+    #         print(f'this is a repeat: {word}')
+    #     else:
+    #         new_word = Keyword()
+    #         new_word.keyword = word
+    #         new_word.searches = 0
+    #
+    #         try:
+    #             Keyword.full_clean(new_word)
+    #         except ValidationError as e:
+    #             print(e)
+    #
+    #
+    #         try:
+    #             new_word.save()
+    #             print(f'saved new keyword {new_word.keyword}')
+    #         except:
+    #             print(f"there was a problem saving with Keyword {word}")
+    #
+    #
+    #     grant_list =Grant.objects.filter(project_terms__search=word)
+    #     for grant in grant_list:
+    #         new_word.grants.add(grant)
+    #
+    #     Add_Keyword.set_keyword_stats(new_word, grant_list)
 
 ### add link table
-zip_files = ['seed_data/zipfiles_linktables/RePORTER_PUBLNK_C_2016.zip']
+zip_files = ['seed_data/zipfiles_linktables/RePORTER_PUBLNK_C_2016.zip','seed_data/zipfiles_linktables/RePORTER_PUBLNK_C_2015.zip']
 
 for zip_file in zip_files:
     zf = zipfile.ZipFile(zip_file, 'r')
