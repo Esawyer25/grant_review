@@ -28,7 +28,7 @@ import zipfile
 # Full path and name to csv file
 # csv_files= ["seed_data/linktables_csv/RePORTER_PUBLNK_C_2016.csv"]
 
-zip_files = ['seed_data/zipfiles_linktables/RePORTER_PUBLNK_C_2016.zip']
+zip_files = ['seed_data/zipfiles_linktables/RePORTER_PUBLNK_C_2016.zip','seed_data/zipfiles_linktables/RePORTER_PUBLNK_C_2015.zip', 'seed_data/zipfiles_linktables/RePORTER_PUBLNK_C_2014.zip']
 
 for zip_file in zip_files:
     zf = zipfile.ZipFile(zip_file, 'r')
@@ -61,3 +61,4 @@ for zip_file in zip_files:
                     print('there was a problem with row with a link')
 
         print(csv_file_path)
+    os.remove(csv_file_path)
