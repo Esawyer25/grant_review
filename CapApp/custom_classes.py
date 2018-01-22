@@ -219,11 +219,32 @@ class Add_Keyword:
 
 
     def make_short_list(grant_list_long):
-        if grant_list_long.count() > 100:
-            grant_list_short = grant_list_long[0:100]
-        else:
-            grant_list_short = grant_list_long
+
+
+        length = len(grant_list_long)
+
+        print (f'this is the length: {length}')
+        index = 0
+        success = 0
+        core_project_nums =[]
+        grant_list_short =[]
+
+        while success < 100 or index > length:
+            print(f'index: {index}')
+            print(f'index: {length}')
+            print(f'success: {success}')
+            core_id = grant_list_long[index].core_project_num
+            if core_id in core_project_nums:
+                pass
+            else:
+                grant_list_short.append(grant_list_long[index])
+                core_project_nums.append(core_id)
+                success += 1
+                print("a core project number")
+                print(grant_list_long[index].core_project_num)
+            index += 1
         return grant_list_short
+
 
     def incriment_keyword_searches(keyword_object):
         keyword_object.searches += 1
@@ -239,6 +260,18 @@ class Add_Keyword:
 
 
 class Stats:
+    def make_array_feild(data):
+        list = data.split(';')
+        array= {}
+        for item in list:
+            item = item.title
+            if item == '':
+                list.remove(item)
+            # if '(contact)' in item:
+            #     item.replace('(contact)','*')
+        array = set(list)
+        return array
+
     def find_cost(list):
         total_cost = 0
         direct_cost = 0

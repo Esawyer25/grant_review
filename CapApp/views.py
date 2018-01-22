@@ -55,13 +55,6 @@ def index(request):
         keyword_2015 = {}
         keyword_2014 = {}
 
-        # try:
-        #     keyword.grant_total_cost_18
-        # except:
-        #     keyword_2018['Year'] = 2018
-        #     keyword_2018[keyword] = keyword.keyword
-        #     keyword_2018[total_cost_18] = 0
-
         if keyword.grant_total_cost_18:
             keyword_2018['Year'] = 2018
             keyword_2018['keyword'] = keyword.keyword
