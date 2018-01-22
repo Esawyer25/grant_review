@@ -233,7 +233,7 @@ for zip_file in zip_files:
     os.remove(csv_file_path)
     print('I HAVE REACHED THE END OF A FILE')
 
-groups= ['C', 'G', 'H', 'L', 'O', 'P', 'T', 'U', 'V', 'I', 'M', 'N', 'X', 'Y', 'Z', 'R24', 'KL2', 'R4', 'R18', 'R13', 'R24', 'RM1']
+groups= ['B,''C', 'G', 'H', 'L', 'O', 'P', 'T', 'U', 'V', 'I', 'M', 'N', 'X', 'Y', 'Z', 'R24', 'KL2', 'R4', 'R18', 'R13', 'R24', 'RM1']
 
 for code in groups:
     temp = Grant.objects.filter(activity__startswith = code)

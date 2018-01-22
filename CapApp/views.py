@@ -44,7 +44,7 @@ def index(request):
             #     errors.append('Please enter at most 30 characters.')
             # else:
             request.session['query'] = q.rstrip()
-            return HttpResponseRedirect('grants')
+            return HttpResponseRedirect('grants/?q='+q)
 
     #return a hash for the d3 scatterplot
     scatter_dict =[]
@@ -53,11 +53,19 @@ def index(request):
         keyword_2017 = {}
         keyword_2016 = {}
         keyword_2015 = {}
+        keyword_2014 = {}
+
+        # try:
+        #     keyword.grant_total_cost_18
+        # except:
+        #     keyword_2018['Year'] = 2018
+        #     keyword_2018[keyword] = keyword.keyword
+        #     keyword_2018[total_cost_18] = 0
 
         if keyword.grant_total_cost_18:
             keyword_2018['Year'] = 2018
-            keyword_2018[keyword] = keyword.keyword
-            keyword_2018[total_cost_18] =keyword.grant_total_cost_18
+            keyword_2018['keyword'] = keyword.keyword
+            keyword_2018['total_cost'] =round((keyword.grant_total_cost_18/1000), 1)
         else:
             pass
 
@@ -74,17 +82,25 @@ def index(request):
             keyword_2016['total_cost'] =round((keyword.grant_total_cost_16/1000), 1)
         else:
             pass
-        if keyword.grant_total_cost_17:
+        if keyword.grant_total_cost_15:
             keyword_2015['Year'] = 2015
             keyword_2015['keyword'] =keyword.keyword
             keyword_2015['total_cost'] =round((keyword.grant_total_cost_15/1000), 1)
         else:
             pass
 
-        # scatter_dict.append(keyword_2018)
+        if keyword.grant_total_cost_14:
+            keyword_2014['Year'] = 2014
+            keyword_2014['keyword'] = keyword.keyword
+            keyword_2014['total_cost'] =round((keyword.grant_total_cost_14/1000), 1)
+        else:
+            pass
+
+        scatter_dict.append(keyword_2018)
         scatter_dict.append(keyword_2017)
         scatter_dict.append(keyword_2016)
         scatter_dict.append(keyword_2015)
+        scatter_dict.append(keyword_2014)
 
     scatter_dict = json.dumps(scatter_dict)
 
@@ -93,7 +109,8 @@ def index(request):
 
 
 def grants(request):
-    query = request.session['query']
+    query = request.GET.get('q', '')
+    # query = request.session['query']
 
     #1)See if there is a keyword_object for that keyword
     print(f'this is the query {query}')
@@ -163,6 +180,8 @@ def publications(request):
     # cleaned_paperab_text =
     for pub in pubs:
         if pub.abstract == "":
+            pass
+        elif focal.abstract_text == "":
             pass
         else:
             cleaned_grantab = Stats.remove_common_words(focal.abstract_text)

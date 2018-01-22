@@ -119,7 +119,6 @@ class Grant(models.Model):
     # num_of_papers = Grant_Publication.objects.get(project_num= self.core_project_num).count()
     def make_data_structure(self):
         abstract = self.abstract_text
-
         for punt in COMMON_PUNTUATION:
             abstract = abstract.replace(punt, "")
 

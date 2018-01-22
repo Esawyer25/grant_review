@@ -35,7 +35,7 @@
 
             // Define our scales
             var colorScale = d3.scale.category10();
-            var minyear = 2014
+            var minyear = 2013
             var maxyear = 2019
             var xScale = d3.scale.linear()
                 .domain([minyear, maxyear])
@@ -142,7 +142,7 @@
       <ul>
         {% for search in top_twenty_searches %}
         <li>
-          {{search.keyword}}
+        <a href="{%url 'grants'%} ?q={{search.keyword}}" class ="button">  {{search.keyword}}</a>
         </li>
       {%endfor%}
       </ul>

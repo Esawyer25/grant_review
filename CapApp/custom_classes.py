@@ -133,15 +133,15 @@ class Add_Keyword:
         new_word.grant_indirect_cost = round(grant_stats['totals']['grant_indirect_cost'],-3)/1000
         print( f'this is the indirect cost {new_word.grant_indirect_cost}')
 
-        new_word.grant_count_18 = grant_stats['2018']['grant_count']
+        new_word.grant_count_18 = round(grant_stats['2018']['grant_count']-3)/1000
 
-        new_word.grant_total_cost_18 = grant_stats['2018']['grant_total_cost']
+        new_word.grant_total_cost_18 = round(grant_stats['2018']['grant_total_cost']-3)/1000
 
-        new_word.grant_direct_cost_18 = grant_stats['2018']['grant_direct_cost']
+        new_word.grant_direct_cost_18 = round(grant_stats['2018']['grant_direct_cost']-3)/1000
 
-        new_word.grant_indirect_cost_18 = grant_stats['2018']['grant_indirect_cost']
+        new_word.grant_indirect_cost_18 = round(grant_stats['2018']['grant_indirect_cost']-3)/1000
 
-        new_word.grant_count_17 = grant_stats['2017']['grant_count']
+        new_word.grant_count_17 = round(grant_stats['2017']['grant_count'],-3)/1000
 
         new_word.grant_total_cost_17 = round(grant_stats['2017']['grant_total_cost'],-3)/1000
 
@@ -259,7 +259,7 @@ class Stats:
 
     def divide_by_FY(grant_list):
         # years = range(1985,2018,1)
-        years = range(2015, 2018, 1)
+        years = range(2014, 2019, 1)
         grants_by_year={}
         for year in years:
             year_str = str(year)
@@ -349,7 +349,7 @@ class Stats:
         return json.dumps(institution_hash)
 
     def return_stats_dict(grant_list, query):
-        grant1= grant_list
+        grant1 = grant_list
         a = datetime.datetime.now()
         grant_count = grant_list.count()
         costs = Stats.find_cost(grant_list)
