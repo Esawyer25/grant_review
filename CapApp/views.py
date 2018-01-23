@@ -37,12 +37,6 @@ def index(request):
         q = q.capitalize()
         print(f'query at the start of index GET: {q}')
         if q !="":
-        # if not q:
-        #     print('if not q')
-        #     errors.append('Enter a search term.')
-            # if len(q) > 30:
-            #     errors.append('Please enter at most 30 characters.')
-            # else:
             request.session['query'] = q.rstrip()
             return HttpResponseRedirect('grants/?q='+q)
 
@@ -151,13 +145,47 @@ def grants(request):
     #6)Calculate the stats for all the results
     # grant_stats = Stats.return_stats_by_year(grant_list_long, query)
 
+    #Make scatter plot array for papers vs. funding
+    scatterplot_array =[]
+    for grant in grant_list_short:
+        if grant.FY == 2018 and grant.support_year < 5:
+            all_years = True
+        elif grant.FY == 2017 and grant.support_year < 4:
+            all_years = True
+        elif grant.FY == 2016 and grant.support_year < 3:
+            all_years = True
+        elif grant.FY == 2015 and grant.support_year < 2:
+            all_years = True
+        elif grant.FY == 2014 and grant.support_year < 1:
+            all_years = True
+        else:
+            all_years = None
+
+        if all_years:
+            temp ={}
+            temp['number'] = grant.number_of_papers()
+            temp['total_cost'] = grant.total_funding_of_core_numb
+            temp['core_project_num'] =grant.core_project_num
+            scatterplot_array.append(temp)
+        else:
+            pass
+    scatterplot_array = json.dumps(scatterplot_array)
+    print(scatterplot_array)
+
+
+    #     temp = {}
+    #     temp['Cost'] = grant.total_cost
+    #     temp['num_papers'] = grant.number_of_papers
+    #     temp['Journal'] =
+
+
     states_dict = Stats.states(grant_list_long)
 
     states_top_inst = Stats.top_institutions(grant_list_long)
 
     keyword_object = Keyword.objects.get(keyword__iexact=query)
 
-    return render(request, 'CapApp/grants.html',{'grants':grant_list_short, 'keyword':keyword_object, 'states_dict': states_dict, 'states_top_inst': states_top_inst})
+    return render(request, 'CapApp/grants.html',{'grants':grant_list_short, 'keyword':keyword_object, 'states_dict': states_dict, 'states_top_inst': states_top_inst, 'scatterplot_array': scatterplot_array})
 
 #https://github.com/titipata/pubmed_parser
 #if you use this package please cite: Titipat Achakulvisut, Daniel E. Acuna (2015) "Pubmed Parser" http://github.com/titipata/pubmed_parser. http://doi.org/10.5281/zenodo.159504

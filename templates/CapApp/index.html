@@ -3,27 +3,20 @@
   {%block body_block%}
 
 
-    <div>
-      <h4>Enter keyword here</h4>
-      <form type="get" action="{% url 'index' %}" style="margin: 0">
-        <input  id="q" type="text" name="q"  placeholder="Search..." >
-        <button id="search_submit" type="submit" >Submit</button>
-      </form>
-    </div>
 
     <div>
-
-    <div id="vis-container" class="scatterplot pull-right">
-      <h5>Research Dollars Devoted to Keywords in Recent Years</h5>
+    <div id="vis-container" class="scatterplot pull-right ">
+      <h3>Research Dollars Devoted to Keywords in Recent Years</h3>
     </div>
       <!-- Optionally reference your vis JS file here, or define in a script tag -->
       <!-- <script type="text/javascript" src="js/my-vis.js"></script> -->
       <script type="text/javascript">
       data = ({{scatter_dict|safe}})
+      console.log(data)
         var makeVis = function(data) {
             // Common pattern for defining vis size and margins
             var margin = { top: 20, right: 20, bottom: 30, left: 50  },
-                width  = 500 - margin.left - margin.right,
+                width  = 600 - margin.left - margin.right,
                 height = 600 - margin.top - margin.bottom;
 
             // Add the visualization svg canvas to the vis-container <div>
@@ -135,6 +128,21 @@
 
         makeVis(data)
       </script>
+
+      <h4>Enter keyword here</h4>
+      <form type="get" action="{% url 'index' %}" style="margin: 0">
+        <input  id="q" type="text" name="q"  placeholder="Search..." >
+        <button id="search_submit" type="submit" >Submit</button>
+        <div>
+          <strong>Search in a specific year:</strong>
+            2018 <input id="checkBox18" type="checkbox" name= "Funding Year" value="2018">
+            2017 <input id="checkBox17" type="checkbox" name= "Funding Year" value="2017">
+            2016 <input id="checkBox16" type="checkbox" name= "Funding Year" value="2016">
+            2015 <input id="checkBox15" type="checkbox" name= "Funding Year" value="2015">
+            2014 <input id="checkBox14" type="checkbox" name= "Funding Year" value="2014">
+        </div>
+
+      </form>
 
 
       <h4>Top searches</h4>

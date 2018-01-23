@@ -53,12 +53,159 @@
     #tooltip tr td:nth-child(2){
       text-align:center;
     }
+
+    #scatter_tooltip {
+    font-size:14px;
+    color:black;
+    }
   </style>
 
-
-
     <div class="jumbotron">
-      <h2>Summary Figures for Grants with Keyword <strong><em>{{keyword.keyword}}</em></strong> </h2>
+      <h2>Summary Figures for Grants with Keyword <strong><em>{{keyword.keyword}}</em></strong>
+        <div class="pull-right">
+          <p>
+          </p>
+          <p>Research dollars vs. Publications</p>
+          <div id="vis-container" class ="small">
+            <p id ="scatterplot">
+            </p>
+          </div>
+        <script type="text/javascript">
+        data = ({{scatterplot_array|safe}})
+        console.log('this is the scatterplot data')
+        console.log(data)
+
+          var makeVis = function(data) {
+              // Common pattern for defining vis size and margins
+              var margin = { top: 30, right: 30, bottom: 70, left: 40  },
+                  width  = 700 - margin.left - margin.right,
+                  height = 250 - margin.top - margin.bottom;
+
+              // Add the visualization svg canvas to the vis-container <div>
+              var canvas = d3.select("#vis-container").append("svg")
+                  .attr("width",  width  + margin.left + margin.right)
+                  .attr("height", height + margin.top  + margin.bottom)
+                .append("g")
+                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+              // Define our scales
+              var colorScale = d3.scale.category10();
+              var xScale = d3.scale.linear()
+                  .domain([ d3.min(data, function(d) { return d.total_cost; }),
+                            d3.max(data, function(d) { return d.total_cost; }) + 100000 ])
+                  .range([0, width]);
+
+              var yScale = d3.scale.linear()
+                  .domain([ d3.min(data, function(d) { return d.number; }),
+                            d3.max(data, function(d) { return d.number; }) + 1 ])
+                  .range([height, 0]); // flip order because y-axis origin is upper LEFT
+
+              // Define our axes
+              var formatxAxis = d3.format('.0f');
+
+              var xAxis = d3.svg.axis()
+                  .scale(xScale)
+                  .orient('bottom')
+                  .tickFormat(formatxAxis)
+                  .ticks(4)
+                  // .tickValues(d3.range(d3.min(data, function(d) { return d.number; }), d3.max(data, function(d) { return d.number; }), 1));
+
+              var yAxis = d3.svg.axis()
+                  .scale(yScale)
+                  .ticks(4)
+                  .orient('left');
+
+
+              // Add x-axis to the canvas
+              canvas.append("g")
+                  .attr("class", "x axis")
+                  .attr("transform", "translate(0," + height + ")") // move axis to the bottom of the canvas
+                  .call(xAxis)
+                .append("text")
+                  .attr("class", "label")
+                  .attr("x", width) // x-offset from the xAxis, move label all the way to the right
+                  .attr("y", + 40)    // y-offset from the xAxis, moves text UPWARD!
+                  .style("text-anchor", "end") // right-justify text
+                  .text("Total Funding (thousands of $)");
+
+              // Add y-axis to the canvas
+              canvas.append("g")
+                  .attr("class", "y axis") // .orient('left') took care of axis positioning for us
+                  .call(yAxis)
+                  .append("text")
+                  .attr("class", "label")
+                  .attr("transform", "rotate(-90)") // although axis is rotated, text is not
+                  .attr("y", 15) // y-offset from yAxis, moves text to the RIGHT because it's rotated, and positive y is DOWN
+                  .style("text-anchor", "end")
+                  .text("Number of Papers");
+
+              // Add the tooltip container to the vis container
+              // it's invisible and its position/contents are defined during mouseover
+              var tooltip = d3.select("#vis-container").append("div")
+                  .attr("id", "scatter_tooltip")
+                  .style("opacity", 0)
+                  .style("right", 0)
+                  .style("bottom", 0);
+              // var tooltip = d3.select("#vis-container").append("div")
+              //     .attr("class", "tooltip")
+              //     .style("opacity", 0);
+
+
+              // tooltip mouseover event handler
+              var tipMouseover = function(d) {
+                  // var color = colorScale(d.core_project_num);
+                  // var color = black
+                  var html  = "<span style='color:" + color + ";'>" + "Core Project Number:"+ d.core_project_num +", Total cost: " + d.total_cost + "</span>" + ", Number of papers: "+ d.number ;
+
+                  tooltip.html(html)
+                  .style("left", (d3.event.pageX + 15) + "px")
+                  .style("top", (d3.event.pageY - 28) + "px")
+                  // .style("top", d3.select("svg").offsetTop + 10 + "px")
+                  // .style("left", d3.select("svg").offsetLeft + 270 + "px")
+                    // .style("left", (d3.event.pageX + 15) + "px")
+                    // .style("top", (d3.event.pageY - 28) + "px")
+                    // .style("right", d3.select("#scatterplot").attr("cx") + "px")
+                    // .style("bottom", d3.select("#scatterplot").attr("cy")+ "px")
+                    .transition()
+                    .duration(200) // ms
+                    .style("opacity", 1) // started as 0!
+
+              };
+              // tooltip mouseout event handler
+              var tipMouseout = function(d) {
+                  tooltip.transition()
+                      .duration(300) // ms
+                      .style("opacity", 0); // don't care about position!
+              };
+
+              // Add data points!
+              canvas.selectAll(".dot")
+                .data(data)
+              .enter().append("circle")
+                .attr("class", "dot")
+                .attr("r", 4) // radius size, could map to another data dimension
+                .attr("cx", function(d) { return xScale( d.total_cost ); })     // x position
+                .attr("cy", function(d) { return yScale( d.number ); })  // y position
+                // .attr("cy", function(d) {
+                //  return random_jitter();
+                // })
+                .style("fill", function(d) { return colorScale(d.core_project_num); })
+                .on("mouseover", tipMouseover)
+                .on("mouseout", tipMouseout);
+          };
+
+          function random_jitter(xloc) {
+            if (Math.round(Math.random() * 1) == 0)
+              var seed = -25;
+            else
+              var seed = 25;
+            return xloc + Math.floor((Math.random() * seed) + 1);
+          }
+          makeVis(data)
+        </script>
+
+
+       </h2>
           <p>
             Cost table (in thousands of dollars)
           </p>
@@ -169,7 +316,7 @@
             <p>
               Funding by grant type:
             </p>
-            <table id = "keyword_table">
+            <table id = "keyword_table" class = "small">
               <tr>
                 <th>
                   Award Name
@@ -181,7 +328,7 @@
                   Number of awards
                 </th>
                 <th>
-                  Total cost
+                  Total cost <br/>(in thousands of dollars)
                 </th>
               </tr>
 
@@ -307,8 +454,9 @@
 
             </table>
     </div>
+
     <div>
-      <h4>Location of funded grants</h4>
+      <h4>Location of grants funded to study <em>{{keyword.keyword}}</em></h4>
     <div id="tooltip"></div><!-- div to hold tooltip. -->
     <svg width="960" height="600" id="statesvg"></svg> <!-- svg to hold the map. -->
     </div>
@@ -419,7 +567,7 @@
             </p>
           </p>
           <p>
-            <strong>Number of Papers:</strong> {{grant.number_of_papers|intcomma}}
+            <strong>Number of Papers written off this grant:</strong> {{grant.number_of_papers|intcomma}}
             {% if grant.number_of_papers > 0%}
               <a href="{%url 'publications'%} ?app_id={{grant.application_id}}" class ="button">See the papers</a>
 
@@ -484,7 +632,6 @@
               </td>
             </tr>
           </table>
-          {{grant.application_id}}
           </div>
           <div class="abstract">
           <p>

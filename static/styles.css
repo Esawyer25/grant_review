@@ -54,3 +54,7 @@ tr td, th {
   margin:20px;
   border: black;
 }
+
+#vis-container {
+  margin: 20px;
+}

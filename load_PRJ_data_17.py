@@ -142,7 +142,7 @@ for zip_file in zip_files:
 
                 grant.pi_ids = row[28]
 
-                grant.pi_name= make_array_feild(row[29])
+                grant.pi_name= row[29]
 
                 # grant.program_officer_name = row[30]
 

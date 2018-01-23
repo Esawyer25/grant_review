@@ -15,44 +15,47 @@ class Publication_methods:
                 pass
             else:
                 pmids.append(paper.pmid)
-                temp = None
-                print(f'this is the pmid{paper.pmid}')
-                try:
-                    Publication.objects.get(pmid = paper.pmid)
-                    temp = Publication.objects.get(pmid = paper.pmid)
-                    # print(temp)
-                    pub = temp
-                except:
-                    temp = (Pubmed.parse_xml_web(paper.pmid, sleep=0.5, save_xml=False))
-                    # print(temp)
-                    pub = Publication()
-                    pub.pmid = paper.pmid
-                    pub.title = temp['title']
-                    pub.abstract = temp['abstract']
-                    pub.journal = temp['journal']
-                    pub.affiliation = temp['affiliation']
-
-                    list = temp['authors'].split(";")
-                    for item in list:
-                        item = item.title
-                        if item == "":
-                            list.remove(item)
-
-                    pub.authors = list
-                    pub.year = temp['year']
-                    try:
-                        Publication.full_clean(pub)
-                    except ValidationError as e:
-                        print(e)
-
-                    try:
-                        pub.save()
-                        print(f'I saved this pub pmid: {pub.pmid}')
-                    except:
-                        print(f"there was a problem saving publication {paper.pmid}")
+                pub = Publication_methods.return_pub(paper)
                 pubs.append(pub)
-
         return (pubs)
+
+    def return_pub(paper):
+        temp = None
+        print(f'this is the pmid{paper.pmid}')
+        try:
+            Publication.objects.get(pmid = paper.pmid)
+            temp = Publication.objects.get(pmid = paper.pmid)
+            # print(temp)
+            pub = temp
+        except:
+            temp = (Pubmed.parse_xml_web(paper.pmid, sleep=0.5, save_xml=False))
+            # print(temp)
+            pub = Publication()
+            pub.pmid = paper.pmid
+            pub.title = temp['title']
+            pub.abstract = temp['abstract']
+            pub.journal = temp['journal']
+            pub.affiliation = temp['affiliation']
+
+            list = temp['authors'].split(";")
+            for item in list:
+                item = item.title
+                if item == "":
+                    list.remove(item)
+
+            pub.authors = list
+            pub.year = temp['year']
+            try:
+                Publication.full_clean(pub)
+            except ValidationError as e:
+                print(e)
+            try:
+                pub.save()
+                print(f'I saved this pub pmid: {pub.pmid}')
+            except:
+                print(f"there was a problem saving publication {paper.pmid}")
+        return(pub)
+
 
 
 class Score:
@@ -217,12 +220,8 @@ class Add_Keyword:
             print(f"there was a problem saving the stats associated with Keyword {new_word}")
 
 
-
     def make_short_list(grant_list_long):
-
-
         length = len(grant_list_long)
-
         print (f'this is the length: {length}')
         index = 0
         success = 0
