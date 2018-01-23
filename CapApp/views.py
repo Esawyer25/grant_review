@@ -124,8 +124,18 @@ def grants(request):
 
         grant_list_short = Add_Keyword.make_short_list(grant_list_long)
 
+        # state_dict = Stats.states(grant_list)
+        # new_word.states_dict = state_dict
+        #
+        # states_top_inst = Stats.top_institutions(grant_list_long)
+        #
+        # new_word.states_top_inst = states_top_inst
+        # try:
+        #     new_word.save()
+        #     print('I saved the states_dict')
+        # except:
+        #     print(f"there was a problem saving with state_dict")
     #4) find total cost associated with grant
-    Relate_grants.set_related_grant_stats(grant_list_short)
 
     #5)Paginate the first 100 results
     # c = datetime.datetime.now()
@@ -146,31 +156,31 @@ def grants(request):
     # grant_stats = Stats.return_stats_by_year(grant_list_long, query)
 
     #Make scatter plot array for papers vs. funding
-    scatterplot_array =[]
-    for grant in grant_list_short:
-        if grant.FY == 2018 and grant.support_year < 5:
-            all_years = True
-        elif grant.FY == 2017 and grant.support_year < 4:
-            all_years = True
-        elif grant.FY == 2016 and grant.support_year < 3:
-            all_years = True
-        elif grant.FY == 2015 and grant.support_year < 2:
-            all_years = True
-        elif grant.FY == 2014 and grant.support_year < 1:
-            all_years = True
-        else:
-            all_years = None
-
-        if all_years:
-            temp ={}
-            temp['number'] = grant.number_of_papers()
-            temp['total_cost'] = grant.total_funding_of_core_numb
-            temp['core_project_num'] =grant.core_project_num
-            scatterplot_array.append(temp)
-        else:
-            pass
-    scatterplot_array = json.dumps(scatterplot_array)
-    print(scatterplot_array)
+    # scatterplot_array =[]
+    # for grant in grant_list_short:
+    #     if grant.FY == 2018 and grant.support_year < 5:
+    #         all_years = True
+    #     elif grant.FY == 2017 and grant.support_year < 4:
+    #         all_years = True
+    #     elif grant.FY == 2016 and grant.support_year < 3:
+    #         all_years = True
+    #     elif grant.FY == 2015 and grant.support_year < 2:
+    #         all_years = True
+    #     elif grant.FY == 2014 and grant.support_year < 1:
+    #         all_years = True
+    #     else:
+    #         all_years = None
+    #
+    #     if all_years:
+    #         temp ={}
+    #         temp['number'] = grant.number_of_papers()
+    #         temp['total_cost'] = grant.total_funding_of_core_numb
+    #         temp['core_project_num'] =grant.core_project_num
+    #         scatterplot_array.append(temp)
+    #     else:
+    #         pass
+    # scatterplot_array = json.dumps(scatterplot_array)
+    # print(scatterplot_array)
 
 
     #     temp = {}
@@ -179,13 +189,13 @@ def grants(request):
     #     temp['Journal'] =
 
 
-    states_dict = Stats.states(grant_list_long)
+    # states_dict = Stats.states(grant_list_long)
 
-    states_top_inst = Stats.top_institutions(grant_list_long)
+    # states_top_inst = Stats.top_institutions(grant_list_long)
 
     keyword_object = Keyword.objects.get(keyword__iexact=query)
-
-    return render(request, 'CapApp/grants.html',{'grants':grant_list_short, 'keyword':keyword_object, 'states_dict': states_dict, 'states_top_inst': states_top_inst, 'scatterplot_array': scatterplot_array})
+    return render(request, 'CapApp/grants.html',{'grants':grant_list_short, 'keyword':keyword_object})
+    # return render(request, 'CapApp/grants.html',{'grants':grant_list_short, 'keyword':keyword_object, 'states_dict': states_dict, 'states_top_inst': states_top_inst, 'scatterplot_array': scatterplot_array})
 
 #https://github.com/titipata/pubmed_parser
 #if you use this package please cite: Titipat Achakulvisut, Daniel E. Acuna (2015) "Pubmed Parser" http://github.com/titipata/pubmed_parser. http://doi.org/10.5281/zenodo.159504

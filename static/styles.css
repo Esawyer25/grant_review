@@ -58,3 +58,14 @@ tr td, th {
 #vis-container {
   margin: 20px;
 }
+
+#logo {
+  height: 100px;
+  width: 134px;
+  float: right;
+  padding: 20px;
+}
+
+#statesvg{
+  margin: 20px;
+}

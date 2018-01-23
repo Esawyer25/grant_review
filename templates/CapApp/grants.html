@@ -71,7 +71,7 @@
             </p>
           </div>
         <script type="text/javascript">
-        data = ({{scatterplot_array|safe}})
+        data = ({{keyword.scatterplot_array|safe}})
         console.log('this is the scatterplot data')
         console.log(data)
 
@@ -126,7 +126,7 @@
                   .attr("x", width) // x-offset from the xAxis, move label all the way to the right
                   .attr("y", + 40)    // y-offset from the xAxis, moves text UPWARD!
                   .style("text-anchor", "end") // right-justify text
-                  .text("Total Funding (thousands of $)");
+                  .text("Total Funding ($)");
 
               // Add y-axis to the canvas
               canvas.append("g")
@@ -155,7 +155,7 @@
               var tipMouseover = function(d) {
                   // var color = colorScale(d.core_project_num);
                   // var color = black
-                  var html  = "<span style='color:" + color + ";'>" + "Core Project Number:"+ d.core_project_num +", Total cost: " + d.total_cost + "</span>" + ", Number of papers: "+ d.number ;
+                  var html  = "<span style='color:" + color + ";'>" + "Core Project Number:"+ d.core_project_num +", Total cost: $" + d.total_cost + "</span> Number of papers: "+ d.number + " Years of funding:" + d.support_year + "<br />" + d.title;
 
                   tooltip.html(html)
                   .style("left", (d3.event.pageX + 15) + "px")
@@ -207,7 +207,7 @@
 
        </h2>
           <p>
-            Cost table (in thousands of dollars)
+            Cost table
           </p>
           <table id = "keyword_table">
             <tr>
@@ -232,13 +232,13 @@
                 2018
               </td>
               <td>
-                ${{keyword.grant_total_cost_18|intcomma}}
+                $ {{keyword.grant_total_cost_18|intcomma}},000
               </td>
               <td>
-                ${{keyword.grant_direct_cost_18|intcomma}}
+                $ {{keyword.grant_direct_cost_18|intcomma}},000
               </td>
               <td>
-                ${{keyword.grant_indirect_cost_18|intcomma}}
+                $ {{keyword.grant_indirect_cost_18|intcomma}},000
               </td>
               <td>
                 {{keyword.grant_count_18|intcomma}}
@@ -249,13 +249,13 @@
                 2017
               </td>
               <td>
-                ${{keyword.grant_total_cost_17|intcomma}}
+                $ {{keyword.grant_total_cost_17|intcomma}},000
               </td>
               <td>
-                ${{keyword.grant_direct_cost_17|intcomma}}
+                $ {{keyword.grant_direct_cost_17|intcomma}},000
               </td>
               <td>
-                ${{keyword.grant_indirect_cost_17|intcomma}}
+                $ {{keyword.grant_indirect_cost_17|intcomma}},000
               </td>
               <td>
                 {{keyword.grant_count_17|intcomma}}
@@ -266,13 +266,13 @@
                 2016
               </td>
               <td>
-                ${{keyword.grant_total_cost_16|intcomma}}
+                $ {{keyword.grant_total_cost_16|intcomma}},000
               </td>
               <td>
-                ${{keyword.grant_direct_cost_16|intcomma}}
+                $ {{keyword.grant_direct_cost_16|intcomma}},000
               </td>
               <td>
-                ${{keyword.grant_indirect_cost_16|intcomma}}
+                $ {{keyword.grant_indirect_cost_16|intcomma}},000
               </td>
               <td>
                 {{keyword.grant_count_16|intcomma}}
@@ -283,13 +283,13 @@
                 2015
               </td>
               <td>
-                ${{keyword.grant_total_cost_15|intcomma}}
+                $ {{keyword.grant_total_cost_15|intcomma}},000
               </td>
               <td>
-                ${{keyword.grant_indirect_cost_15|intcomma}}
+                $ {{keyword.grant_indirect_cost_15|intcomma}},000
               </td>
               <td>
-                ${{keyword.grant_indirect_cost_15|intcomma}}
+                $ {{keyword.grant_indirect_cost_15|intcomma}},000
               </td>
               <td>
                 {{keyword.grant_count_15|intcomma}}
@@ -300,13 +300,13 @@
                 Total
               </td>
               <td>
-                ${{keyword.grant_total_cost|intcomma}}
+                $ {{keyword.grant_total_cost|intcomma}},000
               </td>
               <td>
-                ${{keyword.grant_indirect_cost|intcomma}}
+                $ {{keyword.grant_indirect_cost|intcomma}},000
               </td>
               <td>
-                {{keyword.grant_indirect_cost|intcomma}}
+                $ {{keyword.grant_indirect_cost|intcomma}},000
               </td>
               <td>
                 {{keyword.grant_count|intcomma}}
@@ -343,7 +343,7 @@
                   {{keyword.dp1_count|intcomma}}
                 </td>
                 <td>
-                  $ {{keyword.dp1_total_cost|intcomma}}
+                  $ {{keyword.dp1_total_cost|intcomma}},000
                 </td>
               </tr>
 
@@ -358,7 +358,7 @@
                   {{keyword.dp2_count|intcomma}}
                 </td>
                 <td>
-                  $ {{keyword.dp2_total_cost|intcomma}}
+                  $ {{keyword.dp2_total_cost|intcomma}},000
                 </td>
               </tr>
 
@@ -373,7 +373,7 @@
                   {{keyword.r35_count|intcomma}}
                 </td>
                 <td>
-                  $ {{keyword.r35_total_cost|intcomma}}
+                  $ {{keyword.r35_total_cost|intcomma}},000
                 </td>
               </tr>
 
@@ -388,7 +388,7 @@
                   {{keyword.r01_count|intcomma}}
                 </td>
                 <td>
-                  $ {{keyword.r01_total_cost|intcomma}}
+                  $ {{keyword.r01_total_cost|intcomma}},000
                 </td>
               </tr>
 
@@ -403,7 +403,7 @@
                   {{keyword.r00_count|intcomma}}
                 </td>
                 <td>
-                  $ {{keyword.r00_total_cost|intcomma}}
+                  $ {{keyword.r00_total_cost|intcomma}},000
                 </td>
               </tr>
 
@@ -418,7 +418,7 @@
                   {{keyword.k99_count|intcomma}}
                 </td>
                 <td>
-                  $ {{keyword.k99_total_cost|intcomma}}
+                  $ {{keyword.k99_total_cost|intcomma}},000
                 </td>
               </tr>
 
@@ -433,7 +433,7 @@
                   {{keyword.f32_count|intcomma}}
                 </td>
                 <td>
-                  $ {{keyword.f32_total_cost|intcomma}}
+                  $ {{keyword.f32_total_cost|intcomma}},000
                 </td>
               </tr>
 
@@ -448,12 +448,12 @@
                   {{keyword.f31_count|intcomma}}
                 </td>
                 <td>
-                  $ {{keyword.f31_total_cost|intcomma}}
+                  $ {{keyword.f31_total_cost|intcomma}},000
                 </td>
               </tr>
 
             </table>
-    </div>
+
 
     <div>
       <h4>Location of grants funded to study <em>{{keyword.keyword}}</em></h4>
@@ -478,8 +478,8 @@
       string = string + "</table><p>Total grants to state: </td><td>"+(d.value)+" </p> ";
       return string
     }
-    let Data ={{states_dict|safe}};
-    let inst ={{states_top_inst|safe}};
+    let Data ={{keyword.states_dict|safe}};
+    let inst ={{keyword.states_top_inst|safe}};
     let sampleData ={}
     let STATES = ["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA","ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", "MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", "CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", "WI", "MO", "AR", "OK", "KS", "LS", "VA"]
     STATES.forEach(function(state){
@@ -494,6 +494,7 @@
     uStates.draw("#statesvg", sampleData, tooltipHtml);
     d3.select(self.frameElement).style("height", "600px");
     </script>
+      </div>
 
     <div>
       <h2>Search Results</h2>

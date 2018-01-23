@@ -113,8 +113,55 @@ class Add_Keyword:
 
         Add_Keyword.set_keyword_stats(new_word, grant_list)
 
+        state_dict = Stats.states(grant_list)
+        new_word.states_dict = state_dict
+
+        states_top_inst = Stats.top_institutions(grant_list)
+
+        new_word.states_top_inst = states_top_inst
+
+        scatterplot_array = Add_Keyword.cost_scatterplot(grant_list)
+
+        new_word.scatterplot_array = scatterplot_array
+        try:
+            new_word.save()
+            print('I saved the states_dict')
+        except:
+            print(f"there was a problem saving with state_dict")
+
+
         b = datetime.datetime.now()
         print(f'time in to create new keyword = {b-a}')
+
+    def cost_scatterplot(grant_list):
+        #Make scatter plot array for papers vs. funding
+        scatterplot_array =[]
+        for grant in grant_list:
+            if grant.FY == 2018 and grant.support_year < 5 and grant.support_year > 2:
+                all_years = True
+            elif grant.FY == 2017 and grant.support_year < 4 and grant.support_year > 1:
+                all_years = True
+            elif grant.FY == 2016 and grant.support_year < 3:
+                all_years = True
+            elif grant.FY == 2015 and grant.support_year < 2:
+                all_years = True
+            elif grant.FY == 2014 and grant.support_year < 1:
+                all_years = True
+            else:
+                all_years = None
+
+            if all_years:
+                temp ={}
+                temp['number'] = grant.number_of_papers()
+                temp['total_cost'] = grant.total_funding_of_core_numb
+                temp['core_project_num'] =grant.core_project_num
+                temp['support_year'] = grant.support_year
+                temp['title'] = grant.project_title
+                scatterplot_array.append(temp)
+            else:
+                pass
+        scatterplot_array = json.dumps(scatterplot_array)
+        return scatterplot_array
 
     def set_keyword_stats(new_word, grant_list):
         #grant_list = new_word.grants.all()
