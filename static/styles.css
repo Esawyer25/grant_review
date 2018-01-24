@@ -25,6 +25,55 @@ svg {
   margin: 20px;
 }
 
+#white{
+  color: white;
+}
+#scatter_section {
+  padding: 10px;
+}
+
+#map_figure, #funding_figure {
+  float: right;
+  max-width:410px;
+  border-color: #333;
+  border-style: solid;
+  border-width: thin;
+  margin: 10px;
+}
+#map,  #cost_scatter{
+  padding: 10px;
+  max-width:400px;
+  max-height:400px;
+  width: auto;
+  height: auto;
+}
+
+#map_caption, #cost_scatter_caption  {
+  font-weight: bold;
+  padding: 0px 20px 10px 20px;
+}
+
+
+#word_cloud_figure {
+  float: right;
+  max-width:400px;
+  border-color: #333;
+  border-style: solid;
+  border-width: thin;
+  margin: 10px;
+}
+#wordcloud {
+  padding: 20px;
+  max-width:400px;
+  max-height:400px;
+  width: auto;
+  height: auto;
+}
+
+#wordcloud_caption {
+  font-weight: bold;
+  padding: 0px 20px;
+}
 
 tr td, th {
   padding:10px;
@@ -60,7 +109,7 @@ tr td, th {
 }
 
 #logo {
-  height: 100px;
+  height: 110px;
   width: 134px;
   float: right;
   padding: 20px;

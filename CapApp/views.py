@@ -114,15 +114,17 @@ def grants(request):
 
         grant_list_long = keyword_object.grants.all()
         print(f'a keyword exists and this is my grant list {grant_list_long}')
-        grant_list_short = Add_Keyword.make_short_list(grant_list_long)
+        grant_list_short = grant_list_long[:100]
+        # grant_list_short = Add_Keyword.make_short_list(grant_list_long)
 
     #3) if there is not, do a database search and create a keyword
     else:
         grant_list_long = Grant.objects.filter(project_terms__search=query)
         print(f'a keyword did not exist and this is my grant list {grant_list_long}')
-        Add_Keyword.create_keyword(query, grant_list_long, searches=1)
+        keyword_object = Add_Keyword.create_keyword(query, grant_list_long, searches=1)
+        grant_list_short = new_word.grant_list[:100]
 
-        grant_list_short = Add_Keyword.make_short_list(grant_list_long)
+        # grant_list_short = Add_Keyword.make_short_list(grant_list_long)
 
         # state_dict = Stats.states(grant_list)
         # new_word.states_dict = state_dict
@@ -193,7 +195,7 @@ def grants(request):
 
     # states_top_inst = Stats.top_institutions(grant_list_long)
 
-    keyword_object = Keyword.objects.get(keyword__iexact=query)
+    # keyword_object = Keyword.objects.get(keyword__iexact=query)
     return render(request, 'CapApp/grants.html',{'grants':grant_list_short, 'keyword':keyword_object})
     # return render(request, 'CapApp/grants.html',{'grants':grant_list_short, 'keyword':keyword_object, 'states_dict': states_dict, 'states_top_inst': states_top_inst, 'scatterplot_array': scatterplot_array})
 

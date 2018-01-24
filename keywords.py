@@ -68,8 +68,12 @@ for word in keywords:
         except:
             print(f"there was a problem saving with Keyword {word}")
 
-
+    #all grants with that keyword
     grant_list =Grant.objects.filter(project_terms__search=word)
+    
+    Add_Keyword.set_keyword_stats(new_word, grant_list)
+
+    grant_list = Add_Keyword.no_repeats(grant_list)
     for grant in grant_list:
         new_word.grants.add(grant)
 
@@ -77,11 +81,9 @@ for word in keywords:
     new_word.states_dict = state_dict
 
     scatterplot_array = Add_Keyword.cost_scatterplot(grant_list)
-
     new_word.scatterplot_array = scatterplot_array
 
     states_top_inst = Stats.top_institutions(grant_list)
-
     new_word.states_top_inst = states_top_inst
     try:
         new_word.save()
@@ -90,7 +92,7 @@ for word in keywords:
         print(f"there was a problem saving with state_dict")
 
 
-    Add_Keyword.set_keyword_stats(new_word, grant_list)
+    # Add_Keyword.set_keyword_stats(new_word, grant_list)
 
     Relate_grants.set_related_grant_stats(grant_list)
 

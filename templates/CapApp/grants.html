@@ -155,7 +155,7 @@
               var tipMouseover = function(d) {
                   // var color = colorScale(d.core_project_num);
                   // var color = black
-                  var html  = "<span style='color:" + color + ";'>" + "Core Project Number:"+ d.core_project_num +", Total cost: $" + d.total_cost + "</span> Number of papers: "+ d.number + " Years of funding:" + d.support_year + "<br />" + d.title;
+                  var html  = "<span style='color:" + color + ";'>" + "Core Project Number: "+ d.core_project_num +", Total cost: $" + d.total_cost + "</span> Number of papers: "+ d.number + " Years of funding: " + d.support_year;
 
                   tooltip.html(html)
                   .style("left", (d3.event.pageX + 15) + "px")
@@ -479,9 +479,10 @@
       return string
     }
     let Data ={{keyword.states_dict|safe}};
+    console.log(Data)
     let inst ={{keyword.states_top_inst|safe}};
     let sampleData ={}
-    let STATES = ["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA","ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", "MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", "CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", "WI", "MO", "AR", "OK", "KS", "LS", "VA"]
+    let STATES = ["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA","ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", "MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", "CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", "WI", "MO", "AR", "OK", "KS", "LA", "VA"]
     STATES.forEach(function(state){
         sampleData[state]={value: Data[state],
           first: inst[state][0],

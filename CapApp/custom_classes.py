@@ -108,8 +108,10 @@ class Add_Keyword:
             print(f"there was a problem saving with Keyword {word}")
 #is it better to do terms or abstract?
         grant_list =Grant.objects.filter(project_terms__search=word)
+        grant_list = Add_Keyword.no_repeats(grant_list)
         for grant in grant_list:
             new_word.grants.add(grant)
+        print('I have added the grants')
 
         Add_Keyword.set_keyword_stats(new_word, grant_list)
 
@@ -117,7 +119,6 @@ class Add_Keyword:
         new_word.states_dict = state_dict
 
         states_top_inst = Stats.top_institutions(grant_list)
-
         new_word.states_top_inst = states_top_inst
 
         scatterplot_array = Add_Keyword.cost_scatterplot(grant_list)
@@ -132,6 +133,7 @@ class Add_Keyword:
 
         b = datetime.datetime.now()
         print(f'time in to create new keyword = {b-a}')
+        return new_word
 
     def cost_scatterplot(grant_list):
         #Make scatter plot array for papers vs. funding
@@ -266,30 +268,49 @@ class Add_Keyword:
         except:
             print(f"there was a problem saving the stats associated with Keyword {new_word}")
 
-
-    def make_short_list(grant_list_long):
-        length = len(grant_list_long)
-        print (f'this is the length: {length}')
-        index = 0
-        success = 0
-        core_project_nums =[]
-        grant_list_short =[]
-
-        while success < 100 or index > length:
-            print(f'index: {index}')
-            print(f'index: {length}')
-            print(f'success: {success}')
-            core_id = grant_list_long[index].core_project_num
+    def no_repeats(grant_list):
+        # index = 0
+        core_project_nums = {}
+        grant_list_no_repeats =[]
+        for grant in grant_list:
+            # print(f'index: {index}')
+            # print(f'index: {length}')
+            # print(f'success: {success}')
+            core_id = grant.core_project_num
             if core_id in core_project_nums:
                 pass
             else:
-                grant_list_short.append(grant_list_long[index])
-                core_project_nums.append(core_id)
-                success += 1
-                print("a core project number")
-                print(grant_list_long[index].core_project_num)
-            index += 1
-        return grant_list_short
+                grant_list_no_repeats.append(grant)
+                core_project_nums[core_id] = 1
+                # print("a core project number")
+                # print(grant.core_project_num)
+            # index += 1
+        print('no repeats')
+        return grant_list_no_repeats
+
+    # def make_short_list(grant_list_long):
+    #     length = len(grant_list_long)
+    #     print (f'this is the length: {length}')
+    #     index = 0
+    #     success = 0
+    #     core_project_nums =[]
+    #     grant_list_short =[]
+    #
+    #     while success < 100 or index > length:
+    #         print(f'index: {index}')
+    #         print(f'index: {length}')
+    #         print(f'success: {success}')
+    #         core_id = grant_list_long[index].core_project_num
+    #         if core_id in core_project_nums:
+    #             pass
+    #         else:
+    #             grant_list_short.append(grant_list_long[index])
+    #             core_project_nums.append(core_id)
+    #             success += 1
+    #             print("a core project number")
+    #             print(grant_list_long[index].core_project_num)
+    #         index += 1
+    #     return grant_list_short
 
 
     def incriment_keyword_searches(keyword_object):
@@ -365,12 +386,16 @@ class Stats:
 
     def states(grant_list):
         a = datetime.datetime.now()
-        STATES = ["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA","ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", "MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", "CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", "WI", "MO", "AR", "OK", "KS", "LS", "VA"]
-        states_dict={}
-        for state in STATES:
-            results = grant_list.filter(org_state=state)
-            length = len(results)
-            states_dict[state] = length
+        STATES = ["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA", "ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", "MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", "CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", "WI", "MO", "AR", "OK", "KS", "LA", "VA"]
+
+        states_dict = {
+        "HI": 0,  "AK": 0, "FL": 0, "SC": 0, "GA": 0, "AL": 0, "NC": 0, "TN": 0, "RI": 0, "CT": 0, "MA": 0, "ME": 0, "NH": 0, "VT": 0, "NY": 0, "NJ": 0, "PA": 0, "DE": 0, "MD": 0, "WV": 0, "KY": 0, "OH": 0, "MI": 0, "WY": 0, "MT": 0, "ID": 0, "WA": 0, "DC": 0, "TX": 0, "CA": 0, "AZ": 0, "NV": 0, "UT": 0, "CO": 0, "NM": 0, "OR": 0, "ND": 0, "SD": 0, "NE": 0, "IA": 0, "MS": 0, "IN": 0, "IL": 0, "MN": 0, "WI": 0, "MO": 0, "AR": 0, "OK": 0, "KS": 0, "LA": 0, "VA": 0
+        }
+        for grant in grant_list:
+            if grant.org_state in STATES:
+                states_dict[grant.org_state] += 1
+            else:
+                pass
         b = datetime.datetime.now()
         print(f'time calculating states_dict: {b-a}')
         return json.dumps(states_dict)
@@ -409,23 +434,47 @@ class Stats:
 
     def top_institutions(grant_list):
         a = datetime.datetime.now()
-        STATES = ["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA","ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", "MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", "CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", "WI", "MO", "AR", "OK", "KS", "LS", "VA"]
-        institution_hash ={}
+        STATES = ["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA", "ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH", "MI", "WY", "MT", "ID", "WA", "DC", "TX", "CA", "AZ", "NV", "UT", "CO", "NM", "OR", "ND", "SD", "NE", "IA", "MS", "IN", "IL", "MN", "WI", "MO", "AR", "OK", "KS", "LA", "VA"]
+
+        institution_hash ={
+        "HI": {},  "AK": {}, "FL": {}, "SC": {}, "GA": {}, "AL": {}, "NC": {}, "TN": {}, "RI": {}, "CT": {}, "MA": {}, "ME": {}, "NH": {}, "VT": {}, "NY": {}, "NJ": {}, "PA": {}, "DE": {}, "MD": {}, "WV": {}, "KY": {}, "OH": {}, "MI": {}, "WY": {}, "MT": {}, "ID": {}, "WA": {}, "DC": {}, "TX": {}, "CA": {}, "AZ": {}, "NV": {}, "UT": {}, "CO": {}, "NM": {}, "OR": {}, "ND": {}, "SD": {}, "NE": {}, "IA": {}, "MS": {}, "IN": {}, "IL": {}, "MN": {}, "WI": {}, "MO": {}, "AR": {}, "OK": {}, "KS": {}, "LA": {}, "VA": {}
+        }
+
+        for grant in grant_list:
+            if grant.org_state in STATES:
+                try:
+                    institution_hash[grant.org_state][grant.org_name] += 1
+                except:
+                    institution_hash[grant.org_state][grant.org_name] = 0
+            else:
+                pass
+
+        new_hash = {}
         for state in STATES:
-            state_grant_list = grant_list.filter(org_state=state)
-            state_hash = {}
-            for grant in state_grant_list:
-                if grant.org_name in state_hash:
-                    state_hash[grant.org_name] += 1
-                else:
-                    state_hash[grant.org_name] = 1
+            new_hash[state] = Stats.return_max(institution_hash[state])
 
-            top_three = Stats.return_max(state_hash)
-
-            institution_hash[state] = top_three
         b = datetime.datetime.now()
         print(f'time calculating top_institutions: {b-a}')
-        return json.dumps(institution_hash)
+        print(new_hash)
+        return json.dumps(new_hash)
+
+
+
+        # for state in STATES:
+        #     state_grant_list = grant_list.filter(org_state=state)
+        #     state_hash = {}
+        #     for grant in state_grant_list:
+        #         if grant.org_name in state_hash:
+        #             state_hash[grant.org_name] += 1
+        #         else:
+        #             state_hash[grant.org_name] = 1
+        #
+        #     top_three = Stats.return_max(state_hash)
+        #
+        #     institution_hash[state] = top_three
+        # b = datetime.datetime.now()
+        # print(f'time calculating top_institutions: {b-a}')
+        # return json.dumps(institution_hash)
 
     def return_stats_dict(grant_list, query):
         grant1 = grant_list
@@ -444,66 +493,74 @@ class Stats:
 
         # Individual Predoctoral NRSA for M.D./Ph.D. Fellowships
         grant_f30 = grant_list.filter(activity="F30")
-        grant_f30 = grant_list.filter(activity="F30")
         costs = Stats.find_cost(grant_f30)
         f30_total_cost = costs['total_cost']
-        f30_count = costs['number']
+        f30_count = len(Add_Keyword.no_repeats(grant_f30))
+        # f30_count = costs['number']
 
         # Predoctoral Individual National Research Service Award
         grant_f31 = grant_list.filter(activity="F31")
         f31_total_cost = Stats.find_cost(grant_f31)
         costs = Stats.find_cost(grant_f31)
         f31_total_cost = costs['total_cost']
-        f31_count = costs['number']
+        f31_count = len(Add_Keyword.no_repeats(grant_f31))
+        # f31_count = costs['number']
 
         # Postdoctoral Individual National Research Service Award
         grant_f32 = grant_list.filter(activity="F32")
         f32_total_cost = Stats.find_cost(grant_f32)
         costs = Stats.find_cost(grant_f32)
         f32_total_cost = costs['total_cost']
-        f32_count = costs['number']
+        f32_count = len(Add_Keyword.no_repeats(grant_f32))
+        # f32_count = costs['number']
 
         #Career Transition Award
         grant_k99 = grant_list.filter(activity="K99")
         k99_total_cost = Stats.find_cost(grant_k99)
         costs = Stats.find_cost(grant_k99)
         k99_total_cost = costs['total_cost']
-        k99_count = costs['number']
+        k99_count = len(Add_Keyword.no_repeats(grant_k99))
+        # k99_count = costs['number']
 
         #Research Transition Award
         grant_r00 = grant_list.filter(activity="R00")
         r00_total_cost = Stats.find_cost(grant_r00)
         costs = Stats.find_cost(grant_r00)
         r00_total_cost = costs['total_cost']
-        r00_count = costs['number']
+        r00_count = len(Add_Keyword.no_repeats(grant_r00))
+        # r00_count = costs['number']
 
         #Research Project
         grant_r01 = grant_list.filter(activity="R01")
         r01_total_cost = Stats.find_cost(grant_r01)
         costs = Stats.find_cost(grant_r01)
         r01_total_cost = costs['total_cost']
-        r01_count = costs['number']
+        r01_count = len(Add_Keyword.no_repeats(grant_r01))
+        # r01_count = costs['number']
 
         #Outstanding Investigator Award
         grant_r35 = grant_list.filter(activity="R35")
         r35_total_cost = Stats.find_cost(grant_r35)
         costs = Stats.find_cost(grant_r35)
         r35_total_cost = costs['total_cost']
-        r35_count = costs['number']
+        r35_count = len(Add_Keyword.no_repeats(grant_r35))
+        # r35_count = costs['number']
 
         #NIH Director’s Pioneer Award (NDPA)
         grant_dp1 = grant_list.filter(activity="DP1")
         dp1_total_cost = Stats.find_cost(grant_dp1)
         costs = Stats.find_cost(grant_dp1)
         dp1_total_cost = costs['total_cost']
-        dp1_count = costs['number']
+        dp1_count = len(Add_Keyword.no_repeats(grant_dp1))
+        # dp1_count = costs['number']
 
         #NIH Director’s New Innovator Award
         grant_dp2 =grant_list.filter(activity="DP2")
         dp2_total_cost = Stats.find_cost(grant_dp2)
         costs = Stats.find_cost(grant_dp2)
         dp2_total_cost = costs['total_cost']
-        dp2_count = costs['number']
+        dp2_count = len(Add_Keyword.no_repeats(grant_dp2))
+        # dp2_count = costs['number']
 
         b = datetime.datetime.now()
         print(f'time elapsed in stats: {b-a}')

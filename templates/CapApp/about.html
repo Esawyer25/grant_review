@@ -22,7 +22,7 @@
   <p>
   <h5>Search Results Page:</h5>
   <p>
-    This page has two sections, a <strong>Summary Figures</strong> and a list of the <strong>Search Results<strong>
+    This page has two sections, a <strong>Summary Figures</strong> and a list of the <strong>Search Results</strong>
   </p>
   <section>
     <p>
@@ -30,7 +30,20 @@
     </p>
     <ul>
       <li>
+         <figure id = "funding_figure">
+          <img src="../static/cost_scatter.png" alt="scatterplot" id ="cost_scatter">
+        <figcaption id = "cost_scatter_caption">
+         Funding of a grant vs. the number of papers published off that funding.
+      </figcaption>
+      </figure>
         <strong>Cost table:</strong>
+        This section which includes a table of <em>total, direct</em> and <em>indirect</em> costs.
+        <p>
+          Briefly, direct costs are clearly associated with a particular project, and include "salaries, travel, equipment, and supplies directly benefiting the grant-supported project or activity". Indirect costs are the funds that go to facilities operation and maintenance costs and go to the institution where the researcher works.  The total cost is the combined amount of direct and indirect costs.
+        </p>
+        <p>
+            For a fuller explanation of these costs, see the NIH's description <a link="https://grants.nih.gov/grants/policy/nihgps/HTML5/section_7/7.3_direct_costs_and_facilities_and_administrative_costs.htm">here</a>.
+        </p>
       </li>
       <li>
         <strong>Funding by grant type:</strong>
@@ -38,22 +51,46 @@
       <li>
         <strong>Funding vs. Papers:</strong>
         <p>
-          This scatterplot shows the relationship between funding and the number of papers published over the last 4 years for all grants with the specified keywords.  The graph should be interpreted in context: publications take years to produce, so there is little expectation that grants funded recently will have resulted in papers yet.  In the future, when the database was expanded to cover more years this graph will be more meaningful.
+          This scatterplot shows the relationship between funding and the number of papers published over the last 4 years for all grants with the specified keywords.  The graph should be interpreted in context: publications take years to produce, so there is little expectation that grants funded recently will have resulted in papers yet.  In the future the database will be expanded to cover more years and this graph will be more meaningful.
+
+      </li>
+      <li>
+        <figure id = "map_figure">
+          <img src="../static/map.png" alt="Map" id ="map">
+        <figcaption id = "map_caption">
+          An interactive map displaying the number of grants awarded to by location.
+        </figcaption>
+        </figure>
+        <strong>Location of Funded Projects</strong>
+        <p>
+          This map displays how many grants have been awarded to institutions in different states.  Darker colors indicate more awards have been awarded to those states, lighter colors indicate less.  For more details about the institutions to which the awards were granted mouse over the graphic.
         </p>
+
+
+
       </li>
 
     </ul>
   </section>
   <section>
-    <strong>Search Results<strong>: <br />
+    <p>
+    <strong>Search Results</strong>: <br />
     This is a list of the top 100 results from the search, ordered by year (2018 to 2014), and total cost (high to low).
     </p>
-    This is a list of the top 100 results from the search, ordered by year (2018 to 2014), and total cost (high to low).  There is a <strong>Summary Figures</strong> section which includes a table of <em>total, direct</em> and <em>indirect</em> costs.
+    <ul>
 
-    <p>
-      Briefly, direct costs are clearly associated with a particular project, and include "salaries, travel, equipment, and supplies directly benefiting the grant-supported project or activity". Indirect costs are the funds that go to facilities operation and maintenance costs and go to the institution where the researcher works.  The total cost is the combined amount of direct and indirect costs.
-      For a fuller explanation of these costs, see the NIH's description <a link="https://grants.nih.gov/grants/policy/nihgps/HTML5/section_7/7.3_direct_costs_and_facilities_and_administrative_costs.htm">here</a>.
-    </p>
+
+    <figure id = "word_cloud_figure">
+      <img src="../static/wordcloud.png" alt="wordcloud" id ="wordcloud">
+    <figcaption id = "wordcloud_caption">
+      A wordcloud displaying words that are not common parts of speach and that are mentioned more than once in a grant or paper abstract.  The font is larger for words that are mentioned more times.
+    </figcaption>
+    </figure>
+
+    </ul>
+
+
+
   </section>
 </div>
 <div>
