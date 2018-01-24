@@ -177,7 +177,8 @@ class Add_Keyword:
         new_word.grant_count = grant_stats['totals']['grant_count']
 
         new_word.grant_total_cost = round(grant_stats['totals']['grant_total_cost'],-3)/1000
-        print( f'this is the total cost {new_word.grant_total_cost}')
+        print('this is the total cost')
+        print (new_word.grant_total_cost)
 
         new_word.grant_direct_cost = round(grant_stats['totals']['grant_direct_cost'],-3)/1000
         print( f'this is the direct cost {new_word.grant_direct_cost}')
@@ -267,6 +268,7 @@ class Add_Keyword:
             new_word.save()
         except:
             print(f"there was a problem saving the stats associated with Keyword {new_word}")
+        return new_word
 
     def no_repeats(grant_list):
         # index = 0
@@ -668,6 +670,8 @@ class Relate_grants:
 
             try:
                 grant.save()
+                print ('saved total_funding_of_core_numb')
+
             except ValidationError as e:
                 print(e)
 
