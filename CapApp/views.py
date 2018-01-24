@@ -112,9 +112,9 @@ def grants(request):
     if keyword_object:
         Add_Keyword.incriment_keyword_searches(keyword_object)
 
-        grant_list_long = keyword_object.grants.all()
-        print(f'a keyword exists and this is my grant list {grant_list_long}')
-        grant_list_short = grant_list_long[:100]
+        grant_list_short = keyword_object.grants.all()[:100]
+        print(f'a keyword exists and this is my grant list {grant_list_short}')
+        # grant_list_short = grant_list_long[:100]
         # grant_list_short = Add_Keyword.make_short_list(grant_list_long)
 
     #3) if there is not, do a database search and create a keyword

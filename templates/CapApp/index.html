@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 {% extends "CapApp/base.html"%}
   {%block body_block%}
-
+  <style>
+  #scatter_tooltip {
+  font-size:14px;
+  color:black;
+  }
+  </style>
 
 
     <div>
@@ -58,7 +63,7 @@
                 .attr("transform", "translate(0," + height + ")") // move axis to the bottom of the canvas
                 .call(xAxis)
               .append("text")
-                .attr("class", "label")
+                // .attr("class", "label")
                 .attr("x", width) // x-offset from the xAxis, move label all the way to the right
                 .attr("y", -6)    // y-offset from the xAxis, moves text UPWARD!
                 .style("text-anchor", "end") // right-justify text
@@ -69,7 +74,7 @@
                 .attr("class", "y axis") // .orient('left') took care of axis positioning for us
                 .call(yAxis)
                 .append("text")
-                .attr("class", "label")
+                // .attr("class", "label")
                 .attr("transform", "rotate(-90)") // although axis is rotated, text is not
                 .attr("y", 15) // y-offset from yAxis, moves text to the RIGHT because it's rotated, and positive y is DOWN
                 .style("text-anchor", "end")
@@ -79,6 +84,7 @@
             // it's invisible and its position/contents are defined during mouseover
             var tooltip = d3.select("#vis-container").append("div")
                 .attr("class", "tooltip")
+                .attr("id", "scatter_tooltip")
                 .style("opacity", 0);
 
             // tooltip mouseover event handler
@@ -171,7 +177,7 @@
           All <strong>K</strong> grants (Research Career Programs)
         </li>
         <li>
-          All <strong>R</strong> grants (Research Projects)
+          Most <strong>R</strong> grants (Research Projects)
         </li>
         <li>
           All <strong>S</strong> grants (Research-Related Programs)

@@ -108,18 +108,22 @@ class Add_Keyword:
             print(f"there was a problem saving with Keyword {word}")
 #is it better to do terms or abstract?
         grant_list =Grant.objects.filter(project_terms__search=word)
+
+        Add_Keyword.set_keyword_stats(new_word, grant_list)
+
         grant_list = Add_Keyword.no_repeats(grant_list)
         for grant in grant_list:
             new_word.grants.add(grant)
         print('I have added the grants')
-
-        Add_Keyword.set_keyword_stats(new_word, grant_list)
 
         state_dict = Stats.states(grant_list)
         new_word.states_dict = state_dict
 
         states_top_inst = Stats.top_institutions(grant_list)
         new_word.states_top_inst = states_top_inst
+
+        #this set the total_cost of a core number
+        Relate_grants.set_related_grant_stats(grant_list)
 
         scatterplot_array = Add_Keyword.cost_scatterplot(grant_list)
 
@@ -350,12 +354,11 @@ class Stats:
         for item in list:
             number += 1
             if item.total_cost:
-                if item.total_cost:
-                     total_cost += item.total_cost
-                if item.direct_cost_amt:
-                    direct_cost += item.direct_cost_amt
-                if item.indirect_cost_amt:
-                    indirect_cost += item.indirect_cost_amt
+                total_cost += item.total_cost
+            if item.direct_cost_amt:
+                direct_cost += item.direct_cost_amt
+            if item.indirect_cost_amt:
+                indirect_cost += item.indirect_cost_amt
         return {'total_cost':total_cost, 'direct_cost':direct_cost, 'indirect_cost':indirect_cost,
         'number': number}
 
@@ -664,6 +667,7 @@ class Relate_grants:
                 except:
                     print("there was a problem setting the RGO")
             #set grant attributes based on rgo
+            #I think this might be the bug that is causing some grants to have no total_funding_of_core_numb
             grant.total_funding_of_core_numb = rgo.total_funding_of_core_numb
             grant.total_indirect_of_core_numb = rgo.total_indirect_of_core_numb
             grant.total_direct_of_core_numb = rgo.total_direct_of_core_numb

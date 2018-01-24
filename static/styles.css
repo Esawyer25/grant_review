@@ -32,7 +32,7 @@ svg {
   padding: 10px;
 }
 
-#map_figure, #funding_figure {
+#map_figure, #funding_figure, #index_figure {
   float: right;
   max-width:410px;
   border-color: #333;
@@ -40,7 +40,7 @@ svg {
   border-width: thin;
   margin: 10px;
 }
-#map,  #cost_scatter{
+#map,  #cost_scatter, #index_scatter{
   padding: 10px;
   max-width:400px;
   max-height:400px;
@@ -48,7 +48,7 @@ svg {
   height: auto;
 }
 
-#map_caption, #cost_scatter_caption  {
+#map_caption, #cost_scatter_caption, #index_scatter_caption  {
   font-weight: bold;
   padding: 0px 20px 10px 20px;
 }
@@ -109,8 +109,8 @@ tr td, th {
 }
 
 #logo {
-  height: 110px;
-  width: 134px;
+  height: 125px;
+  width: 145px;
   float: right;
   padding: 20px;
 }

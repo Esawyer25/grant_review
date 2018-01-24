@@ -2,20 +2,25 @@
 {% extends "CapApp/base.html"%}
 {%block body_block%}
 
-<h4>This is the about page</h4>
+<h3>About Research Review</h3>
 
 <article>
 <p>
-  The purpose of this website is to make it more possible for the general public to search the scientific research grants that are funded by the National Institutes of Health. The website was created by Eva Sawyer, PhD, as a final project at Ada Developers Academy, Seattle, WA, USA.
+  <strong>This website makes it more possible for the general public to search the scientific research grants that are funded by the National Institutes of Health. </strong><br /> It  was created by Eva Sawyer, PhD, as a final project at Ada Developers Academy, Seattle, WA, USA.
 </p>
 <h4>Componets of this project:</h4>
 <div>
     <h5>Search Page:</h5>
+    <figure id = "index_figure">
+     <img src="../static/index_scatter.png" alt="scatterplot" id ="index_scatter">
+   <figcaption id = "index_scatter_caption">
+    Total funding dollars awarded to different "project terms" in recent years.
+ </figcaption>
       <p>
-        On the home page a user can either click on a suggested search term, or enter a keyword, such as a disease name, that they are interested in.  This will launch a search of the "project terms" of every grant in the database of funded NIH grants (currently years 2014 to present.)  Currently, searching a new keyword takes time (~20 mins), so it is suggested that users explore the website by clicking on the previously searched terms. The database was imported from public csv files available through the <a link="exporter.nih.gov/ExPORTER_Catalog.aspx">NIH Exporter resource</a>.
+        On the home page a user can either click on a suggested search term, or enter a keyword, such as a disease name, that they are interested in.  This will launch a search of the "project terms" of every grant in the database of funded NIH grants (only years 2014 to present are currently available on this site)  Currently, searching a new keyword takes time (~20 mins), so it is suggested that users explore the website by clicking on the previously searched terms. The database was imported from publicly available csv files available:  <a link="exporter.nih.gov/ExPORTER_Catalog.aspx">NIH Exporter resource</a>.
       </p>
       <p>
-        A scatterplot to the right of the page shows funding levels for the commonly searched terms over recent years.  Mouse over the dots to get more information about the terms.
+        A scatterplot to the right of the page shows funding levels for commonly searched terms over recent years.  Mouse over the dots to get more information about the terms.
       </p>
 </div>
 <div>

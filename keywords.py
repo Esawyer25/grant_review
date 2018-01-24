@@ -24,11 +24,11 @@ from CapApp.models import Keyword, Grant
 from CapApp.custom_classes import Stats, Add_Keyword, Relate_grants
 
 
-#done: "Primate", "Autism", "Pain", "Electrosensory", "Cancer", "big data",
+#done: "AIDS", "HIV", "cardiac","gender",
 
-"Influenza", "Lung", "Pulmonary fibrosis",  "evolution", "immunotherapy", "somatosensory", "learning", "memory",
+# "Influenza", "Lung", "Pulmonary fibrosis",  "evolution", "immunotherapy", "somatosensory", "learning", "memory",
 
-keywords =["AIDS", "HIV", "cardiac","gender", "Alzheimer's", "stroke", "Primate", "Autism", "Pain", "Cancer", "Influenza", "Lung", "Pulmonary fibrosis", "big data", "somatosensory", "learning", "memory","Primate"]
+keywords =["Alzheimer's", "stroke", "Primate", "Autism", "Pain", "Cancer", "Influenza", "Lung", "Pulmonary fibrosis", "big data", "somatosensory", "learning", "memory","Primate"]
 
 # "machine learning", "nanotechnology", "adaptive immune response", "adaptive immunity", "adult", "youth","biotechnology", "disability", "flu", "deppression", "vaccine", "dementia", "malignant", "transplant", "somatosensory", "vision", "audition", "Hodgkin's Disease", "convergance", "cure", "olfaction","Acquired Cognitive Impairment","Acute Respiratory Distress Syndrome", "Adolescent Sexual Activity","data mining", "Agent Orange","Dioxin","Electrosensory", "Aging","Alcoholism","Allergic Rhinitis", "Hay Fever","ALS","Alzheimer's Disease","Alzheimer's","Alzheimer", "Dementia","American Indians","Alaska Natives","Anorexia","Anthrax","Antimicrobial Resistance","Anxiety Disorders","Aphasia", "Arctic","Arthritis","Assistive Technology","Asthma","Ataxia Telangiectasia","Louis–Bar syndrome", "Atherosclerosis","Attention Deficit Disorder","ADD","Autism","Autoimmune Disease","Back Pain","Batten Disease","Behavioral and Social Science","Biodefense","Bioengineering","Biotechnology","Bipolar Disorder","Brain Cancer","Brain Disorders","Breast Cancer","Burden of Illness","Cachexia","Cancer", "Cancer Genomics","Cannabinoid","Cardiovascular","Caregiving","Cerebral Palsy","Cerebrovascular","Cervical Cancer","Charcot-Marie-Tooth Disease","Child Abuse", "Neglect", "Childhood Leukemia", "Leukemia","Chronic Fatigue Syndrome", "ME/CFS","Chronic Liver Disease", "Cirrhosis","Chronic Obstructive", "Pulmonary Disease","Climate Change","Clinical Trials", "Colo-Rectal Cancer", "Alternative Medicine","Congenital","Congenital Heart Disease","Muscular Dystrophy","Congenital Structural Anomalies","Contraception","Reproduction","Cooley's Anemia","Crohn's Disease","Cystic Fibrosis","Dementia","Craniofacial Disease","Dental","Depression","Diabetes","Prader-Willi syndrome","Prader-Willi"]
 #"Diet","Fat","Obesity","Dietary Supplements","Diethylstilbestrol","DES","Digestive Diseases","Gallbladder","Peptic Ulcer","Down Syndrome","Drug Abuse","Duchenne","Duchenne Muscular Dystrophy","Becker","Becker Muscular Dystrophy","Muscular Dystrophy","Dystonia","Eating Disorders","Eczema","Atopic Dermatitis","Emergency Care","Emerging Infectious Diseases","Emphysema","Endocannabinoid","Endocrine Disruptors","Endometriosis","Epilepsy","Estrogen","Eye Disease","Facioscapulohumeral Muscular Dystrophy","Facioscapulohumeral","Fetal Alcohol Syndrome","Fibroid Tumors ","Uterine","Fibromyalgia","Food Allergies","Allergies","Foodborne Illness","Fragile X Syndrome","Frontotemporal Dementia ","FTD","Gene Therapy","Genetic Testing","Genetics","Global Warming","Climate Change","Headaches","Migrane","Health Disparities","Indoor Air Pollution","Health Services","Heart Disease","Coronary Heart Disease","Hematology","Hepatitis","Hepatitis A","Hepatitis B","Hepatitis C","HIV/AIDS","Hodgkin's Disease","Homelessness","Homicide","HPV","Cervical Cancer Vaccines"
@@ -71,30 +71,35 @@ for word in keywords:
     #all grants with that keyword
     grant_list =Grant.objects.filter(project_terms__search=word)
 
+    #TODO: what happens is a grant has a term one year, but not the next?
+
+    #this takes all the grants with that keyword and totals returns how much was spent per year.  This needs every instance of a grant (many grant objects with same core_project number)
     Add_Keyword.set_keyword_stats(new_word, grant_list)
 
+    #this makes gets rid of repeat coreproject numbers
     grant_list = Add_Keyword.no_repeats(grant_list)
     for grant in grant_list:
         new_word.grants.add(grant)
 
+    #this returns how many grants per state
     state_dict = Stats.states(grant_list)
     new_word.states_dict = state_dict
+
+    #this returns the top institutions per state
+    states_top_inst = Stats.top_institutions(grant_list)
+    new_word.states_top_inst = states_top_inst
+
+    #this set the total_cost of a core number
+    Relate_grants.set_related_grant_stats(grant_list)
 
     scatterplot_array = Add_Keyword.cost_scatterplot(grant_list)
     new_word.scatterplot_array = scatterplot_array
 
-    states_top_inst = Stats.top_institutions(grant_list)
-    new_word.states_top_inst = states_top_inst
     try:
         new_word.save()
         print('I saved the states_dict')
     except:
         print(f"there was a problem saving with state_dict")
-
-
-    # Add_Keyword.set_keyword_stats(new_word, grant_list)
-
-    Relate_grants.set_related_grant_stats(grant_list)
 
     # state_dict = Stats.states(grant_list)
     # new_word.states_dict = state_dict
