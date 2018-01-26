@@ -3,14 +3,39 @@
    list-style-type: none;
 }
 
+.navbar-link {
+  padding: 20px;
+  margin: 40px;
+}
+
 .container2 {
-  margins: 40px;
-  padding: 40px;
+  margin: 20px;
+  padding: 20px;
+}
+
+.floatLeft{
+  float: left;
+
 }
 
 h1 {
   color:white;
+  float: left;
 }
+
+
+h2, h4 {
+  margin: 20px 40px;
+}
+
+#divider{
+  min-height: 10px;
+  clear: both;
+}
+.clearblock {
+  margin:20px;
+}
+
 
 svg {
   border-color: black;
@@ -63,9 +88,9 @@ svg {
   margin: 10px;
 }
 #wordcloud {
-  padding: 20px;
-  max-width:400px;
-  max-height:400px;
+  margin: 20px;
+  max-width:300px;
+  max-height:300px;
   width: auto;
   height: auto;
 }
@@ -74,6 +99,10 @@ svg {
   font-weight: bold;
   padding: 0px 20px;
 }
+#down {
+  margin: 35px 20px 20px 20px;
+}
+
 
 tr td, th {
   padding:10px;
@@ -81,19 +110,44 @@ tr td, th {
   border: black;
   border-bottom: solid;
   border-width: thin;
+  font-size: 14px;
+}
+
+input {
+  padding: 10px;
+}
+
+th {
+  font-size: 18px;
+}
+
+#large a {
+  font-size: 18px;
+}
+
+#search_box {
+  border-style: solid;
+  border-color: #333;
+  padding: 10px;
+  min-width: 500px;
+  margin: 20px;
 }
 
 #costTable {
   background-color: white;
-  padding:20px;
+  padding: 20px;
   margin: 20px;
   border: black;
+}
+.inlineblock {
+  display: inline-block;
+  margin: 10px;
 }
 
 #keyword_table {
   background-color: white;
   padding:20px;
-  margin:20px;
+  margin:40px 10px 70px 10px;
   border: black;
 }
 
@@ -106,6 +160,7 @@ tr td, th {
 
 #vis-container {
   margin: 20px;
+  font: 14px;
 }
 
 #logo {
@@ -116,5 +171,63 @@ tr td, th {
 }
 
 #statesvg{
+  margin:  1% 10%;
+}
+
+#paper_summary{
   margin: 20px;
+}
+
+.state{
+  fill: none;
+  stroke: #a9a9a9;
+  stroke-width: 1;
+}
+.state:hover{
+  fill-opacity:0.5;
+}
+#tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 20px;
+  margin: 10px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 1px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+#tooltip h4{
+  margin:0;
+  font-size:14px;
+}
+#tooltip{
+  background:rgba(0,0,0,0.9);
+  border:1px solid grey;
+  border-radius:5px;
+  font-size:12px;
+  width:auto;
+  padding:4px;
+  color:white;
+  opacity:0;
+}
+#tooltip table{
+  table-layout:fixed;
+}
+#tooltip tr td{
+  padding:10px;
+  margin:10px;
+  border: white;
+}
+#tooltip tr td:nth-child(1){
+  width:50px;
+}
+#tooltip tr td:nth-child(2){
+  text-align:center;
+}
+
+#scatter_tooltip {
+font-size:14px;
+color:black;
+max-width: 650px;
 }

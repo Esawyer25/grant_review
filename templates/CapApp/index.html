@@ -8,11 +8,39 @@
   }
   </style>
 
-
-    <div>
-    <div id="vis-container" class="scatterplot pull-right ">
-      <h3>Research Dollars Devoted to Keywords in Recent Years</h3>
+  <div id = "search_box" class= "pull-left">
+  <h4 class = "pull-left">Enter keyword: </h4>
+  <form type="get" action="{% url 'index' %}" style="margin: 0">
+    <input  id="q" type="text" name="q"  placeholder="Search..." >
+    <button id="search_submit" type="submit" >Submit</button>
+    <br />
+    <div class="pull-right">
+      <strong>Search in a specific year:</strong>
+        <div class ="inlineblock">
+           2018 <input id="checkBox18" type="checkbox" name= "Funding Year" value="2018">
+        </div>
+          <div class ="inlineblock">
+          2017 <input id="checkBox17" type="checkbox" name= "Funding Year" value="2017">
+        </div>
+        <div class ="inlineblock">
+          2016 <input id="checkBox16" type="checkbox" name= "Funding Year" value="2016">
+        </div>
+      <div class ="inlineblock">
+          2015 <input id="checkBox15" type="checkbox" name= "Funding Year" value="2015">
+        </div>
+      <div class ="inlineblock">
+            2014 <input id="checkBox14" type="checkbox" name= "Funding Year" value="2014">
+        </div>
     </div>
+    </div>
+
+  </form>
+
+  <!-- <div id ="divider">
+  </div> -->
+      <div id="vis-container" class="scatterplot pull-right ">
+      <h3>Research Dollars Devoted to Keywords in Recent Years</h3>
+      </div>
       <!-- Optionally reference your vis JS file here, or define in a script tag -->
       <!-- <script type="text/javascript" src="js/my-vis.js"></script> -->
       <script type="text/javascript">
@@ -22,7 +50,7 @@
             // Common pattern for defining vis size and margins
             var margin = { top: 20, right: 20, bottom: 30, left: 50  },
                 width  = 600 - margin.left - margin.right,
-                height = 600 - margin.top - margin.bottom;
+                height = 500 - margin.top - margin.bottom;
 
             // Add the visualization svg canvas to the vis-container <div>
             var canvas = d3.select("#vis-container").append("svg")
@@ -135,28 +163,13 @@
         makeVis(data)
       </script>
 
-      <h4>Enter keyword here</h4>
-      <form type="get" action="{% url 'index' %}" style="margin: 0">
-        <input  id="q" type="text" name="q"  placeholder="Search..." >
-        <button id="search_submit" type="submit" >Submit</button>
-        <div>
-          <strong>Search in a specific year:</strong>
-            2018 <input id="checkBox18" type="checkbox" name= "Funding Year" value="2018">
-            2017 <input id="checkBox17" type="checkbox" name= "Funding Year" value="2017">
-            2016 <input id="checkBox16" type="checkbox" name= "Funding Year" value="2016">
-            2015 <input id="checkBox15" type="checkbox" name= "Funding Year" value="2015">
-            2014 <input id="checkBox14" type="checkbox" name= "Funding Year" value="2014">
-        </div>
-
-      </form>
-
-
-      <h4>Top searches</h4>
+      <div class="clearblock">
+      <h3>Top searches</h3>
       {% if top_twenty_searches %}
       <ul>
         {% for search in top_twenty_searches %}
         <li>
-        <a href="{%url 'grants'%} ?q={{search.keyword}}" class ="button">  {{search.keyword}}</a>
+              <a href="{%url 'grants'%} ?q={{search.keyword}}" class ="button" id ="large">  {{search.keyword}}</a>
         </li>
       {%endfor%}
       </ul>
@@ -182,11 +195,13 @@
         <li>
           All <strong>S</strong> grants (Research-Related Programs)
         </li>
+        <p>
+          <br />For more information on grant types visit this
+            <a href="https://grants.nih.gov/grants/funding/ac_search_results.htm">NIH page </a>
+        </p>
       </ul>
-      <p>
-        For more information on grant types visit this
-          <a href="https://grants.nih.gov/grants/funding/ac_search_results.htm">NIH page </a>
-      </p>
+
+    </div>
     </div>
 
 {%endblock%}

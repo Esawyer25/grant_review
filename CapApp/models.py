@@ -252,7 +252,7 @@ class Publication(models.Model):
     class Meta:
         ordering = ['-year',]
 
-    def small_data_structure(self):
+    def make_data_structure(self):
         abstract = self.abstract
 
         for punt in COMMON_PUNTUATION:
@@ -278,9 +278,9 @@ class Publication(models.Model):
             except KeyError:
                 value = None
             if value:
-                ab_dict[word.capitalize()] += (4)
+                ab_dict[word.capitalize()] += (7)
             else:
-                ab_dict[word.capitalize()] = (4)
+                ab_dict[word.capitalize()] = (7)
 
         # for word, repeats in ab_dict.items():
         #     if repeats == 1:
@@ -288,7 +288,7 @@ class Publication(models.Model):
 
         data = []
         for word, repeats in ab_dict.items():
-            if repeats > 4:
+            if repeats > 7:
                 temp={"text":word, "size": repeats}
                 data.append(temp)
 

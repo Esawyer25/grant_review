@@ -69,8 +69,8 @@ circle:hover {
         var color = d3.scale.linear()
           .domain([0,1,2,3,4,5,6,10,15,20,100])
           .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
-        d3.layout.cloud().size([200, 200])
-      .words({{focal.small_data_structure|safe}})
+        d3.layout.cloud().size([360, 360])
+      .words({{focal.make_data_structure|safe}})
       .rotate(0)
       .padding(3)
       .fontSize(function(d) { return d.size; })
@@ -78,13 +78,13 @@ circle:hover {
       .start();
       function draw(words) {
         d3.select("#{{focal.core_project_num}}").append("svg")
-          .attr("width", 220)
-          .attr("height", 220)
+          .attr("width", 370)
+          .attr("height", 370)
           .attr("class", "wordcloud")
           .append("g")
           // without the transform, words words would get cutoff to the left and top, they would
           // appear outside of the SVG area
-          .attr("transform", "translate(100,100)")
+          .attr("transform", "translate(180,190)")
           .selectAll("text")
           .data(words)
           .enter().append("text")
@@ -132,7 +132,7 @@ circle:hover {
           {%endfor%}
         </p>
         {%endif%}
-        <p class= "small">
+        <p>
           Abstract: {{focal.abstract_text}}
         </p>
         <p>
@@ -192,7 +192,7 @@ circle:hover {
   <div id="boxplot">
     <h4>Boxplot of "Bag-of-Words" Comparison Scores (N = {{n}})</h4>
     <p>
-      Scores estimate the similarity of the grant abstract and the abstracts of papers funded off that grant.  The papers funded off this grant (core project number = {{focal.core_project_num}}) are displyed with black dots.  Any outliers are indicated in red. Hover over the points to see the atricle title.
+      Scores estimate the similarity of the grant abstract and the abstracts of papers funded off that grant.  The papers funded off this grant (core project number = {{focal.core_project_num}}) are displyed with black dots.  Any outliers are indicated in red. Hover over the points to see the article title.
     </p>
   <script>
     //initialize the dimensions
@@ -372,7 +372,7 @@ function type(d) {
   </h2>
   {% if pubs%}
     {% for paper in pubs %}
-      <article class = "paper-summary">
+      <article id = "paper-summary">
 
         <div class="paper_header">
           <p>
@@ -388,8 +388,8 @@ function type(d) {
         var color = d3.scale.linear()
           .domain([0,1,2,3,4,5,6,10,15,20,100])
           .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
-        d3.layout.cloud().size([200, 200])
-      .words({{paper.small_data_structure|safe}})
+        d3.layout.cloud().size([370, 370])
+      .words({{paper.make_data_structure|safe}})
       .rotate(0)
       .padding(3)
       .fontSize(function(d) { return d.size; })
@@ -397,13 +397,13 @@ function type(d) {
       .start();
       function draw(words) {
         d3.select("#A{{paper.pmid}}").append("svg")
-          .attr("width", 220)
-          .attr("height", 220)
+          .attr("width", 370)
+          .attr("height", 370)
           .attr("class", "wordcloud")
           .append("g")
           // without the transform, words words would get cutoff to the left and top, they would
           // appear outside of the SVG area
-          .attr("transform", "translate(100,100)")
+          .attr("transform", "translate(180,190)")
           .selectAll("text")
           .data(words)
           .enter().append("text")
@@ -431,7 +431,7 @@ function type(d) {
             <strong>Comparison Score</strong>: {{paper.score}}
           </p>
           <p class= "small">
-              (Score is the eculidian distance between the "bag-of-words" representing the grant abstract and the paper abstract.  Midline = Median, w)
+              (Score is the eculidian distance between the "bag-of-words" representation of the grant abstract and the paper abstract.)
           </p>
           {%endif%}
           <p>
@@ -450,8 +450,6 @@ function type(d) {
               Abstract not available
             {%endif%}
           </p>
-
-
       </article>
     {%endfor%}
   {%endif%}

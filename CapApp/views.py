@@ -49,39 +49,41 @@ def index(request):
         keyword_2015 = {}
         keyword_2014 = {}
 
+        keyword_2018['Year'] = 2018
+        keyword_2018['keyword'] = keyword.keyword
         if keyword.grant_total_cost_18:
-            keyword_2018['Year'] = 2018
-            keyword_2018['keyword'] = keyword.keyword
             keyword_2018['total_cost'] =round((keyword.grant_total_cost_18/1000), 1)
         else:
-            pass
+            keyword_2018['total_cost'] = 0
 
+
+        keyword_2017['Year'] = 2017
+        keyword_2017['keyword'] =keyword.keyword
         if keyword.grant_total_cost_17:
-            keyword_2017['Year'] = 2017
-            keyword_2017['keyword'] =keyword.keyword
             keyword_2017['total_cost'] =round((keyword.grant_total_cost_17/1000), 1)
         else:
-            pass
+            keyword_2017['total_cost'] = 0
 
+        keyword_2016['Year'] = 2016
+        keyword_2016['keyword'] =keyword.keyword
         if keyword.grant_total_cost_16:
-            keyword_2016['Year'] = 2016
-            keyword_2016['keyword'] =keyword.keyword
             keyword_2016['total_cost'] =round((keyword.grant_total_cost_16/1000), 1)
         else:
-            pass
+            keyword_2016['total_cost'] = 0
+
+        keyword_2015['Year'] = 2015
+        keyword_2015['keyword'] =keyword.keyword
         if keyword.grant_total_cost_15:
-            keyword_2015['Year'] = 2015
-            keyword_2015['keyword'] =keyword.keyword
             keyword_2015['total_cost'] =round((keyword.grant_total_cost_15/1000), 1)
         else:
-            pass
+            keyword_2015['total_cost'] = 0
 
+        keyword_2014['Year'] = 2014
+        keyword_2014['keyword'] = keyword.keyword
         if keyword.grant_total_cost_14:
-            keyword_2014['Year'] = 2014
-            keyword_2014['keyword'] = keyword.keyword
             keyword_2014['total_cost'] =round((keyword.grant_total_cost_14/1000), 1)
         else:
-            pass
+            keyword_2014['total_cost'] = 0
 
         scatter_dict.append(keyword_2018)
         scatter_dict.append(keyword_2017)

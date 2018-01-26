@@ -6,7 +6,7 @@
   {%block body_block%}
   {% load humanize %}
   <style>
-    .state{
+    /*.state{
       fill: none;
       stroke: #a9a9a9;
       stroke-width: 1;
@@ -57,19 +57,20 @@
     #scatter_tooltip {
     font-size:14px;
     color:black;
-    }
+    }*/
   </style>
 
     <div class="jumbotron">
-      <h2>Summary Figures for Grants with Keyword <strong><em>{{keyword.keyword}}</em></strong>
+      <h2>Summary Figures for Grants with Keyword  <strong><em>{{keyword.keyword}}</em></strong></h2>
         <div class="pull-right">
-          <p>
+            <p>
           </p>
-          <p>Research dollars vs. Publications</p>
-          <div id="vis-container" class ="small">
+          <h4>Research Dollars vs. Publications</h4>
+          <div id="vis-container">
             <p id ="scatterplot">
             </p>
           </div>
+        </div>
         <script type="text/javascript">
         data = ({{keyword.scatterplot_array|safe}})
         console.log('this is the scatterplot data')
@@ -77,9 +78,9 @@
 
           var makeVis = function(data) {
               // Common pattern for defining vis size and margins
-              var margin = { top: 30, right: 30, bottom: 70, left: 40  },
-                  width  = 700 - margin.left - margin.right,
-                  height = 250 - margin.top - margin.bottom;
+              var margin = { top: 10, right: 10, bottom: 40, left: 60  },
+                  width  = 640 - margin.left - margin.right,
+                  height = 260 - margin.top - margin.bottom;
 
               // Add the visualization svg canvas to the vis-container <div>
               var canvas = d3.select("#vis-container").append("svg")
@@ -124,7 +125,7 @@
                 .append("text")
                   // .attr("class", "label")
                   .attr("x", width) // x-offset from the xAxis, move label all the way to the right
-                  .attr("y", + 40)    // y-offset from the xAxis, moves text UPWARD!
+                  .attr("y", + 35)    // y-offset from the xAxis, moves text UPWARD!
                   .style("text-anchor", "end") // right-justify text
                   .text("Total Funding ($)");
 
@@ -135,7 +136,7 @@
                   .append("text")
                   // .attr("class", "label")
                   .attr("transform", "rotate(-90)") // although axis is rotated, text is not
-                  .attr("y", 15) // y-offset from yAxis, moves text to the RIGHT because it's rotated, and positive y is DOWN
+                  .attr("y", -35) // y-offset from yAxis, moves text to the RIGHT because it's rotated, and positive y is DOWN
                   .style("text-anchor", "end")
                   .text("Number of Papers");
 
@@ -155,7 +156,9 @@
               var tipMouseover = function(d) {
                   // var color = colorScale(d.core_project_num);
                   // var color = black
-                  var html  = "<span style='color:" + color + ";'>" + "Core Project Number: "+ d.core_project_num +", Total cost: $" + d.total_cost + ",</span> Number of papers: "+ d.number + ", Years of funding: " + d.support_year;
+                  var html  = "<span style='color:" + color + ";'>" + "Core Project Number: "+ d.core_project_num +", Total cost: $" + d.total_cost + ",</span> Number of papers: "+ d.number + ", Years of funding: " + d.support_year + "<br/> Title: " + d.title
+
+                  ;
 
                   tooltip.html(html)
                   .style("left", (d3.event.pageX + 15) + "px")
@@ -205,12 +208,10 @@
         </script>
 
 
-       </h2>
-          <p>
-            Cost table
-          </p>
-          <table id = "keyword_table">
-            <tr>
+      <div class "pull-left">
+        <h4 id ="down">Cost table</h4>
+        <table id = "keyword_table">
+          <tr>
               <th>
                 Year
               </th>
@@ -313,7 +314,8 @@
               </td>
             </tr>
           </table>
-            <p>
+          </div>
+            <!-- <p>
               Funding by grant type:
             </p>
             <table id = "keyword_table" class = "small">
@@ -452,11 +454,14 @@
                 </td>
               </tr>
 
-            </table>
+            </table> -->
+    <div id ="divider">
+
+    </div>
 
 
     <div>
-      <h4>Location of grants funded to study <em>{{keyword.keyword}}</em></h4>
+      <h4>Location of Funded Insititutions</h4>
     <div id="tooltip"></div><!-- div to hold tooltip. -->
     <svg width="960" height="600" id="statesvg"></svg> <!-- svg to hold the map. -->
     </div>

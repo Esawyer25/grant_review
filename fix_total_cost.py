@@ -41,6 +41,7 @@ for keyword in keywords:
             except:
                 pass
             print(rgo)
+            
             for assoc_grant in assoc_grants:
                 if assoc_grant.total_cost:
                     total_cost +=   assoc_grant.total_cost

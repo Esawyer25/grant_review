@@ -3,29 +3,51 @@
 {%block body_block%}
 
 <h3>About Research Review</h3>
-
+<figure id = "index_figure">
+ <img src="../static/index_scatter.png" alt="scatterplot" id ="index_scatter">
+<figcaption id = "index_scatter_caption">
+Total funding dollars awarded to different "project terms" in recent years.
+</figcaption>
+</figure>
 <article>
 <p>
-  <strong>This website makes it more possible for the general public to search the scientific research grants that are funded by the National Institutes of Health. </strong><br /> It  was created by Eva Sawyer, PhD, as a final project at Ada Developers Academy, Seattle, WA, USA.
+  <strong>This website makes it more possible for the general public to search the scientific research grants that are funded by the National Institutes of Health. </strong><br /> It  was created by Eva Sawyer, PhD, as a month-long final project at Ada Developers Academy, Seattle, WA, USA.  The project challeneged students to make a product using a tech stack that they had not worked with before. This project was made using Postgres database, writen in Python with a Django framework and uses <a link ="https://d3js.org/">D3 graphics</a>.  It relies on the <a link= link="exporter.nih.gov/ExPORTER_Catalog.aspx">NIH Exporter</a> resources and the <a link="https://www.ncbi.nlm.nih.gov/books/NBK25501/">Pubmed e-utilities API. </a>
 </p>
 <h4>Componets of this project:</h4>
 <div>
-    <h5>Search Page:</h5>
-    <figure id = "index_figure">
-     <img src="../static/index_scatter.png" alt="scatterplot" id ="index_scatter">
-   <figcaption id = "index_scatter_caption">
-    Total funding dollars awarded to different "project terms" in recent years.
- </figcaption>
+    <h4>Search Page:</h4>
       <p>
         On the home page a user can either click on a suggested search term, or enter a keyword, such as a disease name, that they are interested in.  This will launch a search of the "project terms" of every grant in the database of funded NIH grants (only years 2014 to present are currently available on this site)  Currently, searching a new keyword takes time (~20 mins), so it is suggested that users explore the website by clicking on the previously searched terms. The database was imported from publicly available csv files available:  <a link="exporter.nih.gov/ExPORTER_Catalog.aspx">NIH Exporter resource</a>.
       </p>
       <p>
         A scatterplot to the right of the page shows funding levels for commonly searched terms over recent years.  Mouse over the dots to get more information about the terms.
       </p>
+      <p>
+        Future work:
+        1. Increase the speed of searches
+        2. Add the ability to filter the searches by year and/or funding mechanism (ex. "activity" code)
+        3. Consider adding the ability to search by researcher name.
+      </p>
+</div>
+<div id ="divider">
 </div>
 <div>
   <p>
-  <h5>Search Results Page:</h5>
+  <h4>Search Results Page:</h4>
+  <figure id = "funding_figure">
+   <img src="../static/cost_scatter.png" alt="scatterplot" id ="cost_scatter">
+ <figcaption id = "cost_scatter_caption">
+  Funding of a grant vs. the number of papers published off that funding.
+</figcaption>
+<img src="../static/map.png" alt="Map" id ="map">
+<figcaption id = "map_caption">
+An interactive map displaying the number of grants awarded to by location.
+<img src="../static/wordcloud.png" alt="wordcloud" id ="wordcloud">
+<figcaption id = "wordcloud_caption">
+A wordcloud displaying words that are not common parts of speach and that are mentioned more than once in a grant or paper abstract.  The font is larger for words that are mentioned more times.
+</figcaption>
+</figcaption>
+</figure>
   <p>
     This page has two sections, a <strong>Summary Figures</strong> and a list of the <strong>Search Results</strong>
   </p>
@@ -35,12 +57,6 @@
     </p>
     <ul>
       <li>
-         <figure id = "funding_figure">
-          <img src="../static/cost_scatter.png" alt="scatterplot" id ="cost_scatter">
-        <figcaption id = "cost_scatter_caption">
-         Funding of a grant vs. the number of papers published off that funding.
-      </figcaption>
-      </figure>
         <strong>Cost table:</strong>
         This section which includes a table of <em>total, direct</em> and <em>indirect</em> costs.
         <p>
@@ -51,66 +67,86 @@
         </p>
       </li>
       <li>
-        <strong>Funding by grant type:</strong>
-      </li>
-      <li>
         <strong>Funding vs. Papers:</strong>
         <p>
           This scatterplot shows the relationship between funding and the number of papers published over the last 4 years for all grants with the specified keywords.  The graph should be interpreted in context: publications take years to produce, so there is little expectation that grants funded recently will have resulted in papers yet.  In the future the database will be expanded to cover more years and this graph will be more meaningful.
 
       </li>
       <li>
-        <figure id = "map_figure">
-          <img src="../static/map.png" alt="Map" id ="map">
-        <figcaption id = "map_caption">
-          An interactive map displaying the number of grants awarded to by location.
-        </figcaption>
-        </figure>
         <strong>Location of Funded Projects</strong>
         <p>
           This map displays how many grants have been awarded to institutions in different states.  Darker colors indicate more awards have been awarded to those states, lighter colors indicate less.  For more details about the institutions to which the awards were granted mouse over the graphic.
         </p>
-
-
-
       </li>
-
     </ul>
+    <p>
+      <strong>Future work:</strong><br />
+      <ol>
+        <li>
+      Have additional information on funding available on click.  For example, the funding levels for different funding mechanisms.
+      </li>
+      <li>
+    Graphically display the indirect and direct costs.
+    </li>
+  </0l>
+    </p>
   </section>
+
   <section>
     <p>
     <strong>Search Results</strong>: <br />
     This is a list of the top 100 results from the search, ordered by year (2018 to 2014), and total cost (high to low).
     </p>
-    <ul>
-
-
-    <figure id = "word_cloud_figure">
-      <img src="../static/wordcloud.png" alt="wordcloud" id ="wordcloud">
-    <figcaption id = "wordcloud_caption">
-      A wordcloud displaying words that are not common parts of speach and that are mentioned more than once in a grant or paper abstract.  The font is larger for words that are mentioned more times.
-    </figcaption>
-    </figure>
-
-    </ul>
-
+    <p>
+      The words that are put into the <a link ="https://www.jasondavies.com/wordcloud/">wordcloud</a> are words that are used more than once in the abstract, and are not one of the 100 most common english words, or with a group of selected common science words (ex. "hypothesis", "result").
+    </p>
+    <p>
+    <strong>Future work:</strong><br />
+    <ol>
+      <li>
+    Display a paginated list of results, not only the first 100 (as I had designed it this was making the website too slow)
+      </li>
+      <li>
+    Make some words in the word cloud display definitions on a click.
+    </li>
+  </ol>
+    </p>
 
 
   </section>
+
 </div>
 <div>
-  <h5>Publications page</h5>
+  <h4>Publications page</h4>
   <p>
-    <strong>Grant summary:</strong> This section provides more information on a single grant than was available on the search results page.  Specifically, if a project has received funding over several years, it links to the summaries of those projects.
+    Grants are matched to publications by searching for the grant's core project number in a linktable published by the NIH to see if it has any pubmed ids associated with it.  The most current link table reports on publications in 2016, so no more recent papers are reported here. The pubmed id is then used to make an API call.  The NIH has strict limits on the volume of API calls, so these calls are spaced 0.5 seconds apart.
+  </p>
+  <p>
+    <strong>Grant summary</strong>: This section provides more information on a single grant than was available on the search results page.  Specifically, if a project has received funding over several years, it links to the summaries of those projects.
   </p>
   <p>
     <strong>Boxplots</strong>:
-
+    The boxplot displays a measure of similarity between the grant abstract and a paper abstract.
+    The goal of reporting this score is to flag papers that deviate strongly from the stated goals of the funded research.
+    </p>
+    <p>
+   Specifically, it displays the euclidian distance between the collection of words in the two abstracts.  The collection of words was created by removing commonly used words as was done for the wordclouds (removing any word in the list of the 100 most used words in English, and removing very common science words).  Then a "bag of words" was created, which is a data structure that matches words with the number of times they are repeated in the abstract.<br />
+    <em>For example: "The boxplot displays a measure of similarity between the grant abstract and a paper abstract." becomes: </em><br />
+    <strong>Boxplot: 1, displays: 1, measure: 1, similarity: 1, grant: 1, abstract: 2, paper: 1</strong>.
+    This was done for both abstracts, and then the collections of words were scored for similarity. A high score indicates that there is little similarity between the texts, and a low score indicates there is strong similarity between the texts.
+  </p>
+  <p>
+    The scores are recorded and displayed on the boxplot. The midline is at the median, the center box is the middle 50%, and the outer tick marks indicate the extent of the 97.5% range. The scores for the publication of the grant currently being examined are displayed as either black or red dots.  Black indicates that the publication's score falls within an expected range, while red indicates that the score is higher or lower than expected.
+  </p>
+  <p>
+    <strong>Future work:</strong><br />
+    <ol>
+      <li>
+        1. Improve the similarity score with a more advanced text-analysis algorithim and/or more input.  Though the programining for the scoring and boxplot function, in its current state the values are not meaningful.  Matched science grants and papers have a average score of about 28, while random abstracts have a average score of about 32, and abstracts compared to sections of Harry Potter have a average score of 34.
+        </li>
+    </ol>
   </p>
 </div>
-<p>
-  <strong>Publication Results Page:</strong>
-</p>
 
 
 
