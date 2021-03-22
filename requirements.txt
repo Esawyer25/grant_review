@@ -20,7 +20,7 @@ docutils==0.14
 idna==2.6
 jmespath==0.9.3
 jsonfield==2.0.2
-lxml==4.1.1
+lxml==4.6.3
 numpy==1.14.0
 pathspec==0.5.0
 prompt-toolkit==1.0.15
